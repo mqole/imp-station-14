@@ -11,7 +11,7 @@
       Brute:
         collection: GlassSmash
   - type: Construction
-    graph: Computer
+    graph: Computergiuoighjgbghjguiouihgjvhhiuoi
     node: computer
     containers:
       - board
