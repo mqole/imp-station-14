@@ -11,6 +11,9 @@ using Robust.Shared.Containers;
 using Robust.Server.Audio;
 using Content.Shared.Coordinates;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Server.EUI; //imp
+using Content.Server._Impstation.Ghost; //imp
+using Robust.Shared.Audio; //imp
 
 namespace Content.Server.Silicons.Borgs;
 
@@ -22,6 +25,9 @@ public sealed partial class BorgSystem
     [Dependency] private readonly PuddleSystem _puddle = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solution = default!;
     [Dependency] private readonly SharedRoleSystem _roles = default!;
+    [Dependency] private readonly EuiManager _euiManager = default!; //imp
+
+    public SoundSpecifier MMIDissolve = new SoundPathSpecifier("/Audio/Effects/Fluids/splat.ogg"); //imp
 
     public void InitializeMMI()
     {
@@ -52,20 +58,17 @@ public sealed partial class BorgSystem
             return;
 
         var ent = args.Entity;
-        if (HasComp<UnborgableComponent>(ent))
-        {
-            return;
-        }
         var linked = EnsureComp<MMILinkedComponent>(ent);
         linked.LinkedMMI = uid;
         Dirty(uid, component);
 
-        if (_mind.TryGetMind(ent, out var mindId, out var mind))
+        if (_mind.TryGetMind(ent, out _, out var mind) && mind.Session is { } playerSession) //imp edit. is this even necessary
         {
-            _mind.TransferTo(mindId, uid, true, mind: mind);
-
-            if (!_roles.MindHasRole<SiliconBrainRoleComponent>(mindId))
-                _roles.MindAddRole(mindId, "MindRoleSiliconBrain", silent: true);
+            // imp: notify them they're being mmi'd.
+            if (mind.CurrentEntity != ent)
+            {
+                _euiManager.OpenEui(new ReturnToMindEui(mind, _mind), playerSession);
+            }
         }
 
         _appearance.SetData(uid, MMIVisuals.BrainPresent, true);
@@ -82,12 +85,15 @@ public sealed partial class BorgSystem
     }
 
     private void OnMMILinkedMindAdded(EntityUid uid, MMILinkedComponent component, MindAddedMessage args)
+    //TODO: wait for checkbox!!!
     {
         if (!_mind.TryGetMind(uid, out var mindId, out var mind) ||
             component.LinkedMMI == null)
             return;
 
         _mind.TransferTo(mindId, component.LinkedMMI, true, mind: mind);
+        if (!_roles.MindHasRole<SiliconBrainRoleComponent>(mindId)) //imp, just in case
+            _roles.MindAddRole(mindId, "MindRoleSiliconBrain", silent: true);
     }
 
     private void OnMMILinkedRemoved(EntityUid uid, MMILinkedComponent component, EntGotRemovedFromContainerMessage args)
@@ -110,22 +116,22 @@ public sealed partial class BorgSystem
         _appearance.SetData(linked, MMIVisuals.BrainPresent, false);
     }
 
+    //Imp edit start
+    //TODO: need checkbox to trigger this event instead
     private void OnMMIAttemptInsert(EntityUid uid, MMIComponent component, ItemSlotInsertAttemptEvent args)
     {
         var ent = args.Item;
-        if (HasComp<UnborgableComponent>(ent))
+        _popup.PopupEntity("The brain suddenly dissolves on contact with the interface!", uid, Shared.Popups.PopupType.MediumCaution);
+        _audio.PlayPvs(MMIDissolve, uid);
+        if (_solution.TryGetSolution(ent, "food", out var solution))
         {
-            _popup.PopupEntity("The brain suddenly dissolves on contact with the interface!", uid, Shared.Popups.PopupType.MediumCaution);
-            _audio.PlayPvs("/Audio/Effects/Fluids/splat.ogg", uid);
-            if (_solution.TryGetSolution(ent, "food", out var solution))
+            if (solution != null)
             {
-                if (solution != null)
-                {
-                    Entity<SolutionComponent> solutions = (Entity<SolutionComponent>)solution;
-                    _puddle.TrySpillAt(Transform(uid).Coordinates, solutions.Comp.Solution, out _);
-                }
+                Entity<SolutionComponent> solutions = (Entity<SolutionComponent>)solution;
+                _puddle.TrySpillAt(Transform(uid).Coordinates, solutions.Comp.Solution, out _);
             }
-            EntityManager.QueueDeleteEntity(ent);
         }
+        EntityManager.QueueDeleteEntity(ent);
     }
+    //Imp edit end
 }
