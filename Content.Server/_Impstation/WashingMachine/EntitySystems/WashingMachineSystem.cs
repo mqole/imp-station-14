@@ -64,6 +64,7 @@ using Content.Server.Fluids.EntitySystems;
 // microwaves need water & power to function.
 //      a certain amount of water will be used up by the microwave.
 // soap, bleach, space cleaner... anything with a dyeremover component, maybe? can remove colours from entities.
+// washing something will remove dna and fingerprints, and add 'lint' fibers
 //
 // no ui. if i end up stabbing myself in the foot with this one, so be it.
 //
