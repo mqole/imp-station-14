@@ -47,6 +47,7 @@ using Content.Shared._Impstation.WashingMachine.Components;
 using Content.Shared.Storage.Components;
 using Content.Shared.Chemistry.Components;
 using Content.Server.Fluids.EntitySystems;
+using Content.Server.Storage.Components;
 
 
 // The goal here, for mq:
@@ -85,6 +86,10 @@ using Content.Server.Fluids.EntitySystems;
 // [] DyeRemover tag
 // [] 'Dizzy' status effect
 // [] YAML edits
+//
+// NOTES ON HOW CRATES WORK
+//
+// crate == uid.EntityStorage.Contents
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
@@ -123,8 +128,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
             SubscribeLocalEvent<WashingMachineComponent, ComponentInit>(OnInit);
             SubscribeLocalEvent<WashingMachineComponent, MapInitEvent>(OnMapInit);
-            SubscribeLocalEvent<WashingMachineComponent, StorageAfterOpenEvent>(OnWashDoorOpen);
-            SubscribeLocalEvent<WashingMachineComponent, StorageAfterCloseEvent>(OnWashDoorClose);
             SubscribeLocalEvent<WashingMachineComponent, InteractUsingEvent>(OnInteractUsing, after: new[] { typeof(AnchorableSystem) });
             SubscribeLocalEvent<WashingMachineComponent, BreakageEventArgs>(OnBreak);
             SubscribeLocalEvent<WashingMachineComponent, PowerChangedEvent>(OnPowerChanged);
@@ -140,7 +143,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<FoodRecipeProviderComponent, GetSecretRecipesEvent>(OnGetSecretRecipes);
         }
 
-        private void OnWashStart(Entity<ActiveWashingMachineComponent> ent, ref ComponentStartup args)
+        private void OnWashStart(Entity<ActiveWashingMachineComponent> ent, ref ComponentStartup args) //done
         {
             if (!TryComp<WashingMachineComponent>(ent, out var comp))
                 return;
@@ -150,7 +153,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 _audio.PlayPvs(comp.LoopingSound, ent, AudioParams.Default.WithLoop(true).WithMaxDistance(5))?.Entity;
         }
 
-        private void OnWashStop(Entity<ActiveWashingMachineComponent> ent, ref ComponentShutdown args)
+        private void OnWashStop(Entity<ActiveWashingMachineComponent> ent, ref ComponentShutdown args) //done
         {
             if (!TryComp<WashingMachineComponent>(ent, out var comp))
                 return;
@@ -161,7 +164,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
         // Stop items from transforming through constructiongraphs while being washed.
         // They might be reserved for dyes.
-        private void OnConstructionTemp(Entity<ActivelyWashedComponent> ent, ref OnConstructionTemperatureEvent args)
+        private void OnConstructionTemp(Entity<ActivelyWashedComponent> ent, ref OnConstructionTemperatureEvent args) //done
         {
             args.Result = HandleResult.False;
         }
@@ -172,7 +175,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// </summary>
         /// <param name="component">The washing machine that is heating up.</param>
         /// <param name="time">The time on the washing machine, in seconds.</param>
-        private void AddTemperature(WashingMachineComponent component, float time)
+        private void AddTemperature(WashingMachineComponent component, float time) //done
         {
             var heatToAdd = time * component.BaseHeatMultiplier;
             foreach (var entity in component.Contents.ContainedEntities) // unsure if this is ok with crate?
@@ -276,20 +279,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
         }
 
-        private void OnInit(Entity<WashingMachineComponent> ent, ref ComponentInit args)
-        {
-            // this really does have to be in ComponentInit
-            ent.Comp.Contents = _container.EnsureContainer<Container>(ent, ent.Comp.ContainerId);
-        }
-
         private void OnMapInit(Entity<WashingMachineComponent> ent, ref MapInitEvent args)
         {
             _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
-        }
-
-        private void OnWashDoorClose(Entity<MicrowaveComponent> ent, ref StorageAfterCloseEvent args) // handle w crate
-        {
-            // add entitystorage contents to washingmachine contents (is this redundant?)
         }
 
         private void OnInteractUsing(Entity<WashingMachineComponent> ent, ref InteractUsingEvent args)
@@ -326,11 +318,13 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             StopWashing(ent);
             _container.EmptyContainer(ent.Comp.Contents);
 
-            _solutionContainer.TryGetSolution(ent, "tank", out var solution); //fuck!!!!!!!!
-            if (solution != null)
+            if (TryComp<SolutionContainerManagerComponent>(ent, out var solComp))
             {
-                Entity<SolutionComponent> solutions = (Entity<SolutionComponent>)solution;
-                _puddle.TrySpillAt(Transform(ent).Coordinates, solutions.Comp.Solution, out _);
+                _solutionContainer.TryGetSolution(solComp, "tank", out var solution);
+                if (solution != null)
+                {
+                    _puddle.TrySpillAt(Transform(ent).Coordinates, solution, out _);
+                }
             }
         }
 
@@ -343,7 +337,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
         }
 
-        private void OnSignalReceived(Entity<MicrowaveComponent> ent, ref SignalReceivedEvent args)
+        private void OnSignalReceived(Entity<WashingMachineComponent> ent, ref SignalReceivedEvent args)
         {
             if (args.Port != ent.Comp.OnPort)
                 return;
@@ -362,9 +356,13 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             _appearance.SetData(uid, PowerDeviceVisuals.VisualState, display, appearanceComponent);
         }
 
-        public static bool HasContents(MicrowaveComponent component) // handle w crate
+        public bool HasContents(EntityUid uid) // handle w crate
         {
-            return component.Storage.ContainedEntities.Any();
+            if (TryComp<EntityStorageComponent>(uid, out var comp))
+            {
+                return comp.Contents.ContainedEntities.Any();
+            }
+            else return false;
         }
 
         // dunno if we wanna keep explosion shit as is or not, look at later
@@ -415,27 +413,22 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// Starts Washing
         /// </summary>
         /// <remarks>
-        /// the microwave version was named 'Wzhzhzh' im turning into joker -mq
+        /// im NOT fucking naming this wrhzhzh -mq
         /// </remarks>
         public void StartWash(EntityUid uid, WashingMachineComponent component, EntityUid? user)
         {
-            if (!HasContents(component) || HasComp<ActiveWashingMachineComponent>(uid) || !(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
+            if (!HasContents(uid) || HasComp<ActiveWashingMachineComponent>(uid) || !(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
                 return;
 
             var solidsDict = new Dictionary<string, int>(); // yeah later issue for me
             var reagentDict = new Dictionary<string, FixedPoint2>();
             var malfunctioning = false;
             // TODO use lists of Reagent quantities instead of reagent prototype ids.
-            foreach (var item in component.Storage.ContainedEntities.ToArray())
+            EnsureComp<EntityStorageComponent>(uid, out var storeComp); // if we got this far we should already have the thing
+            foreach (var item in storeComp.Contents.ContainedEntities.ToArray())
             {
                 var ev = new BeingWashedEvent(uid, user);
                 RaiseLocalEvent(item, ev);
-
-                if (ev.Handled)
-                {
-                    UpdateUserInterfaceState(uid, component);
-                    return;
-                }
 
                 if (_tag.HasTag(item, "Metal")) // OH FUCK, TAGS
                 {
@@ -511,9 +504,12 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         private void StopWashing(Entity<WashingMachineComponent> ent)
         {
             RemCompDeferred<ActiveWashingMachineComponent>(ent);
-            foreach (var item in ent.Comp.Contents.ContainedEntities) // crate
+            if (TryComp<EntityStorageComponent>(ent, out var comp))
             {
-                RemCompDeferred<ActivelyWashedComponent>(item);
+                foreach (var item in comp.Contents.ContainedEntities)
+                {
+                    RemCompDeferred<ActivelyWashedComponent>(item);
+                }
             }
         }
 
