@@ -126,7 +126,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         {
             base.Initialize();
 
-            SubscribeLocalEvent<WashingMachineComponent, ComponentInit>(OnInit);
             SubscribeLocalEvent<WashingMachineComponent, MapInitEvent>(OnMapInit);
             SubscribeLocalEvent<WashingMachineComponent, InteractUsingEvent>(OnInteractUsing, after: new[] { typeof(AnchorableSystem) });
             SubscribeLocalEvent<WashingMachineComponent, BreakageEventArgs>(OnBreak);
@@ -143,58 +142,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<FoodRecipeProviderComponent, GetSecretRecipesEvent>(OnGetSecretRecipes);
         }
 
-        private void OnWashStart(Entity<ActiveWashingMachineComponent> ent, ref ComponentStartup args) //done
-        {
-            if (!TryComp<WashingMachineComponent>(ent, out var comp))
-                return;
-            SetAppearance(ent.Owner, WashingMachineVisualState.Active, comp);
-
-            comp.PlayingStream =
-                _audio.PlayPvs(comp.LoopingSound, ent, AudioParams.Default.WithLoop(true).WithMaxDistance(5))?.Entity;
-        }
-
-        private void OnWashStop(Entity<ActiveWashingMachineComponent> ent, ref ComponentShutdown args) //done
-        {
-            if (!TryComp<WashingMachineComponent>(ent, out var comp))
-                return;
-
-            SetAppearance(ent.Owner, WashingMachineVisualState.Idle, comp);
-            comp.PlayingStream = _audio.Stop(comp.PlayingStream);
-        }
-
-        // Stop items from transforming through constructiongraphs while being washed.
-        // They might be reserved for dyes.
-        private void OnConstructionTemp(Entity<ActivelyWashedComponent> ent, ref OnConstructionTemperatureEvent args) //done
-        {
-            args.Result = HandleResult.False;
-        }
-
-        /// <summary>
-        ///     Adds temperature to every item in the washing machine,
-        ///     based on the time it took to wash.
-        /// </summary>
-        /// <param name="component">The washing machine that is heating up.</param>
-        /// <param name="time">The time on the washing machine, in seconds.</param>
-        private void AddTemperature(WashingMachineComponent component, float time) //done
-        {
-            var heatToAdd = time * component.BaseHeatMultiplier;
-            foreach (var entity in component.Contents.ContainedEntities) // unsure if this is ok with crate?
-            {
-                if (TryComp<TemperatureComponent>(entity, out var tempComp))
-                    _temperature.ChangeHeat(entity, heatToAdd * component.ObjectHeatMultiplier, false, tempComp);
-
-                if (!TryComp<SolutionContainerManagerComponent>(entity, out var solutions))
-                    continue;
-                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((entity, solutions)))
-                {
-                    var solution = soln.Comp.Solution;
-                    if (solution.Temperature > component.TemperatureUpperThreshold)
-                        continue;
-
-                    _solutionContainer.AddThermalEnergy(soln, heatToAdd);
-                }
-            }
-        }
+        #region TODO
 
         private void SubtractContents(MicrowaveComponent component, FoodRecipePrototype recipe) // LATER
         {
@@ -279,11 +227,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
         }
 
-        private void OnMapInit(Entity<WashingMachineComponent> ent, ref MapInitEvent args)
-        {
-            _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
-        }
-
         private void OnInteractUsing(Entity<WashingMachineComponent> ent, ref InteractUsingEvent args)
         {
             if (args.Handled)
@@ -311,24 +254,30 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             UpdateUserInterfaceState(ent, ent.Comp); // no ui, handle w crate later
         }
 
-        private void OnBreak(Entity<WashingMachineComponent> ent, ref BreakageEventArgs args)
+        /// <summary>
+        /// This event tries to get secret recipes that the microwave might be capable of.
+        /// Currently, we only check the microwave itself, but in the future, the user might be able to learn recipes.
+        /// </summary>
+        private void OnGetSecretRecipes(Entity<FoodRecipeProviderComponent> ent, ref GetSecretRecipesEvent args)
         {
-            ent.Comp.Broken = true;
-            SetAppearance(ent, WashingMachineVisualState.Broken, ent.Comp);
-            StopWashing(ent);
-            _container.EmptyContainer(ent.Comp.Contents);
-
-            if (TryComp<SolutionContainerManagerComponent>(ent, out var solComp))
+            foreach (ProtoId<FoodRecipePrototype> recipeId in ent.Comp.ProvidedRecipes)
             {
-                _solutionContainer.TryGetSolution(solComp, "tank", out var solution);
-                if (solution != null)
+                if (_prototype.TryIndex(recipeId, out var recipeProto))
                 {
-                    _puddle.TrySpillAt(Transform(ent).Coordinates, solution, out _);
+                    args.Recipes.Add(recipeProto);
                 }
             }
         }
 
-        private void OnPowerChanged(Entity<WashingMachineComponent> ent, ref PowerChangedEvent args)
+        #endregion
+        #region Startup
+
+        private void OnMapInit(Entity<WashingMachineComponent> ent, ref MapInitEvent args)
+        {
+            _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
+        }
+
+        private void OnPowerChanged(Entity<WashingMachineComponent> ent, ref PowerChangedEvent args) //done
         {
             if (!args.Powered)
             {
@@ -348,66 +297,29 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             StartWash(ent.Owner, ent.Comp, null);
         }
 
-        public void SetAppearance(EntityUid uid, WashingMachineVisualState state, WashingMachineComponent? component = null, AppearanceComponent? appearanceComponent = null)
+        private void OnBreak(Entity<WashingMachineComponent> ent, ref BreakageEventArgs args)
         {
-            if (!Resolve(uid, ref component, ref appearanceComponent, false))
-                return;
-            var display = component.Broken ? WashingMachineVisualState.Broken : state;
-            _appearance.SetData(uid, PowerDeviceVisuals.VisualState, display, appearanceComponent);
-        }
+            ent.Comp.Broken = true;
+            SetAppearance(ent, WashingMachineVisualState.Broken, ent.Comp);
+            StopWashing(ent);
 
-        public bool HasContents(EntityUid uid) // handle w crate
-        {
-            if (TryComp<EntityStorageComponent>(uid, out var comp))
+            if (TryComp<EntityStorageComponent>(ent, out var storeComp))
             {
-                return comp.Contents.ContainedEntities.Any();
-            }
-            else return false;
-        }
-
-        // dunno if we wanna keep explosion shit as is or not, look at later
-
-        /// <summary>
-        /// Explodes the microwave internally, turning it into a broken state, destroying its board, and spitting out its machine parts
-        /// </summary>
-        /// <param name="ent"></param>
-        public void Explode(Entity<MicrowaveComponent> ent)
-        {
-            ent.Comp.Broken = true; // Make broken so we stop processing stuff
-            _explosion.TriggerExplosive(ent);
-            if (TryComp<MachineComponent>(ent, out var machine))
-            {
-                _container.CleanContainer(machine.BoardContainer);
-                _container.EmptyContainer(machine.PartContainer);
+                _container.EmptyContainer(storeComp.Contents);
             }
 
-            _adminLogger.Add(LogType.Action, LogImpact.Medium,
-                $"{ToPrettyString(ent)} exploded from unsafe cooking!");
-        }
-        /// <summary>
-        /// Handles the attempted cooking of unsafe objects
-        /// </summary>
-        /// <remarks>
-        /// Returns false if the microwave didn't explode, true if it exploded.
-        /// </remarks>
-        private void RollMalfunction(Entity<ActiveMicrowaveComponent, MicrowaveComponent> ent)
-        {
-            if (ent.Comp1.MalfunctionTime == TimeSpan.Zero)
-                return;
-
-            if (ent.Comp1.MalfunctionTime > _gameTiming.CurTime)
-                return;
-
-            ent.Comp1.MalfunctionTime = _gameTiming.CurTime + TimeSpan.FromSeconds(ent.Comp2.MalfunctionInterval);
-            if (_random.Prob(ent.Comp2.ExplosionChance))
+            if (TryComp<SolutionContainerManagerComponent>(ent, out var solComp))
             {
-                Explode((ent, ent.Comp2));
-                return;  // microwave is fucked, stop the cooking.
+                _solutionContainer.TryGetSolution(solComp, "tank", out var solution);
+                if (solution != null)
+                {
+                    _puddle.TrySpillAt(Transform(ent).Coordinates, solution, out _);
+                }
             }
-
-            if (_random.Prob(ent.Comp2.LightningChance))
-                _lightning.ShootRandomLightnings(ent, 1.0f, 2, MalfunctionSpark, triggerLightningEvents: false);
         }
+
+        #endregion
+        #region Washing
 
         /// <summary>
         /// Starts Washing
@@ -430,7 +342,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 var ev = new BeingWashedEvent(uid, user);
                 RaiseLocalEvent(item, ev);
 
-                if (_tag.HasTag(item, "Metal")) // OH FUCK, TAGS
+                if (_tag.HasTag(item, "Lint"))
                 {
                     malfunctioning = true;
                 }
@@ -501,6 +413,163 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             UpdateUserInterfaceState(uid, component);
         }
 
+        public override void Update(float frameTime)
+        {
+            base.Update(frameTime);
+
+            var query = EntityQueryEnumerator<ActiveWashingMachineComponent, WashingMachineComponent>();
+            var storeQuery = EntityQueryEnumerator<EntityStorageComponent>();
+
+            while (query.MoveNext(out var uid, out var active, out var washComp))
+            {
+                active.WashTimeRemaining -= frameTime;
+
+                while (storeQuery.MoveNext(out _, out var storeComp))
+                {
+                    RollMalfunction((uid, active, washComp));
+
+                    //check if there's still wash time left
+                    if (active.WashTimeRemaining > 0)
+                    {
+                        AddTemperature(washComp, storeComp, frameTime);
+                        continue;
+                    }
+
+                    //this means the cycle has finished.
+                    AddTemperature(washComp, storeComp, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
+
+                    if (active.PortionedRecipe.Item1 != null) // do crayon recipes
+                    {
+                        var coords = Transform(uid).Coordinates;
+                        for (var i = 0; i < active.PortionedRecipe.Item2; i++)
+                        {
+                            SubtractContents(microwave, active.PortionedRecipe.Item1);
+                            Spawn(active.PortionedRecipe.Item1.Result, coords);
+                            //remove 200u from solution
+                        }
+                    }
+                    _container.EmptyContainer(storeComp.Contents);
+                }
+
+                washComp.CurrentCookTimeEnd = TimeSpan.Zero;
+                _audio.PlayPvs(washComp.CycleDoneSound, uid);
+                StopWashing((uid, washComp));
+            }
+        }
+
+        /// <summary>
+        ///     Adds temperature to every item in the washing machine,
+        ///     based on the time it took to wash.
+        /// </summary>
+        /// <param name="washComp">The washing machine that is heating up.</param>
+        /// <param name="storeComp">The entity storage attached to the washing machine.</param>
+        /// <param name="time">The time on the washing machine, in seconds.</param>
+        private void AddTemperature(WashingMachineComponent washComp, EntityStorageComponent storeComp, float time) //done, but these 2 trycomps get called pretty often
+        {
+            var heatToAdd = time * washComp.BaseHeatMultiplier;
+            foreach (var entity in storeComp.Contents.ContainedEntities)
+            {
+                if (TryComp<TemperatureComponent>(entity, out var tempComp))
+                    _temperature.ChangeHeat(entity, heatToAdd * washComp.ObjectHeatMultiplier, false, tempComp);
+
+                if (!TryComp<SolutionContainerManagerComponent>(entity, out var solutions))
+                    continue;
+                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((entity, solutions)))
+                {
+                    var solution = soln.Comp.Solution;
+                    if (solution.Temperature > washComp.TemperatureUpperThreshold)
+                        continue;
+
+                    _solutionContainer.AddThermalEnergy(soln, heatToAdd);
+                }
+            }
+        }
+
+        #endregion
+        #region Malfunction
+
+        /// <summary>
+        /// Handles the attempted washing of dryer lint
+        /// </summary>
+        /// <remarks>
+        /// Returns false if the washing machine didn't explode, true if it exploded.
+        /// </remarks>
+        private void RollMalfunction(Entity<ActiveWashingMachineComponent, WashingMachineComponent> ent)
+        {
+            if (ent.Comp1.MalfunctionTime == TimeSpan.Zero)
+                return;
+
+            if (ent.Comp1.MalfunctionTime > _gameTiming.CurTime)
+                return;
+
+            ent.Comp1.MalfunctionTime = _gameTiming.CurTime + TimeSpan.FromSeconds(ent.Comp2.MalfunctionInterval);
+            if (_random.Prob(ent.Comp2.ExplosionChance))
+            {
+                Explode((ent, ent.Comp2));
+                return;  // washing machine broke, stop cycle
+            }
+
+            if (_random.Prob(ent.Comp2.SteamChance))
+                _lightning.ShootRandomLightnings(ent, 1.0f, 2, MalfunctionSpark, triggerLightningEvents: false); // needs to be steam
+        }
+
+        /// <summary>
+        /// Explodes the washing machine internally, turning it into a broken state, destroying its board, and spitting out its machine parts
+        /// </summary>
+        /// <param name="ent"></param>
+        public void Explode(Entity<WashingMachineComponent> ent)
+        {
+            ent.Comp.Broken = true; // Make broken so we stop processing stuff
+            _explosion.TriggerExplosive(ent);
+            if (TryComp<MachineComponent>(ent, out var machine))
+            {
+                _container.CleanContainer(machine.BoardContainer);
+                _container.EmptyContainer(machine.PartContainer);
+            }
+
+            _adminLogger.Add(LogType.Action, LogImpact.Medium,
+                $"{ToPrettyString(ent)} exploded from unsafe washing!");
+        }
+
+        #endregion
+        #region Helpers
+
+        public bool HasContents(EntityUid uid)
+        {
+            if (TryComp<EntityStorageComponent>(uid, out var comp))
+            {
+                return comp.Contents.ContainedEntities.Any();
+            }
+            else return false;
+        }
+
+        public void SetAppearance(EntityUid uid, WashingMachineVisualState state, WashingMachineComponent? component = null, AppearanceComponent? appearanceComponent = null)
+        {
+            if (!Resolve(uid, ref component, ref appearanceComponent, false))
+                return;
+            var display = component.Broken ? WashingMachineVisualState.Broken : state;
+            _appearance.SetData(uid, PowerDeviceVisuals.VisualState, display, appearanceComponent);
+        }
+
+        private void OnWashStart(Entity<ActiveWashingMachineComponent> ent, ref ComponentStartup args)
+        {
+            if (!TryComp<WashingMachineComponent>(ent, out var comp))
+                return;
+            SetAppearance(ent.Owner, WashingMachineVisualState.Active, comp);
+
+            comp.PlayingStream =
+                _audio.PlayPvs(comp.LoopingSound, ent, AudioParams.Default.WithLoop(true).WithMaxDistance(5))?.Entity;
+        }
+
+        private void OnWashStop(Entity<ActiveWashingMachineComponent> ent, ref ComponentShutdown args)
+        {
+            if (!TryComp<WashingMachineComponent>(ent, out var comp))
+                return;
+
+            SetAppearance(ent.Owner, WashingMachineVisualState.Idle, comp);
+            comp.PlayingStream = _audio.Stop(comp.PlayingStream);
+        }
+
         private void StopWashing(Entity<WashingMachineComponent> ent)
         {
             RemCompDeferred<ActiveWashingMachineComponent>(ent);
@@ -513,59 +582,13 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
         }
 
-        public override void Update(float frameTime)
+        // Stop items from transforming through constructiongraphs while being washed.
+        // They might be reserved for dyes.
+        private void OnConstructionTemp(Entity<ActivelyWashedComponent> ent, ref OnConstructionTemperatureEvent args)
         {
-            base.Update(frameTime);
-
-            var query = EntityQueryEnumerator<ActiveWashingMachineComponent, WashingMachineComponent>();
-            while (query.MoveNext(out var uid, out var active, out var washingMachine))
-            {
-
-                active.WashTimeRemaining -= frameTime;
-
-                RollMalfunction((uid, active, washingMachine)); //?
-
-                //check if there's still wash time left
-                if (active.WashTimeRemaining > 0)
-                {
-                    AddTemperature(washingMachine, frameTime);
-                    continue;
-                }
-
-                //this means the cycle has finished.
-                AddTemperature(washingMachine, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
-
-                if (active.PortionedRecipe.Item1 != null) // do crayon recipes
-                {
-                    var coords = Transform(uid).Coordinates;
-                    for (var i = 0; i < active.PortionedRecipe.Item2; i++)
-                    {
-                        SubtractContents(microwave, active.PortionedRecipe.Item1);
-                        Spawn(active.PortionedRecipe.Item1.Result, coords);
-                        //remove 200u from solution
-                    }
-                }
-
-                _container.EmptyContainer(washingMachine.Contents);
-                washingMachine.CurrentCookTimeEnd = TimeSpan.Zero;
-                _audio.PlayPvs(washingMachine.CycleDoneSound, uid);
-                StopWashing((uid, washingMachine));
-            }
+            args.Result = HandleResult.False;
         }
 
-        /// <summary>
-        /// This event tries to get secret recipes that the microwave might be capable of.
-        /// Currently, we only check the microwave itself, but in the future, the user might be able to learn recipes.
-        /// </summary>
-        private void OnGetSecretRecipes(Entity<FoodRecipeProviderComponent> ent, ref GetSecretRecipesEvent args)
-        {
-            foreach (ProtoId<FoodRecipePrototype> recipeId in ent.Comp.ProvidedRecipes)
-            {
-                if (_prototype.TryIndex(recipeId, out var recipeProto))
-                {
-                    args.Recipes.Add(recipeProto);
-                }
-            }
-        }
+        #endregion
     }
 }

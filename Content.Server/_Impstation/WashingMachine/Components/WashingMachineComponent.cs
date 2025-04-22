@@ -72,10 +72,6 @@ public sealed partial class WashingMachineComponent : Component
     [DataField("temperatureUpperThreshold")]
     public float TemperatureUpperThreshold = 373.15f;
 
-    public int CurrentCookTimeButtonIndex;
-
-    public Container Contents = default!;
-
     [DataField]
     public string ContainerId = "washingmachine_entity_container";
 
@@ -86,10 +82,21 @@ public sealed partial class WashingMachineComponent : Component
     public ProtoId<ItemSizePrototype> MaxItemSize = "Normal";
 
     /// <summary>
-    /// How frequently the microwave can malfunction.
+    /// How frequently the washing machine can malfunction.
     /// </summary>
     [DataField]
     public float MalfunctionInterval = 1.0f;
+
+    /// <summary>
+    /// Chance of an explosion occurring when we wash dryer lint
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float ExplosionChance = .05f;
+
+    /// <summary>
+    /// Chance of steam occurring when we wash dryer lint
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float SteamChance = .75f;
 }
 
 public sealed class BeingWashedEvent : HandledEntityEventArgs

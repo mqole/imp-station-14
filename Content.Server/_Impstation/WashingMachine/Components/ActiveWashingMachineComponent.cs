@@ -1,4 +1,3 @@
-using Robust.Shared.Containers;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Server._Impstation.WashingMachine.Components;
@@ -19,10 +18,4 @@ public sealed partial class ActiveWashingMachineComponent : Component
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoPausedField]
     public TimeSpan MalfunctionTime = TimeSpan.Zero;
-
-    /// <summary>
-    /// The items being actively washed
-    /// </summary>
-    [ViewVariables]
-    public Container Contents = default!;
 }
