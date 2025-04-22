@@ -54,17 +54,10 @@ public sealed partial class WashingMachineComponent : Component
     public uint CurrentCookTimerTime = 0;
 
     /// <summary>
-    /// Tracks the elapsed time of the current cook timer.
+    /// Tracks the elapsed time of the current wash timer.
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan CurrentCookTimeEnd = TimeSpan.Zero;
-
-    /// <summary>
-    /// The maximum number of seconds a microwave can be set to.
-    /// This is currently only used for validation and the client does not check this.
-    /// </summary>
-    [DataField("maxCookTime"), ViewVariables(VVAccess.ReadWrite)]
-    public uint MaxCookTime = 30;
+    public TimeSpan CurrentWashTimeEnd = TimeSpan.Zero;
 
     /// <summary>
     /// The max temperature that this washing machine can heat objects to.

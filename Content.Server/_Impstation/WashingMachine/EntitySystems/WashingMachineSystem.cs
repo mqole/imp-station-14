@@ -1,54 +1,40 @@
+using Content.Server._Impstation.WashingMachine.Components;
 using Content.Server.Administration.Logs;
-using Content.Server.Body.Systems;
 using Content.Server.Construction;
-using Content.Server.Explosion.EntitySystems;
+using Content.Server.Construction.Components;
 using Content.Server.DeviceLinking.Events;
 using Content.Server.DeviceLinking.Systems;
-using Content.Server.Hands.Systems;
+using Content.Server.Explosion.EntitySystems;
+using Content.Server.Fluids.EntitySystems;
 using Content.Server.Kitchen.Components;
+using Content.Server.Lightning;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Server.Storage.Components;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
-using Content.Shared.Body.Components;
-using Content.Shared.Body.Part;
+using Content.Shared._Impstation.WashingMachine.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Construction.EntitySystems;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.FixedPoint;
-using Content.Shared.Interaction;
-using Content.Shared.Interaction.Events;
-using Robust.Shared.Random;
-using Robust.Shared.Audio;
-using Content.Server.Lightning;
-using Content.Shared.Item;
 using Content.Shared.Kitchen;
 using Content.Shared.Kitchen.Components;
 using Content.Shared.Popups;
 using Content.Shared.Power;
+using Content.Shared.Stacks;
 using Content.Shared.Tag;
-using Robust.Server.GameObjects;
+using Content.Shared.Verbs;
+using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Player;
-using System.Linq;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
-using Content.Shared.Stacks;
-using Content.Server.Construction.Components;
-using Content.Shared.Chat;
-using Content.Shared.Damage;
 using Robust.Shared.Utility;
-
-using Content.Server._Impstation.WashingMachine.Components;
-using Content.Shared._Impstation.WashingMachine.Components;
-using Content.Shared.Storage.Components;
-using Content.Shared.Chemistry.Components;
-using Content.Server.Fluids.EntitySystems;
-using Content.Server.Storage.Components;
-
+using System.Linq;
 
 // The goal here, for mq:
 //
@@ -95,29 +81,24 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
     public sealed class WashingMachineSystem : EntitySystem
     {
-        [Dependency] private readonly BodySystem _bodySystem = default!;
         [Dependency] private readonly DeviceLinkSystem _deviceLink = default!;
-        [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
+        [Dependency] private readonly ExplosionSystem _explosion = default!;
+        [Dependency] private readonly IAdminLogManager _adminLogger = default!;
+        [Dependency] private readonly IGameTiming _gameTiming = default!;
+        [Dependency] private readonly IPrototypeManager _prototype = default!;
+        [Dependency] private readonly IRobustRandom _random = default!;
+        [Dependency] private readonly LightningSystem _lightning = default!;
         [Dependency] private readonly PowerReceiverSystem _power = default!;
+        [Dependency] private readonly PuddleSystem _puddle = default!;
         [Dependency] private readonly RecipeManager _recipeManager = default!;
         [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
         [Dependency] private readonly SharedAudioSystem _audio = default!;
-        [Dependency] private readonly LightningSystem _lightning = default!;
-        [Dependency] private readonly IRobustRandom _random = default!;
-        [Dependency] private readonly IGameTiming _gameTiming = default!;
-        [Dependency] private readonly ExplosionSystem _explosion = default!;
         [Dependency] private readonly SharedContainerSystem _container = default!;
+        [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
         [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
+        [Dependency] private readonly SharedStackSystem _stack = default!;
         [Dependency] private readonly TagSystem _tag = default!;
         [Dependency] private readonly TemperatureSystem _temperature = default!;
-        [Dependency] private readonly UserInterfaceSystem _userInterface = default!;
-        [Dependency] private readonly HandsSystem _handsSystem = default!;
-        [Dependency] private readonly SharedItemSystem _item = default!;
-        [Dependency] private readonly SharedStackSystem _stack = default!;
-        [Dependency] private readonly IPrototypeManager _prototype = default!;
-        [Dependency] private readonly IAdminLogManager _adminLogger = default!;
-        [Dependency] private readonly SharedSuicideSystem _suicide = default!;
-        [Dependency] private readonly PuddleSystem _puddle = default!;
 
         [ValidatePrototypeId<EntityPrototype>]
         private const string MalfunctionSpark = "Spark";
@@ -127,16 +108,14 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             base.Initialize();
 
             SubscribeLocalEvent<WashingMachineComponent, MapInitEvent>(OnMapInit);
-            SubscribeLocalEvent<WashingMachineComponent, InteractUsingEvent>(OnInteractUsing, after: new[] { typeof(AnchorableSystem) });
+            SubscribeLocalEvent<WashingMachineComponent, GetVerbsEvent<ActivationVerb>>(AddWashVerb);
+
             SubscribeLocalEvent<WashingMachineComponent, BreakageEventArgs>(OnBreak);
             SubscribeLocalEvent<WashingMachineComponent, PowerChangedEvent>(OnPowerChanged);
-
             SubscribeLocalEvent<WashingMachineComponent, SignalReceivedEvent>(OnSignalReceived);
 
-            SubscribeLocalEvent<WashingMachineComponent, WashingMachineStartMessage>((u, c, m) => StartWash(u, c, m.Actor));
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentStartup>(OnWashStart);
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentShutdown>(OnWashStop);
-
             SubscribeLocalEvent<ActivelyWashedComponent, OnConstructionTemperatureEvent>(OnConstructionTemp);
 
             SubscribeLocalEvent<FoodRecipeProviderComponent, GetSecretRecipesEvent>(OnGetSecretRecipes);
@@ -227,33 +206,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
         }
 
-        private void OnInteractUsing(Entity<WashingMachineComponent> ent, ref InteractUsingEvent args)
-        {
-            if (args.Handled)
-                return;
-            if (!(TryComp<ApcPowerReceiverComponent>(ent, out var apc) && apc.Powered)) // these 2 args should be moved to trywash or whatever
-            {
-                _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-power"), ent, args.User);
-                return;
-            }
-
-            if (ent.Comp.Broken)
-            {
-                _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-broken"), ent, args.User);
-                return;
-            }
-
-            if (ent.Comp.Storage.Count >= ent.Comp.Capacity)
-            {
-                _popupSystem.PopupEntity(Loc.GetString("microwave-component-interact-full"), ent, args.User);
-                return;
-            }
-
-            args.Handled = true;
-            _handsSystem.TryDropIntoContainer(args.User, args.Used, ent.Comp.Storage);
-            UpdateUserInterfaceState(ent, ent.Comp); // no ui, handle w crate later
-        }
-
         /// <summary>
         /// This event tries to get secret recipes that the microwave might be capable of.
         /// Currently, we only check the microwave itself, but in the future, the user might be able to learn recipes.
@@ -275,6 +227,50 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         private void OnMapInit(Entity<WashingMachineComponent> ent, ref MapInitEvent args)
         {
             _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
+        }
+        private void AddWashVerb(EntityUid uid, WashingMachineComponent comp, GetVerbsEvent<ActivationVerb> args) // if interacting gets annoying, change to alternativeverb
+        {
+            // We need an actor to give the verb.
+            if (!TryComp<ActorComponent>(args.User, out var actor))
+                return;
+
+            // Make sure ghosts can't use verb.
+            if (!args.CanInteract)
+                return;
+
+            var washVerb = new ActivationVerb
+            {
+                Text = Loc.GetString("washing-verb-wash"),
+                Act = () =>
+                {
+                    if (HasComp<ActiveWashingMachineComponent>(uid))
+                    {
+                        _popupSystem.PopupEntity(Loc.GetString("washing-popup-notify-wash-locked"), uid, actor.PlayerSession, PopupType.Large);
+                        return;
+                    }
+
+                    // If either the actor or comp have magically vanished
+                    if (actor.PlayerSession.AttachedEntity == null || !HasComp<WashingMachineComponent>(uid))
+                        return;
+
+                    if (!(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
+                    {
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-power"), uid, args.User);
+                        return;
+                    }
+
+                    if (comp.Broken)
+                    {
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-broken"), uid, args.User);
+                        return;
+                    }
+
+                    StartWash(uid, comp, args.User);
+                },
+                Impact = LogImpact.Low,
+            };
+            washVerb.Impact = LogImpact.Low;
+            args.Verbs.Add(washVerb);
         }
 
         private void OnPowerChanged(Entity<WashingMachineComponent> ent, ref PowerChangedEvent args) //done
@@ -417,43 +413,38 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         {
             base.Update(frameTime);
 
-            var query = EntityQueryEnumerator<ActiveWashingMachineComponent, WashingMachineComponent>();
-            var storeQuery = EntityQueryEnumerator<EntityStorageComponent>();
+            var query = EntityQueryEnumerator<ActiveWashingMachineComponent, WashingMachineComponent, EntityStorageComponent>();
 
-            while (query.MoveNext(out var uid, out var active, out var washComp))
+            while (query.MoveNext(out var uid, out var active, out var wash, out var storage)) //so this wont trigger if someone manually makes something a washing machine without also giving it entitystorage. if they try to wash them, then im pretty sure they'll be stuck making washing noises forever. things to consider.
             {
                 active.WashTimeRemaining -= frameTime;
+                RollMalfunction((uid, active, wash));
 
-                while (storeQuery.MoveNext(out _, out var storeComp))
+                //check if there's still wash time left
+                if (active.WashTimeRemaining > 0)
                 {
-                    RollMalfunction((uid, active, washComp));
-
-                    //check if there's still wash time left
-                    if (active.WashTimeRemaining > 0)
-                    {
-                        AddTemperature(washComp, storeComp, frameTime);
-                        continue;
-                    }
-
-                    //this means the cycle has finished.
-                    AddTemperature(washComp, storeComp, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
-
-                    if (active.PortionedRecipe.Item1 != null) // do crayon recipes
-                    {
-                        var coords = Transform(uid).Coordinates;
-                        for (var i = 0; i < active.PortionedRecipe.Item2; i++)
-                        {
-                            SubtractContents(microwave, active.PortionedRecipe.Item1);
-                            Spawn(active.PortionedRecipe.Item1.Result, coords);
-                            //remove 200u from solution
-                        }
-                    }
-                    _container.EmptyContainer(storeComp.Contents);
+                    AddTemperature(wash, storage, frameTime);
+                    continue;
                 }
 
-                washComp.CurrentCookTimeEnd = TimeSpan.Zero;
-                _audio.PlayPvs(washComp.CycleDoneSound, uid);
-                StopWashing((uid, washComp));
+                //this means the cycle has finished.
+                AddTemperature(wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
+
+                if (active.PortionedRecipe.Item1 != null) // do crayon recipes
+                {
+                    var coords = Transform(uid).Coordinates;
+                    for (var i = 0; i < active.PortionedRecipe.Item2; i++)
+                    {
+                        SubtractContents(microwave, active.PortionedRecipe.Item1);
+                        Spawn(active.PortionedRecipe.Item1.Result, coords);
+                        //remove 200u from solution
+                    }
+                }
+
+                _container.EmptyContainer(storage.Contents);
+                wash.CurrentWashTimeEnd = TimeSpan.Zero;
+                _audio.PlayPvs(wash.CycleDoneSound, uid);
+                StopWashing((uid, wash));
             }
         }
 
@@ -520,7 +511,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         public void Explode(Entity<WashingMachineComponent> ent)
         {
             ent.Comp.Broken = true; // Make broken so we stop processing stuff
-            _explosion.TriggerExplosive(ent);
+            _explosion.TriggerExplosive(ent); // are microwaves explosive???
             if (TryComp<MachineComponent>(ent, out var machine))
             {
                 _container.CleanContainer(machine.BoardContainer);
