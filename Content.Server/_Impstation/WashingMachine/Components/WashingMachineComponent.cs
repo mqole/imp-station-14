@@ -46,12 +46,10 @@ public sealed partial class WashingMachineComponent : Component
     public ProtoId<SinkPortPrototype> OnPort = "On";
 
     /// <summary>
-    /// This is a fixed offset of 5.
-    /// The cook times for all recipes should be divisible by 5,with a minimum of 1 second.
-    /// For right now, I don't think any recipe cook time should be greater than 60 seconds.
+    /// How long a single cycle lasts, in seconds.
     /// </summary>
-    [DataField("currentCookTimerTime"), ViewVariables(VVAccess.ReadWrite)]
-    public uint CurrentCookTimerTime = 0;
+    [DataField("washTimerRime"), ViewVariables(VVAccess.ReadWrite)]
+    public uint WashTimerTime = 5;
 
     /// <summary>
     /// Tracks the elapsed time of the current wash timer.

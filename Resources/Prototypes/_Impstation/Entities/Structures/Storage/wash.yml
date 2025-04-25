@@ -50,3 +50,28 @@
   - type: Physics
     bodyType: Static
   - type: WashingMachine
+
+- type: entity
+  parent: ClothingUniformBase
+  id: WashingLintTest
+  name: DRYER LINT
+  description: FOR TESTING REASONS!
+  components:
+  - type: Sprite
+    sprite: _Impstation/Clothing/Uniforms/Jumpsuit/spacecadet.rsi
+    layers:
+    - state: icon
+  - type: Item
+    inhandVisuals:
+      left:
+      - state: inhand-left
+      right:
+      - state: inhand-right
+  - type: Clothing
+    sprite: _Impstation/Clothing/Uniforms/Jumpsuit/spacecadet.rsi
+    clothingVisuals:
+      jumpsuit:
+      - state: equipped-INNERCLOTHING
+  - type: Tag
+    tags:
+    - Lint

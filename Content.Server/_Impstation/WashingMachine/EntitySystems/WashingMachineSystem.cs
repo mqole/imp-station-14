@@ -2,7 +2,6 @@ using Content.Server._Impstation.WashingMachine.Components;
 using Content.Server.Administration.Logs;
 using Content.Server.Construction;
 using Content.Server.Construction.Components;
-using Content.Server.DeviceLinking.Events;
 using Content.Server.DeviceLinking.Systems;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
@@ -18,6 +17,7 @@ using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
+using Content.Shared.DeviceLinking.Events;
 using Content.Shared.FixedPoint;
 using Content.Shared.Kitchen;
 using Content.Shared.Kitchen.Components;
@@ -117,8 +117,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentStartup>(OnWashStart);
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentShutdown>(OnWashStop);
             SubscribeLocalEvent<ActivelyWashedComponent, OnConstructionTemperatureEvent>(OnConstructionTemp);
-
-            SubscribeLocalEvent<FoodRecipeProviderComponent, GetSecretRecipesEvent>(OnGetSecretRecipes);
         }
 
         #region TODO
@@ -202,21 +200,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                             break;
                         }
                     }
-                }
-            }
-        }
-
-        /// <summary>
-        /// This event tries to get secret recipes that the microwave might be capable of.
-        /// Currently, we only check the microwave itself, but in the future, the user might be able to learn recipes.
-        /// </summary>
-        private void OnGetSecretRecipes(Entity<FoodRecipeProviderComponent> ent, ref GetSecretRecipesEvent args)
-        {
-            foreach (ProtoId<FoodRecipePrototype> recipeId in ent.Comp.ProvidedRecipes)
-            {
-                if (_prototype.TryIndex(recipeId, out var recipeProto))
-                {
-                    args.Recipes.Add(recipeProto);
                 }
             }
         }
@@ -325,13 +308,11 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// </remarks>
         public void StartWash(EntityUid uid, WashingMachineComponent component, EntityUid? user)
         {
-            if (!HasContents(uid) || HasComp<ActiveWashingMachineComponent>(uid) || !(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
+            if (HasComp<ActiveWashingMachineComponent>(uid) || !(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
                 return;
 
-            var solidsDict = new Dictionary<string, int>(); // yeah later issue for me
-            var reagentDict = new Dictionary<string, FixedPoint2>();
             var malfunctioning = false;
-            // TODO use lists of Reagent quantities instead of reagent prototype ids.
+
             EnsureComp<EntityStorageComponent>(uid, out var storeComp); // if we got this far we should already have the thing
             foreach (var item in storeComp.Contents.ContainedEntities.ToArray())
             {
@@ -343,70 +324,24 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                     malfunctioning = true;
                 }
 
-                if (_tag.HasTag(item, "Plastic"))
-                {
-                    var junk = Spawn(component.BadRecipeEntityId, Transform(uid).Coordinates);
-                    _container.Insert(junk, component.Storage);
-                    Del(item);
-                    continue;
-                }
+                // if it has a body, make it take a lil damage
 
                 var activeWashedComp = AddComp<ActivelyWashedComponent>(item);
                 activeWashedComp.WashingMachine = uid;
 
-                string? solidID = null;
-                int amountToAdd = 1;
-
-                // If a microwave recipe uses a stacked item, use the default stack prototype id instead of prototype id
-                if (TryComp<StackComponent>(item, out var stackComp))
-                {
-                    solidID = _prototype.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
-                    amountToAdd = stackComp.Count;
-                }
-                else
-                {
-                    var metaData = MetaData(item); //this simply begs for cooking refactor
-                    if (metaData.EntityPrototype is not null)
-                        solidID = metaData.EntityPrototype.ID;
-                }
-
-                if (solidID is null)
-                    continue;
-
-                if (!solidsDict.TryAdd(solidID, amountToAdd))
-                    solidsDict[solidID] += amountToAdd;
-
-                // only use reagents we have access to
-                // you have to break the eggs before we can use them!
-                if (!_solutionContainer.TryGetDrainableSolution(item, out var _, out var solution))
-                    continue;
-
-                foreach (var (reagent, quantity) in solution.Contents)
-                {
-                    if (!reagentDict.TryAdd(reagent.Prototype, quantity))
-                        reagentDict[reagent.Prototype] += quantity;
-                }
+                // recipe shit goes here probably
             }
 
             // Check recipes
-            var getRecipesEv = new GetSecretRecipesEvent();
-            RaiseLocalEvent(uid, ref getRecipesEv);
 
-            List<FoodRecipePrototype> recipes = getRecipesEv.Recipes;
-            recipes.AddRange(_recipeManager.Recipes);
-            var portionedRecipe = recipes.Select(r =>
-                CanSatisfyRecipe(component, r, solidsDict, reagentDict)).FirstOrDefault(r => r.Item2 > 0);
-
-            _audio.PlayPvs(component.StartCookingSound, uid);
-            var activeComp = AddComp<ActiveMicrowaveComponent>(uid); //microwave is now cooking
-            activeComp.CookTimeRemaining = component.CurrentCookTimerTime * component.CookTimeMultiplier;
-            activeComp.TotalTime = component.CurrentCookTimerTime; //this doesn't scale so that we can have the "actual" time
-            activeComp.PortionedRecipe = portionedRecipe;
-            //Scale tiems with cook times
-            component.CurrentCookTimeEnd = _gameTiming.CurTime + TimeSpan.FromSeconds(component.CurrentCookTimerTime * component.CookTimeMultiplier);
+            _audio.PlayPvs(component.StartWashingSound, uid);
+            var activeComp = AddComp<ActiveWashingMachineComponent>(uid); // washing machine is go!
+            activeComp.WashTimeRemaining = component.WashTimerTime * component.WashTimeMultiplier;
+            activeComp.TotalTime = component.WashTimerTime; //this doesn't scale so that we can have the "actual" time
+            // Maybe this works maybe this doesnt idk.
+            component.CurrentWashTimeEnd = _gameTiming.CurTime + TimeSpan.FromSeconds(component.WashTimerTime * component.WashTimeMultiplier);
             if (malfunctioning)
                 activeComp.MalfunctionTime = _gameTiming.CurTime + TimeSpan.FromSeconds(component.MalfunctionInterval);
-            UpdateUserInterfaceState(uid, component);
         }
 
         public override void Update(float frameTime)
@@ -430,21 +365,12 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 //this means the cycle has finished.
                 AddTemperature(wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
 
-                if (active.PortionedRecipe.Item1 != null) // do crayon recipes
-                {
-                    var coords = Transform(uid).Coordinates;
-                    for (var i = 0; i < active.PortionedRecipe.Item2; i++)
-                    {
-                        SubtractContents(microwave, active.PortionedRecipe.Item1);
-                        Spawn(active.PortionedRecipe.Item1.Result, coords);
-                        //remove 200u from solution
-                    }
-                }
+                // this is where recipes and removing solution need to happen
 
+                StopWashing((uid, wash));
                 _container.EmptyContainer(storage.Contents);
                 wash.CurrentWashTimeEnd = TimeSpan.Zero;
                 _audio.PlayPvs(wash.CycleDoneSound, uid);
-                StopWashing((uid, wash));
             }
         }
 
