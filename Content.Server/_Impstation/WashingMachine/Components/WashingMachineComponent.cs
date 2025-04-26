@@ -49,7 +49,7 @@ public sealed partial class WashingMachineComponent : Component
     /// How long a single cycle lasts, in seconds.
     /// </summary>
     [DataField("washTimerRime"), ViewVariables(VVAccess.ReadWrite)]
-    public uint WashTimerTime = 5;
+    public uint WashTimerTime = 10;
 
     /// <summary>
     /// Tracks the elapsed time of the current wash timer.
@@ -88,6 +88,12 @@ public sealed partial class WashingMachineComponent : Component
     /// Chance of steam occurring when we wash dryer lint
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float SteamChance = .75f;
+
+    [DataField("baseSteamOutput"), ViewVariables(VVAccess.ReadWrite)]
+    public float BaseSteamOutput = .01f;
+
+    [DataField("malfunctionSteamMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float MalfunctionSteamMultiplier = 1000;
 }
 
 public sealed class BeingWashedEvent : HandledEntityEventArgs

@@ -20,7 +20,6 @@ using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking.Events;
 using Content.Shared.FixedPoint;
 using Content.Shared.Kitchen;
-using Content.Shared.Kitchen.Components;
 using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Stacks;
@@ -35,47 +34,9 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
-
-// The goal here, for mq:
-//
-// WASHING MACHINE
-// - is a crate you can put literally anything in
-// - on activate, locks the open function and washes things in it
-//      crayons dye 'dyeable' entities
-//      maybe it also converts some entities into other entities
-// what happens to a player in the washing machine? well they get fucking washed.
-//      heat damage? blunt damage? not enough to ash paper. but a BIT
-//      emag: it does More Damage Lots
-// probably spawns a little vapor at the end (maybe adds heat? idk man)
-//
-// microwaves need water & power to function.
-//      a certain amount of water will be used up by the microwave.
-// soap, bleach, space cleaner... anything with a dyeremover component, maybe? can remove colours from entities.
-// washing something will remove dna and fingerprints, and add 'lint' fibers
-//
-// no ui. if i end up stabbing myself in the foot with this one, so be it.
-//
-// GAMEPLAY GOALS
-// - dyeing shit, obviously
-// - putting nukies in the tumble dryer
-// - hiding place for sneakthieves
-// - "why is this air alarm going off" "someone left the dryer on"
-// - washing machine microwavable egg
-//
-// CHECKLIST
-// [] WashingMachineComponent
-// [] ActiveWashingMachineComponent
-// [X] ActivelyWashedComponent
-// [] WashingMachineSystem
-// [X] SharedWashingMachine
-// [] DyeableComponent
-// [] DyeRemover tag
-// [] 'Dizzy' status effect
-// [] YAML edits
-//
-// NOTES ON HOW CRATES WORK
-//
-// crate == uid.EntityStorage.Contents
+using Content.Server.Atmos.EntitySystems;
+using Content.Shared.Atmos;
+using Content.Shared.Storage.Components;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
@@ -99,6 +60,8 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         [Dependency] private readonly SharedStackSystem _stack = default!;
         [Dependency] private readonly TagSystem _tag = default!;
         [Dependency] private readonly TemperatureSystem _temperature = default!;
+        [Dependency] private readonly AtmosphereSystem _atmos = default!;
+
 
         [ValidatePrototypeId<EntityPrototype>]
         private const string MalfunctionSpark = "Spark";
@@ -248,6 +211,12 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                         return;
                     }
 
+                    if (TryComp<EntityStorageComponent>(uid, out var storage) && storage.Open)
+                    {
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-open"), uid, args.User);
+                        return;
+                    }
+
                     StartWash(uid, comp, args.User);
                 },
                 Impact = LogImpact.Low,
@@ -314,6 +283,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             var malfunctioning = false;
 
             EnsureComp<EntityStorageComponent>(uid, out var storeComp); // if we got this far we should already have the thing
+            storeComp.Openable = false;
             foreach (var item in storeComp.Contents.ContainedEntities.ToArray())
             {
                 var ev = new BeingWashedEvent(uid, user);
@@ -353,12 +323,15 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             while (query.MoveNext(out var uid, out var active, out var wash, out var storage)) //so this wont trigger if someone manually makes something a washing machine without also giving it entitystorage. if they try to wash them, then im pretty sure they'll be stuck making washing noises forever. things to consider.
             {
                 active.WashTimeRemaining -= frameTime;
-                RollMalfunction((uid, active, wash));
+                var tileMix = _atmos.GetTileMixture(uid, excite: true);
+
+                RollMalfunction((uid, active, wash), tileMix);
 
                 //check if there's still wash time left
                 if (active.WashTimeRemaining > 0)
                 {
                     AddTemperature(wash, storage, frameTime);
+                    tileMix?.AdjustMoles(Gas.WaterVapor, wash.BaseSteamOutput);
                     continue;
                 }
 
@@ -368,6 +341,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 // this is where recipes and removing solution need to happen
 
                 StopWashing((uid, wash));
+                storage.Openable = true;
                 _container.EmptyContainer(storage.Contents);
                 wash.CurrentWashTimeEnd = TimeSpan.Zero;
                 _audio.PlayPvs(wash.CycleDoneSound, uid);
@@ -411,7 +385,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// <remarks>
         /// Returns false if the washing machine didn't explode, true if it exploded.
         /// </remarks>
-        private void RollMalfunction(Entity<ActiveWashingMachineComponent, WashingMachineComponent> ent)
+        private void RollMalfunction(Entity<ActiveWashingMachineComponent, WashingMachineComponent> ent, GasMixture? tileMix)
         {
             if (ent.Comp1.MalfunctionTime == TimeSpan.Zero)
                 return;
@@ -427,7 +401,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
 
             if (_random.Prob(ent.Comp2.SteamChance))
-                _lightning.ShootRandomLightnings(ent, 1.0f, 2, MalfunctionSpark, triggerLightningEvents: false); // needs to be steam
+            {
+                tileMix?.AdjustMoles(Gas.WaterVapor, ent.Comp2.BaseSteamOutput * ent.Comp2.MalfunctionSteamMultiplier);
+            }
         }
 
         /// <summary>
