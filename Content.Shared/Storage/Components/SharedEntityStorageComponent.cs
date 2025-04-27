@@ -146,6 +146,7 @@ public sealed class EntityStorageComponentState : ComponentState
     // imp openable bool
     public bool Openable;
 
+    // imp: add openable
     public EntityStorageComponentState(bool open, int capacity, bool isCollidableWhenOpen, bool openOnMove, float enteringRange, TimeSpan nextInternalOpenAttempt, bool openable)
     {
         Open = open;
@@ -154,7 +155,7 @@ public sealed class EntityStorageComponentState : ComponentState
         OpenOnMove = openOnMove;
         EnteringRange = enteringRange;
         NextInternalOpenAttempt = nextInternalOpenAttempt;
-        Openable = openable;
+        Openable = openable; // imp
     }
 }
 
