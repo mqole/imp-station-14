@@ -75,3 +75,59 @@
   - type: Tag
     tags:
     - Lint
+
+- type: entity
+  parent: ClothingUniformBase
+  id: WashingWhiteUniformTest
+  name: WHITE UNIFORM
+  description: FOR TESTING REASONS!
+  components:
+  - type: Sprite
+    sprite: _Impstation/Clothing/Uniforms/Jumpsuit/spacecadet.rsi
+    layers:
+    - state: icon
+  - type: Item
+    inhandVisuals:
+      left:
+      - state: inhand-left
+      right:
+      - state: inhand-right
+  - type: Clothing
+    sprite: _Impstation/Clothing/Uniforms/Jumpsuit/spacecadet.rsi
+    clothingVisuals:
+      jumpsuit:
+      - state: equipped-INNERCLOTHING
+  - type: Dyeable
+    recipes:
+      rainbow: WashingRainbowUniformTest
+
+- type: entity
+  parent: Crayon
+  id: WashingCrayonTest
+  name: RED CRAYON DYE
+  description: FOR TESTING REASONS!
+  components:
+  - type: Sprite
+    state: red
+  - type: Item
+    heldPrefix: red
+  - type: Crayon
+    color: red
+  - type: Tag
+    tags:
+    - Write
+    - Crayon
+    - CrayonRed
+    - Recyclable
+    - Trash
+
+- type: entity
+  parent: [ ClothingUniformBase, ClothingUniformFoldableBase ]
+  id: WashingRainbowUniformTest
+  name: RAINBOW UNIFORM
+  description: FOR TESTING REASONS!
+  components:
+  - type: Sprite
+    sprite: Clothing/Uniforms/Jumpsuit/rainbow.rsi
+  - type: Clothing
+    sprite: Clothing/Uniforms/Jumpsuit/rainbow.rsi

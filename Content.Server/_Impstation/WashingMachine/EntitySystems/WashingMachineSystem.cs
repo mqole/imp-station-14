@@ -225,7 +225,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             args.Verbs.Add(washVerb);
         }
 
-        private void OnPowerChanged(Entity<WashingMachineComponent> ent, ref PowerChangedEvent args) //done
+        private void OnPowerChanged(Entity<WashingMachineComponent> ent, ref PowerChangedEvent args)
         {
             if (!args.Powered)
             {
@@ -338,7 +338,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 //this means the cycle has finished.
                 AddTemperature(wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
 
-                // this is where recipes and removing solution need to happen
+                DoRecipes(uid, wash, storage);
 
                 StopWashing((uid, wash));
                 storage.Openable = true;
@@ -374,6 +374,47 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                     _solutionContainer.AddThermalEnergy(soln, heatToAdd);
                 }
             }
+        }
+
+        #endregion
+        #region Recipe Shit
+
+        /// <summary>
+        /// Crayon + Dyeable item = profit
+        /// </summary>
+        private void DoRecipes(EntityUid uid, WashingMachineComponent wash, EntityStorageComponent store)
+        {
+            // need to handle if has 1 item dyeable AND 1 item dye, OR 1 item dyed AND 1 item cleaner
+            // how tf... i hate code logic...
+            // the fact that microwave version of this calls it spaghetti does NOT reassure me.
+            var contents = new List<EntityUid>(store.Contents.ContainedEntities);
+
+            // i guess im learning how dictionaries work
+
+            // THE DYEING PART
+            foreach (var item in contents)
+            {
+                if (TryComp<DyeableComponent>(item, out var dyeable))
+                {
+                    // check for unique recipes first
+                    // DELETE THE CRAYON SO WE DONT ADD A LAYER!
+
+                    // run the colour conversion to turn crayon dye into colour
+                    // add new key layer to entity with that colour
+                    // add component 'dyed' and register the original prototype, if it doesnt exist already
+                    // delete the crayon
+
+                    // what if we have TWO crayon.
+                    // adjust transparency of each key layer?
+                    // adjust existing key layer?
+                    // how are we handling dyeing something that's already been dyed?
+                }
+            }
+
+            // THE CLEANING PART
+            // we handle this second bc if you put bleach in the washing machine as well as a red crayon it makes no sense to get a dyed thing out.
+
+            // make a fallback in case theorem gets 'dyed' added to himself and tries to undye
         }
 
         #endregion
