@@ -37,6 +37,8 @@ using System.Linq;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Storage.Components;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Content.Server.Crayon;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
@@ -384,36 +386,70 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// </summary>
         private void DoRecipes(EntityUid uid, WashingMachineComponent wash, EntityStorageComponent store)
         {
-            // need to handle if has 1 item dyeable AND 1 item dye, OR 1 item dyed AND 1 item cleaner
-            // how tf... i hate code logic...
-            // the fact that microwave version of this calls it spaghetti does NOT reassure me.
             var contents = new List<EntityUid>(store.Contents.ContainedEntities);
+            var recipeContents = new Dictionary<EntityUid, Component>();
 
-            // i guess im learning how dictionaries work
+            // thui-wa in hell
+            bool containsDye = false;
+            bool containsDyeable = false;
+            bool containsCleaner = false;
+            bool containsDyed = false;
 
-            // THE DYEING PART
             foreach (var item in contents)
             {
+                if (TryComp<CrayonComponent>(item, out var dye))
+                {
+                    if (!recipeContents.TryAdd(item, dye))
+                        recipeContents[item] = dye;
+                    containsDyeable = true;
+                }
                 if (TryComp<DyeableComponent>(item, out var dyeable))
                 {
-                    // check for unique recipes first
-                    // DELETE THE CRAYON SO WE DONT ADD A LAYER!
-
-                    // run the colour conversion to turn crayon dye into colour
-                    // add new key layer to entity with that colour
-                    // add component 'dyed' and register the original prototype, if it doesnt exist already
-                    // delete the crayon
-
-                    // what if we have TWO crayon.
-                    // adjust transparency of each key layer?
-                    // adjust existing key layer?
-                    // how are we handling dyeing something that's already been dyed?
+                    if (!recipeContents.TryAdd(item, dyeable))
+                        recipeContents[item] = dyeable;
+                    containsDyeable = true;
                 }
+                if (TryComp<DyeCleanerComponent>(item, out var cleaner))
+                {
+                    if (!recipeContents.TryAdd(item, cleaner))
+                        recipeContents[item] = cleaner;
+                    containsCleaner = true;
+                }
+                if (TryComp<DyedComponent>(item, out var dyed))
+                {
+                    if (!recipeContents.TryAdd(item, dyed))
+                        recipeContents[item] = dyed;
+                    containsDyed = true;
+                }
+            }
+
+            // THE DYEING PART
+            if (containsDye && containsDyeable && !containsCleaner)
+            {
+                // check for unique recipes first
+                // DELETE THE CRAYON SO WE DONT ADD A LAYER!
+                foreach (var item in recipeContents)
+                {
+                    // fuckin idk
+                }
+
+                // run the colour conversion to turn crayon dye into colour
+                // add new key layer to entity with that colour
+                // add component 'dyed' and register the original prototype, if it doesnt exist already
+                // delete the crayon
+
+                // what if we have TWO crayon.
+                // adjust transparency of each key layer?
+                // adjust existing key layer?
+                // how are we handling dyeing something that's already been dyed?
             }
 
             // THE CLEANING PART
             // we handle this second bc if you put bleach in the washing machine as well as a red crayon it makes no sense to get a dyed thing out.
 
+            if (containsCleaner && containsDyed)
+            {
+            }
             // make a fallback in case theorem gets 'dyed' added to himself and tries to undye
         }
 
