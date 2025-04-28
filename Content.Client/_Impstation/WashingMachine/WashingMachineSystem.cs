@@ -45,13 +45,12 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
     {
         if (!Resolve(uid, ref sprite, false))
             return;
-
         foreach (var layer in sprite.AllLayers)
         {
             int index;
             if (!sprite.LayerMapTryGet(layer, out index))
             {
-                return;
+                continue;
             }
             sprite.LayerSetColor(index, component.CurrentColor);
         }

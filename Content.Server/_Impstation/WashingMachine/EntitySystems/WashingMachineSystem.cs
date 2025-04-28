@@ -479,8 +479,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
         private Color MixColors(List<Entity<DyeComponent>> contents, int count)
         {
-            // basic subtractive colour mixing
-            // robust has the power to multiply colours but not divide, so we do some dumb maths
             float r = 0;
             float g = 0;
             float b = 0;
@@ -490,19 +488,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             {
                 if (!Color.TryFromName(dye.Comp.Color, out var color))
                     color = Color.Transparent;
-                if (!i)
-                {
-                    r = color.R;
-                    g = color.G;
-                    b = color.B;
-                    i = true;
-                }
-                else
-                {
-                    r *= color.R;
-                    g *= color.G;
-                    b *= color.B;
-                }
+                r += color.R;
+                g += color.G;
+                b += color.B;
             }
             r /= count;
             g /= count;
