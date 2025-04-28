@@ -47,12 +47,7 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
             return;
         foreach (var layer in sprite.AllLayers)
         {
-            int index;
-            if (!sprite.LayerMapTryGet(layer, out index))
-            {
-                continue;
-            }
-            sprite.LayerSetColor(index, component.CurrentColor);
+            layer.Color = component.CurrentColor;
         }
     }
 }

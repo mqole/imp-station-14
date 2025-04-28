@@ -479,23 +479,21 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
         private Color MixColors(List<Entity<DyeComponent>> contents, int count)
         {
-            float r = 0;
-            float g = 0;
-            float b = 0;
-
-            var i = false;
+            Vector4 hsl = new(0, 0, 0, 255);
+            Vector4 outColor;
             foreach (var dye in contents)
             {
                 if (!Color.TryFromName(dye.Comp.Color, out var color))
                     color = Color.Transparent;
-                r += color.R;
-                g += color.G;
-                b += color.B;
+                outColor = Color.ToHsl(color);
+                hsl.X += outColor.X;
+                hsl.Y += outColor.Y;
+                hsl.Z += outColor.Z;
             }
-            r /= count;
-            g /= count;
-            b /= count;
-            return (r, g, b, 255);
+            hsl.X /= count;
+            hsl.Y /= count;
+            hsl.Z /= count;
+            return Color.FromHsl(hsl);
         }
         private void OnGetState(EntityUid uid, DyeableComponent component, ref ComponentGetState args)
         {
