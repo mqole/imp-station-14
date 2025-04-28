@@ -14,7 +14,3 @@ public sealed partial class DyeableComponent : Component
     [DataField]
     public bool AcceptAnyColor = true;
 }
-
-// some sorta system to convert recipe string into colour
-// make rainbow a random colour, have null return transparent(or just null lol)
-// idk man

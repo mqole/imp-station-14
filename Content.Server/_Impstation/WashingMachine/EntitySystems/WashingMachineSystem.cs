@@ -36,7 +36,6 @@ using Robust.Shared.Utility;
 using System.Linq;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
-using Content.Server.Crayon;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
@@ -379,12 +378,16 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         #region Recipe Shit
 
         /// <summary>
-        /// Crayon + Dyeable item = profit
+        /// Dye + Dyeable item = profit
         /// </summary>
         private void DoRecipes(EntityUid uid, WashingMachineComponent wash, EntityStorageComponent store)
         {
             var contents = new List<EntityUid>(store.Contents.ContainedEntities);
-            var recipeContents = new Dictionary<EntityUid, Component>();
+
+            var dyeContents = new List<Entity<DyeComponent>>();
+            var dyeableContents = new List<Entity<DyeableComponent>>();
+            var cleanerContents = new List<Entity<DyeCleanerComponent>>();
+            var dyedContents = new List<Entity<DyedComponent>>();
 
             // thui-wa in hell
             bool containsDye = false;
@@ -394,28 +397,24 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
             foreach (var item in contents)
             {
-                if (TryComp<CrayonComponent>(item, out var dye))
+                if (TryComp<DyeComponent>(item, out var dye))
                 {
-                    if (!recipeContents.TryAdd(item, dye))
-                        recipeContents[item] = dye;
+                    dyeContents.Add((item, dye));
                     containsDyeable = true;
                 }
                 if (TryComp<DyeableComponent>(item, out var dyeable))
                 {
-                    if (!recipeContents.TryAdd(item, dyeable))
-                        recipeContents[item] = dyeable;
+                    dyeableContents.Add((item, dyeable));
                     containsDyeable = true;
                 }
                 if (TryComp<DyeCleanerComponent>(item, out var cleaner))
                 {
-                    if (!recipeContents.TryAdd(item, cleaner))
-                        recipeContents[item] = cleaner;
+                    cleanerContents.Add((item, cleaner));
                     containsCleaner = true;
                 }
                 if (TryComp<DyedComponent>(item, out var dyed))
                 {
-                    if (!recipeContents.TryAdd(item, dyed))
-                        recipeContents[item] = dyed;
+                    dyedContents.Add((item, dyed));
                     containsDyed = true;
                 }
             }
@@ -423,49 +422,46 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             // THE DYEING PART
             if (containsDye && containsDyeable && !containsCleaner)
             {
-                var uniqueRecipe = false;
-                foreach (var dyeableItem in recipeContents)
+                foreach (var dyeableItem in dyeableContents)
                 {
-                    if (TryComp<DyeableComponent>(dyeableItem.Key, out var dyeable)) // theres gotta be a way to check value instead
+                    var uniqueRecipe = false;
+                    // check for unique recipes first
+                    foreach (var (colorname, ent) in dyeableItem.Comp.Recipes)
                     {
-                        // check for unique recipes first
-                        foreach (var colorname in dyeable.Recipes.Keys)
+                        if (uniqueRecipe)
+                            break;
+                        foreach (var dyeItem in dyeContents)
                         {
-                            if (uniqueRecipe)
-                                break;
-                            Color recipeColor = Color.FromName(colorname);// fuuuck this wont fucking work for rainbow!!! it needs to be a string!!! FUCK!!
-
-                            foreach (var dyeItem in recipeContents)
+                            if (dyeItem.Comp.Color == colorname)
                             {
-                                if (TryComp<CrayonComponent>(dyeItem.Key, out var dye)) // just kill me now
-                                {
-                                    if (dye.Color == recipeColor)
-                                    {
-                                        _container.Remove(dyeableItem.Key, store.Contents);
-                                        Del(dyeableItem.Key);
-                                        Spawn(dyeable.Recipes[colorname], Transform(uid).Coordinates);
-                                        uniqueRecipe = true;
-                                        break;
-                                    }
-                                }
+                                _container.Remove(dyeableItem.Owner, store.Contents);
+                                Del(dyeableItem.Owner);
+                                Spawn(dyeableItem.Comp.Recipes[colorname], Transform(uid).Coordinates);
+                                uniqueRecipe = true;
+                                break;
                             }
                         }
-                        // not dying something that's been hit by unique recipe beam
-                        if (!uniqueRecipe)
-                            if (dyeable.AcceptAnyColor)
-                            {
-                                var crayonTally = 0;
-                                foreach (var dyeItem in recipeContents)
-                                    if (TryComp<CrayonComponent>(dyeItem.Key, out var dye))
-                                        crayonTally += 1;
-
-                                if (crayonTally > 1)
-                                    MixColors(recipeContents, crayonTally)
-                                // run the colour conversion to turn crayon dye into colour
-                                // add new key layer to entity with that colour
-                                // add component 'dyed' and register the original prototype, if it doesnt exist already
-                            }
                     }
+                    // not dying something that's been hit by unique recipe beam
+                    if (!uniqueRecipe)
+                        if (dyeableItem.Comp.AcceptAnyColor)
+                        {
+                            var colorString = "";
+                            var dyeTally = 0;
+                            foreach (var dyeItem in dyeContents)
+                            {
+                                colorString = dyeItem.Comp.Color;
+                                dyeTally += 1;
+                            }
+                            if (!Color.TryFromName(colorString, out var color))
+                                color = Color.Transparent;
+                            if (dyeTally > 1)
+                                color = MixColors(dyeContents, dyeTally);
+
+                            // add new key layer to entity with that colour
+
+                            // add component 'dyed' and register the original prototype, if it doesnt exist already
+                        }
                 }
             }
 
@@ -478,9 +474,37 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             // make a fallback in case theorem gets 'dyed' added to himself and tries to undye
         }
 
-        private void MixColors(Dictionary<EntityUid, Component> contents, int count)
+        private Color MixColors(List<Entity<DyeComponent>> contents, int count)
         {
+            // basic subtractive colour mixing
+            // robust has the power to multiply colours but not divide, so we do some dumb maths
+            float r = 0;
+            float g = 0;
+            float b = 0;
 
+            var i = false;
+            foreach (var dye in contents)
+            {
+                if (!Color.TryFromName(dye.Comp.Color, out var color))
+                    color = Color.Transparent;
+                if (!i)
+                {
+                    r = color.R;
+                    g = color.G;
+                    b = color.B;
+                    i = true;
+                }
+                else
+                {
+                    r *= color.R;
+                    g *= color.G;
+                    b *= color.B;
+                }
+            }
+            r /= count;
+            g /= count;
+            b /= count;
+            return (r, g, b, 255);
         }
 
         #endregion
