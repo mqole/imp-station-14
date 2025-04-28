@@ -1,5 +1,6 @@
 using Content.Server._Impstation.WashingMachine.Components;
 using Content.Server.Administration.Logs;
+using Content.Server.Atmos.EntitySystems;
 using Content.Server.Construction;
 using Content.Server.Construction.Components;
 using Content.Server.DeviceLinking.Systems;
@@ -12,7 +13,8 @@ using Content.Server.Power.EntitySystems;
 using Content.Server.Storage.Components;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
-using Content.Shared._Impstation.WashingMachine.Components;
+using Content.Shared._Impstation.WashingMachine;
+using Content.Shared.Atmos;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Database;
@@ -28,18 +30,17 @@ using Content.Shared.Verbs;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
+using Robust.Shared.GameStates;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
-using Content.Server.Atmos.EntitySystems;
-using Content.Shared.Atmos;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
-    public sealed class WashingMachineSystem : EntitySystem
+    public sealed class WashingMachineSystem : SharedWashingMachineSystem
     {
         [Dependency] private readonly DeviceLinkSystem _deviceLink = default!;
         [Dependency] private readonly ExplosionSystem _explosion = default!;
@@ -78,6 +79,8 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentStartup>(OnWashStart);
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentShutdown>(OnWashStop);
             SubscribeLocalEvent<ActivelyWashedComponent, OnConstructionTemperatureEvent>(OnConstructionTemp);
+
+            SubscribeLocalEvent<DyeableComponent, ComponentGetState>(OnGetState);
         }
 
         #region TODO
@@ -387,7 +390,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             var dyeContents = new List<Entity<DyeComponent>>();
             var dyeableContents = new List<Entity<DyeableComponent>>();
             var cleanerContents = new List<Entity<DyeCleanerComponent>>();
-            var dyedContents = new List<Entity<DyedComponent>>();
+            var dyedContents = new List<Entity<DyeableComponent>>();
 
             // thui-wa in hell
             bool containsDye = false;
@@ -406,16 +409,16 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 {
                     dyeableContents.Add((item, dyeable));
                     containsDyeable = true;
+                    if (dyeable.Dyed == true)
+                    {
+                        dyedContents.Add((item, dyeable));
+                        containsDyed = true;
+                    }
                 }
                 if (TryComp<DyeCleanerComponent>(item, out var cleaner))
                 {
                     cleanerContents.Add((item, cleaner));
                     containsCleaner = true;
-                }
-                if (TryComp<DyedComponent>(item, out var dyed))
-                {
-                    dyedContents.Add((item, dyed));
-                    containsDyed = true;
                 }
             }
 
@@ -458,9 +461,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                             if (dyeTally > 1)
                                 color = MixColors(dyeContents, dyeTally);
 
-                            // add new key layer to entity with that colour
-
-                            // add component 'dyed' and register the original prototype, if it doesnt exist already
+                            dyeableItem.Comp.CurrentColor = color;
+                            dyeableItem.Comp.Dyed = true;
+                            Dirty(dyeableItem.Owner, dyeableItem.Comp);
                         }
                 }
             }
@@ -505,6 +508,16 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             g /= count;
             b /= count;
             return (r, g, b, 255);
+        }
+
+        #endregion
+        #region Dye Layer Handling
+        private void OnGetState(EntityUid uid, DyeableComponent component, ref ComponentGetState args)
+        {
+            args.State = new DyeableComponentState()
+            {
+                CurrentColor = component.CurrentColor,
+            };
         }
 
         #endregion
