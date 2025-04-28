@@ -36,8 +36,6 @@ using Robust.Shared.Utility;
 using System.Linq;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
-using Content.Shared.Storage.Components;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Content.Server.Crayon;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
@@ -63,7 +61,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         [Dependency] private readonly TagSystem _tag = default!;
         [Dependency] private readonly TemperatureSystem _temperature = default!;
         [Dependency] private readonly AtmosphereSystem _atmos = default!;
-
 
         [ValidatePrototypeId<EntityPrototype>]
         private const string MalfunctionSpark = "Spark";
@@ -426,22 +423,50 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             // THE DYEING PART
             if (containsDye && containsDyeable && !containsCleaner)
             {
-                // check for unique recipes first
-                // DELETE THE CRAYON SO WE DONT ADD A LAYER!
-                foreach (var item in recipeContents)
+                var uniqueRecipe = false;
+                foreach (var dyeableItem in recipeContents)
                 {
-                    // fuckin idk
+                    if (TryComp<DyeableComponent>(dyeableItem.Key, out var dyeable)) // theres gotta be a way to check value instead
+                    {
+                        // check for unique recipes first
+                        foreach (var colorname in dyeable.Recipes.Keys)
+                        {
+                            if (uniqueRecipe)
+                                break;
+                            Color recipeColor = Color.FromName(colorname);// fuuuck this wont fucking work for rainbow!!! it needs to be a string!!! FUCK!!
+
+                            foreach (var dyeItem in recipeContents)
+                            {
+                                if (TryComp<CrayonComponent>(dyeItem.Key, out var dye)) // just kill me now
+                                {
+                                    if (dye.Color == recipeColor)
+                                    {
+                                        _container.Remove(dyeableItem.Key, store.Contents);
+                                        Del(dyeableItem.Key);
+                                        Spawn(dyeable.Recipes[colorname], Transform(uid).Coordinates);
+                                        uniqueRecipe = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        // not dying something that's been hit by unique recipe beam
+                        if (!uniqueRecipe)
+                            if (dyeable.AcceptAnyColor)
+                            {
+                                var crayonTally = 0;
+                                foreach (var dyeItem in recipeContents)
+                                    if (TryComp<CrayonComponent>(dyeItem.Key, out var dye))
+                                        crayonTally += 1;
+
+                                if (crayonTally > 1)
+                                    MixColors(recipeContents, crayonTally)
+                                // run the colour conversion to turn crayon dye into colour
+                                // add new key layer to entity with that colour
+                                // add component 'dyed' and register the original prototype, if it doesnt exist already
+                            }
+                    }
                 }
-
-                // run the colour conversion to turn crayon dye into colour
-                // add new key layer to entity with that colour
-                // add component 'dyed' and register the original prototype, if it doesnt exist already
-                // delete the crayon
-
-                // what if we have TWO crayon.
-                // adjust transparency of each key layer?
-                // adjust existing key layer?
-                // how are we handling dyeing something that's already been dyed?
             }
 
             // THE CLEANING PART
@@ -451,6 +476,11 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             {
             }
             // make a fallback in case theorem gets 'dyed' added to himself and tries to undye
+        }
+
+        private void MixColors(Dictionary<EntityUid, Component> contents, int count)
+        {
+
         }
 
         #endregion

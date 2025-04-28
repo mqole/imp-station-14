@@ -99,7 +99,7 @@
       - state: equipped-INNERCLOTHING
   - type: Dyeable
     recipes:
-      rainbow: WashingRainbowUniformTest
+      red: WashingRainbowUniformTest
 
 - type: entity
   parent: Crayon
