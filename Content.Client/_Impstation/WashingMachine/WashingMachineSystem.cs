@@ -25,7 +25,7 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
         if (state.CurrentColor == component.CurrentColor)
             return;
 
-        state.CurrentColor = component.CurrentColor;
+        component.CurrentColor = state.CurrentColor;
 
         UpdateSpriteComponentAppearance(uid, component);
         UpdateClothingComponentAppearance(uid, component);
@@ -37,9 +37,8 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
             return;
 
         foreach (var slotPair in clothing.ClothingVisuals)
-        {
-            _clothing.SetLayerColor(clothing, slotPair.Key, "dye", component.CurrentColor);
-        }
+            foreach (var layer in clothing.ClothingVisuals[slotPair.Key])
+                layer.Color = component.CurrentColor;
     }
 
     private void UpdateSpriteComponentAppearance(EntityUid uid, DyeableComponent component, SpriteComponent? sprite = null)
@@ -47,24 +46,14 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
         if (!Resolve(uid, ref sprite, false))
             return;
 
-        foreach (var layer in component.CurrentColor)
+        foreach (var layer in sprite.AllLayers)
         {
             int index;
-            if (_reflection.TryParseEnumReference(layer.Key, out var @enum))
+            if (!sprite.LayerMapTryGet(layer, out index))
             {
-                if (!sprite.LayerMapTryGet(@enum, out index, logError: true))
-                    continue;
+                return;
             }
-            else if (!sprite.LayerMapTryGet(layer.Key, out index))
-            {
-                if (layer.Key is not { } strKey || !int.TryParse(strKey, out index))
-                {
-                    Log.Error($"Invalid key `{layer.Key}` for entity with dyed sprite {ToPrettyString(uid)}");
-                    continue;
-                }
-            }
-            sprite.LayerSetState(index, layer.Value.State);
-            sprite.LayerSetColor(index, layer.Value.Color ?? Color.White);
+            sprite.LayerSetColor(index, component.CurrentColor);
         }
     }
 }

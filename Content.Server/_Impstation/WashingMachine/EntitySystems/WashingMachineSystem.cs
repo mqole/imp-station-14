@@ -403,7 +403,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 if (TryComp<DyeComponent>(item, out var dye))
                 {
                     dyeContents.Add((item, dye));
-                    containsDyeable = true;
+                    containsDye = true;
                 }
                 if (TryComp<DyeableComponent>(item, out var dyeable))
                 {
@@ -509,9 +509,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             b /= count;
             return (r, g, b, 255);
         }
-
-        #endregion
-        #region Dye Layer Handling
         private void OnGetState(EntityUid uid, DyeableComponent component, ref ComponentGetState args)
         {
             args.State = new DyeableComponentState()

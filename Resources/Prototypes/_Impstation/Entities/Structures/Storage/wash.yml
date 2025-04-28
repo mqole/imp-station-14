@@ -102,24 +102,48 @@
       red: WashingRainbowUniformTest
 
 - type: entity
-  parent: Crayon
-  id: WashingCrayonTest
+  parent: CrayonRed
+  id: WashingCrayonTestRed
   name: RED CRAYON DYE
   description: FOR TESTING REASONS!
   components:
-  - type: Sprite
-    state: red
-  - type: Item
-    heldPrefix: red
-  - type: Crayon
+  - type: Dye
     color: red
-  - type: Tag
-    tags:
-    - Write
-    - Crayon
-    - CrayonRed
-    - Recyclable
-    - Trash
+
+- type: entity
+  parent: CrayonBlue
+  id: WashingCrayonTestBlue
+  name: BLUE CRAYON DYE
+  description: FOR TESTING REASONS!
+  components:
+  - type: Dye
+    color: blue
+
+- type: entity
+  parent: CrayonGreen
+  id: WashingCrayonTestGreen
+  name: GREEN CRAYON DYE
+  description: FOR TESTING REASONS!
+  components:
+  - type: Dye
+    color: green
+
+- type: entity
+  parent: CrayonBlack
+  id: WashingCrayonTestBlack
+  name: BLACK CRAYON DYE
+  description: FOR TESTING REASONS!
+  components:
+  - type: Dye
+    color: black
+
+- type: entity
+  parent: PlushieBug
+  id: TOTALLY NORMAL BUG PLUSHIE
+  components:
+  - type: Dyeable
+    recipes:
+      black: PlushieEvilBug
 
 - type: entity
   parent: [ ClothingUniformBase, ClothingUniformFoldableBase ]
