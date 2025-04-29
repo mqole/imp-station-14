@@ -439,7 +439,8 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                             {
                                 _container.Remove(dyeableItem.Owner, store.Contents);
                                 Del(dyeableItem.Owner);
-                                Spawn(dyeableItem.Comp.Recipes[colorname], Transform(uid).Coordinates);
+                                var spawned = Spawn(dyeableItem.Comp.Recipes[colorname], Transform(uid).Coordinates);
+                                //var spawnDye = EnsureComp<DyeableComponent>(spawned);
                                 uniqueRecipe = true;
                                 break;
                             }
@@ -467,14 +468,15 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                         }
                 }
             }
-
             // THE CLEANING PART
-            // we handle this second bc if you put bleach in the washing machine as well as a red crayon it makes no sense to get a dyed thing out.
-
             if (containsCleaner && containsDyed)
             {
+                foreach (var dyeableItem in dyedContents)
+                {
+                    dyeableItem.Comp.CurrentColor = Color.White;
+                    Dirty(dyeableItem.Owner, dyeableItem.Comp);
+                }
             }
-            // make a fallback in case theorem gets 'dyed' added to himself and tries to undye
         }
 
         private Color MixColors(List<Entity<DyeComponent>> contents, int count)
