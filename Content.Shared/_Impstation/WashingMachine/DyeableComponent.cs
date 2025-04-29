@@ -17,7 +17,5 @@ public sealed partial class DyeableComponent : Component
     [DataField]
     public bool Dyed = false;
     [DataField]
-    public EntProtoId OriginalEntity;
-    [DataField]
     public Color CurrentColor = default!;
 }

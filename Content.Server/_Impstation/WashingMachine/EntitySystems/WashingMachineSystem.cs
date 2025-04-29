@@ -27,6 +27,7 @@ using Content.Shared.Power;
 using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Content.Shared.Verbs;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -35,6 +36,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Robust.Shared.Toolshed.TypeParsers;
 using Robust.Shared.Utility;
 using System.Linq;
 
@@ -83,92 +85,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<DyeableComponent, ComponentGetState>(OnGetState);
         }
 
-        #region TODO
-
-        private void SubtractContents(MicrowaveComponent component, FoodRecipePrototype recipe) // LATER
-        {
-            // TODO Turn recipe.IngredientsReagents into a ReagentQuantity[]
-
-            var totalReagentsToRemove = new Dictionary<string, FixedPoint2>(recipe.IngredientsReagents);
-
-            // this is spaghetti ngl
-            foreach (var item in component.Storage.ContainedEntities)
-            {
-                // use the same reagents as when we selected the recipe
-                if (!_solutionContainer.TryGetDrainableSolution(item, out var solutionEntity, out var solution))
-                    continue;
-
-                foreach (var (reagent, _) in recipe.IngredientsReagents)
-                {
-                    // removed everything
-                    if (!totalReagentsToRemove.ContainsKey(reagent))
-                        continue;
-
-                    var quant = solution.GetTotalPrototypeQuantity(reagent);
-
-                    if (quant >= totalReagentsToRemove[reagent])
-                    {
-                        quant = totalReagentsToRemove[reagent];
-                        totalReagentsToRemove.Remove(reagent);
-                    }
-                    else
-                    {
-                        totalReagentsToRemove[reagent] -= quant;
-                    }
-
-                    _solutionContainer.RemoveReagent(solutionEntity.Value, reagent, quant);
-                }
-            }
-
-            foreach (var recipeSolid in recipe.IngredientsSolids)
-            {
-                for (var i = 0; i < recipeSolid.Value; i++)
-                {
-                    foreach (var item in component.Storage.ContainedEntities)
-                    {
-                        string? itemID = null;
-
-                        // If an entity has a stack component, use the stacktype instead of prototype id
-                        if (TryComp<StackComponent>(item, out var stackComp))
-                        {
-                            itemID = _prototype.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
-                        }
-                        else
-                        {
-                            var metaData = MetaData(item);
-                            if (metaData.EntityPrototype == null)
-                            {
-                                continue;
-                            }
-                            itemID = metaData.EntityPrototype.ID;
-                        }
-
-                        if (itemID != recipeSolid.Key)
-                        {
-                            continue;
-                        }
-
-                        if (stackComp is not null)
-                        {
-                            if (stackComp.Count == 1)
-                            {
-                                _container.Remove(item, component.Storage);
-                            }
-                            _stack.Use(item, 1, stackComp);
-                            break;
-                        }
-                        else
-                        {
-                            _container.Remove(item, component.Storage);
-                            Del(item);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        #endregion
         #region Startup
 
         private void OnMapInit(Entity<WashingMachineComponent> ent, ref MapInitEvent args)
@@ -209,6 +125,13 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                     if (comp.Broken)
                     {
                         _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-broken"), uid, args.User);
+                        return;
+                    }
+
+                    if (TryComp<SolutionContainerManagerComponent>(uid, out var solComp))
+                    {
+
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-water"), uid, args.User);
                         return;
                     }
 
@@ -440,8 +363,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                                 _container.Remove(dyeableItem.Owner, store.Contents);
                                 Del(dyeableItem.Owner);
                                 var spawned = Spawn(dyeableItem.Comp.Recipes[colorname], Transform(uid).Coordinates);
-                                //var spawnDye = EnsureComp<DyeableComponent>(spawned);
+                                var spawnDyed = EnsureComp<DyedComponent>(spawned);
                                 uniqueRecipe = true;
+                                spawnDyed.OriginalEntity = MetaData(dyeableItem.Owner).EntityPrototype?.ID;
                                 break;
                             }
                         }
@@ -473,6 +397,13 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             {
                 foreach (var dyeableItem in dyedContents)
                 {
+                    if (TryComp<DyedComponent>(dyeableItem, out var dyed) && dyed.OriginalEntity != null)
+                    {
+                        _container.Remove(dyeableItem.Owner, store.Contents);
+                        Del(dyeableItem.Owner);
+                        Spawn(dyed.OriginalEntity, Transform(uid).Coordinates);
+                        continue;
+                    }
                     dyeableItem.Comp.CurrentColor = Color.White;
                     Dirty(dyeableItem.Owner, dyeableItem.Comp);
                 }
@@ -609,6 +540,23 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         private void OnConstructionTemp(Entity<ActivelyWashedComponent> ent, ref OnConstructionTemperatureEvent args)
         {
             args.Result = HandleResult.False;
+        }
+
+        private void GetTankStorage(Entity<SolutionContainerManagerComponent> entity)
+        {
+            if (!_solutionContainer.ResolveSolution(entity.Owner, entity.Comp.Solutions, ref entity.Comp, out var solution))
+                return;
+
+            var fuel = 0f;
+            foreach (var (reagentId, multiplier) in entity.Comp.Reagents)
+            {
+                var reagent = solution.GetTotalPrototypeQuantity(reagentId).Float();
+                reagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon.Float();
+
+                fuel += reagent * multiplier;
+            }
+
+            args.Fuel = fuel;
         }
 
         #endregion
