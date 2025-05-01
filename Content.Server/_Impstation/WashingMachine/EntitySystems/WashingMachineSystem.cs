@@ -258,13 +258,15 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 AddWashDamage(uid, wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
 
                 DoRecipes(uid, wash, storage);
-
                 StopWashing((uid, wash));
                 RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.WaterRequired, false));
+
+                var ents = storage.Contents.ContainedEntities.ToList();
                 if (_emag.CheckFlag(uid, EmagType.Interaction))
-                    foreach (var user in storage.Contents.ContainedEntities)
+                    foreach (var user in ents)
                         if (TryComp<BodyComponent>(user, out _))
                             _body.GibBody(user, true);
+
                 storage.Openable = true;
                 _container.EmptyContainer(storage.Contents);
                 wash.CurrentWashTimeEnd = TimeSpan.Zero;
@@ -298,13 +300,13 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
                         _solutionContainer.AddThermalEnergy(soln, heatToAdd);
                     }
-                // ideally if emagged, the entity should be dead JUST as the cycle ends
+                // ideally if emagged, the entity should be crit (half dead) JUST as the cycle ends. theyre getting gibbed anyway so the specifics dont matter.
                 if (_emag.CheckFlag(uid, EmagType.Interaction)
                 && TryComp<MobThresholdsComponent>(entity, out var threshold)
                 && TryComp<DamageableComponent>(entity, out var damageable))
                 {
                     foreach (var damage in damageToDo.DamageDict)
-                        emaggedDamage.DamageDict[damage.Key] = (threshold.Thresholds.Keys.Last() - damageable.TotalDamage) * time;
+                        emaggedDamage.DamageDict[damage.Key] = (threshold.Thresholds.Keys.Last() - damageable.TotalDamage) / 2 * time;
                     damageToDo = emaggedDamage;
                 }
                 _damageable.TryChangeDamage(entity, damageToDo);
@@ -327,10 +329,10 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             var dyedContents = new List<Entity<DyeableComponent>>();
 
             // thui-wa in hell
-            bool containsDye = false;
-            bool containsDyeable = false;
-            bool containsCleaner = false;
-            bool containsDyed = false;
+            var containsDye = false;
+            var containsDyeable = false;
+            var containsCleaner = false;
+            var containsDyed = false;
 
             foreach (var item in contents)
             {
@@ -426,7 +428,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             }
         }
 
-        private Color MixColors(List<Entity<DyeComponent>> contents, int count)
+        private static Color MixColors(List<Entity<DyeComponent>> contents, int count)
         {
             Vector4 hsl = new(0, 0, 0, 255);
             Vector4 outColor;
