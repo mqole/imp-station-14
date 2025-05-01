@@ -24,6 +24,7 @@ using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking.Events;
 using Content.Shared.Emag.Systems;
 using Content.Shared.FixedPoint;
+using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Tag;
@@ -262,8 +263,8 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.WaterRequired, false));
                 if (_emag.CheckFlag(uid, EmagType.Interaction))
                     foreach (var user in storage.Contents.ContainedEntities)
-                        if (TryComp<BodyComponent>(user, out var body))
-                            _body.GibBody(user, false, body);
+                        if (TryComp<BodyComponent>(user, out _))
+                            _body.GibBody(user, true);
                 storage.Openable = true;
                 _container.EmptyContainer(storage.Contents);
                 wash.CurrentWashTimeEnd = TimeSpan.Zero;
@@ -281,10 +282,8 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         private void AddWashDamage(EntityUid uid, WashingMachineComponent washComp, EntityStorageComponent storeComp, float time)
         {
             var heatToAdd = time * washComp.BaseHeatMultiplier;
-            var damageToDo = time * washComp.BaseDamageMultiplier;
-            if (_emag.CheckFlag(uid, EmagType.Interaction))
-                damageToDo *= 6; // arbitrary hardcoded emag number, i'll change this if someone REALLY wants but they're getting gibbed anyway
-            DamageSpecifier damage = new(_prototypeManager.Index((ProtoId<DamageGroupPrototype>)"Blunt"), damageToDo);
+            var damageToDo = time * washComp.Damage;
+            var emaggedDamage = damageToDo;
             foreach (var entity in storeComp.Contents.ContainedEntities)
             {
                 if (TryComp<TemperatureComponent>(entity, out var tempComp))
@@ -299,7 +298,16 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
                         _solutionContainer.AddThermalEnergy(soln, heatToAdd);
                     }
-                _damageable.TryChangeDamage(entity, damage);
+                // ideally if emagged, the entity should be dead JUST as the cycle ends
+                if (_emag.CheckFlag(uid, EmagType.Interaction)
+                && TryComp<MobThresholdsComponent>(entity, out var threshold)
+                && TryComp<DamageableComponent>(entity, out var damageable))
+                {
+                    foreach (var damage in damageToDo.DamageDict)
+                        emaggedDamage.DamageDict[damage.Key] = (threshold.Thresholds.Keys.Last() - damageable.TotalDamage) * time;
+                    damageToDo = emaggedDamage;
+                }
+                _damageable.TryChangeDamage(entity, damageToDo);
             }
         }
 

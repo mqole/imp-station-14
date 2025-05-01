@@ -1,3 +1,4 @@
+using Content.Shared.Damage;
 using Content.Shared.DeviceLinking;
 using Content.Shared.FixedPoint;
 using Content.Shared.Item;
@@ -76,11 +77,17 @@ public sealed partial class WashingMachineComponent : Component
     [DataField("temperatureUpperThreshold")]
     public float TemperatureUpperThreshold = 373.15f;
 
-    [DataField("baseDamageMultiplier"), ViewVariables(VVAccess.ReadWrite)]
-    public float BaseDamageMultiplier = 1;
-
-    [DataField("objectDamageMultiplier"), ViewVariables(VVAccess.ReadWrite)]
-    public float ObjectDamageMultiplier = 1;
+    /// <summary>
+    /// How much damage to apply to the entity inside
+    /// </summary>
+    [DataField]
+    public DamageSpecifier Damage = new()
+    {
+        DamageDict = new()
+        {
+            { "Blunt", 1 },
+        }
+    };
 
     #endregion
     #region malfunction
