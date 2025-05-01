@@ -2,7 +2,6 @@ using Content.Shared.DeviceLinking;
 using Content.Shared.FixedPoint;
 using Content.Shared.Item;
 using Robust.Shared.Audio;
-using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Impstation.WashingMachine.Components;
@@ -12,39 +11,10 @@ namespace Content.Server._Impstation.WashingMachine.Components;
 [RegisterComponent]
 public sealed partial class WashingMachineComponent : Component
 {
+    #region time
+
     [DataField("washTimeMultiplier"), ViewVariables(VVAccess.ReadWrite)]
     public float WashTimeMultiplier = 1;
-
-    [DataField("baseHeatMultiplier"), ViewVariables(VVAccess.ReadWrite)]
-    public float BaseHeatMultiplier = 100;
-
-    [DataField("objectHeatMultiplier"), ViewVariables(VVAccess.ReadWrite)]
-    public float ObjectHeatMultiplier = 100;
-
-    #region  audio
-    [DataField("startWashingSound")]
-    public SoundSpecifier StartWashingSound = new SoundPathSpecifier("/Audio/Machines/microwave_start_beep.ogg");
-
-    [DataField("cycleDoneSound")]
-    public SoundSpecifier CycleDoneSound = new SoundPathSpecifier("/Audio/Machines/microwave_done_beep.ogg");
-
-    [DataField("clickSound")]
-    public SoundSpecifier ClickSound = new SoundPathSpecifier("/Audio/Machines/machine_switch.ogg");
-
-    [DataField("ItemBreakSound")]
-    public SoundSpecifier ItemBreakSound = new SoundPathSpecifier("/Audio/Effects/clang.ogg");
-
-    public EntityUid? PlayingStream;
-
-    [DataField("loopingSound")]
-    public SoundSpecifier LoopingSound = new SoundPathSpecifier("/Audio/Machines/microwave_loop.ogg");
-    #endregion
-
-    [ViewVariables]
-    public bool Broken;
-
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public ProtoId<SinkPortPrototype> OnPort = "On";
 
     /// <summary>
     /// How long a single cycle lasts, in seconds.
@@ -58,11 +28,8 @@ public sealed partial class WashingMachineComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public TimeSpan CurrentWashTimeEnd = TimeSpan.Zero;
 
-    /// <summary>
-    /// The max temperature that this washing machine can heat objects to.
-    /// </summary>
-    [DataField("temperatureUpperThreshold")]
-    public float TemperatureUpperThreshold = 373.15f;
+    #endregion
+    #region storage
 
     [DataField]
     public string ContainerId = "washingmachine_entity_container";
@@ -72,6 +39,51 @@ public sealed partial class WashingMachineComponent : Component
 
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public ProtoId<ItemSizePrototype> MaxItemSize = "Normal";
+
+    #endregion
+    #region tank/power
+
+    [ViewVariables]
+    public bool Broken;
+
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public ProtoId<SinkPortPrototype> OnPort = "On";
+
+    /// <summary>
+    /// Amount of water required to begin a cycle
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public FixedPoint2 WaterRequired = 150;
+
+    /// <summary>
+    /// Amount of cleaner reagent required to begin cleaning
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public FixedPoint2 CleanerRequired = 30;
+
+    #endregion
+    #region heat & damage
+
+    [DataField("baseHeatMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float BaseHeatMultiplier = 100;
+
+    [DataField("objectHeatMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float ObjectHeatMultiplier = 100;
+
+    /// <summary>
+    /// The max temperature that this washing machine can heat objects to.
+    /// </summary>
+    [DataField("temperatureUpperThreshold")]
+    public float TemperatureUpperThreshold = 373.15f;
+
+    [DataField("baseDamageMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float BaseDamageMultiplier = 1;
+
+    [DataField("objectDamageMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float ObjectDamageMultiplier = 1;
+
+    #endregion
+    #region malfunction
 
     /// <summary>
     /// How frequently the washing machine can malfunction.
@@ -97,19 +109,28 @@ public sealed partial class WashingMachineComponent : Component
     [DataField("malfunctionSteamMultiplier"), ViewVariables(VVAccess.ReadWrite)]
     public float MalfunctionSteamMultiplier = 1000;
 
-    /// <summary>
-    /// Amount of water required to begin a cycle
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public FixedPoint2 WaterRequired = 150;
+    #endregion
+    #region  audio
+    [DataField("startWashingSound")]
+    public SoundSpecifier StartWashingSound = new SoundPathSpecifier("/Audio/Machines/microwave_start_beep.ogg");
 
-    /// <summary>
-    /// Amount of cleaner reagent required to begin cleaning
-    /// </summary>
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public FixedPoint2 CleanerRequired = 30;
+    [DataField("cycleDoneSound")]
+    public SoundSpecifier CycleDoneSound = new SoundPathSpecifier("/Audio/Machines/microwave_done_beep.ogg");
+
+    [DataField("clickSound")]
+    public SoundSpecifier ClickSound = new SoundPathSpecifier("/Audio/Machines/machine_switch.ogg");
+
+    [DataField("ItemBreakSound")]
+    public SoundSpecifier ItemBreakSound = new SoundPathSpecifier("/Audio/Effects/clang.ogg");
+
+    public EntityUid? PlayingStream;
+
+    [DataField("loopingSound")]
+    public SoundSpecifier LoopingSound = new SoundPathSpecifier("/Audio/Machines/microwave_loop.ogg");
+    #endregion
 }
 
+#region  events
 public sealed class BeingWashedEvent : HandledEntityEventArgs
 {
     public EntityUid WashingMachine;
@@ -121,3 +142,4 @@ public sealed class BeingWashedEvent : HandledEntityEventArgs
         User = user;
     }
 }
+#endregion

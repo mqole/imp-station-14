@@ -13,11 +13,16 @@ using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
 using Content.Shared._Impstation.WashingMachine;
 using Content.Shared.Atmos;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking.Events;
+using Content.Shared.Emag.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Popups;
 using Content.Shared.Power;
@@ -40,15 +45,19 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
     public sealed class WashingMachineSystem : SharedWashingMachineSystem
     {
         [Dependency] private readonly AtmosphereSystem _atmos = default!;
+        [Dependency] private readonly DamageableSystem _damageable = default!;
         [Dependency] private readonly DeviceLinkSystem _deviceLink = default!;
+        [Dependency] private readonly EmagSystem _emag = default!;
         [Dependency] private readonly ExplosionSystem _explosion = default!;
         [Dependency] private readonly IAdminLogManager _adminLogger = default!;
         [Dependency] private readonly IGameTiming _gameTiming = default!;
+        [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly PowerReceiverSystem _power = default!;
         [Dependency] private readonly PuddleSystem _puddle = default!;
         [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
         [Dependency] private readonly SharedAudioSystem _audio = default!;
+        [Dependency] private readonly SharedBodySystem _body = default!;
         [Dependency] private readonly SharedContainerSystem _container = default!;
         [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
         [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
@@ -65,6 +74,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<WashingMachineComponent, BreakageEventArgs>(OnBreak);
             SubscribeLocalEvent<WashingMachineComponent, PowerChangedEvent>(OnPowerChanged);
             SubscribeLocalEvent<WashingMachineComponent, SignalReceivedEvent>(OnSignalReceived);
+            SubscribeLocalEvent<WashingMachineComponent, GotEmaggedEvent>(OnEmagged);
 
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentStartup>(OnWashStart);
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentShutdown>(OnWashStop);
@@ -121,7 +131,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
                     if (GetReagents(uid).Item1 < comp.WaterRequired)
                     {
-
                         _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-water"), uid, args.User);
                         return;
                     }
@@ -209,15 +218,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                     malfunctioning = true;
                 }
 
-                // if it has a body, make it take a lil damage
-
                 var activeWashedComp = AddComp<ActivelyWashedComponent>(item);
                 activeWashedComp.WashingMachine = uid;
-
-                // recipe shit goes here probably
             }
-
-            // Check recipes
 
             _audio.PlayPvs(component.StartWashingSound, uid);
             var activeComp = AddComp<ActiveWashingMachineComponent>(uid); // washing machine is go!
@@ -245,18 +248,22 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 //check if there's still wash time left
                 if (active.WashTimeRemaining > 0)
                 {
-                    AddTemperature(wash, storage, frameTime);
+                    AddWashDamage(uid, wash, storage, frameTime);
                     tileMix?.AdjustMoles(Gas.WaterVapor, wash.BaseSteamOutput);
                     continue;
                 }
 
                 //this means the cycle has finished.
-                AddTemperature(wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
+                AddWashDamage(uid, wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
 
                 DoRecipes(uid, wash, storage);
 
                 StopWashing((uid, wash));
                 RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.WaterRequired, false));
+                if (_emag.CheckFlag(uid, EmagType.Interaction))
+                    foreach (var user in storage.Contents.ContainedEntities)
+                        if (TryComp<BodyComponent>(user, out var body))
+                            _body.GibBody(user, false, body);
                 storage.Openable = true;
                 _container.EmptyContainer(storage.Contents);
                 wash.CurrentWashTimeEnd = TimeSpan.Zero;
@@ -265,30 +272,34 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         }
 
         /// <summary>
-        ///     Adds temperature to every item in the washing machine,
+        ///     Adds temperature &/or damage to every item in the washing machine,
         ///     based on the time it took to wash.
         /// </summary>
         /// <param name="washComp">The washing machine that is heating up.</param>
         /// <param name="storeComp">The entity storage attached to the washing machine.</param>
         /// <param name="time">The time on the washing machine, in seconds.</param>
-        private void AddTemperature(WashingMachineComponent washComp, EntityStorageComponent storeComp, float time) //done, but these 2 trycomps get called pretty often
+        private void AddWashDamage(EntityUid uid, WashingMachineComponent washComp, EntityStorageComponent storeComp, float time)
         {
             var heatToAdd = time * washComp.BaseHeatMultiplier;
+            var damageToDo = time * washComp.BaseDamageMultiplier;
+            if (_emag.CheckFlag(uid, EmagType.Interaction))
+                damageToDo *= 6; // arbitrary hardcoded emag number, i'll change this if someone REALLY wants but they're getting gibbed anyway
+            DamageSpecifier damage = new(_prototypeManager.Index((ProtoId<DamageGroupPrototype>)"Blunt"), damageToDo);
             foreach (var entity in storeComp.Contents.ContainedEntities)
             {
                 if (TryComp<TemperatureComponent>(entity, out var tempComp))
                     _temperature.ChangeHeat(entity, heatToAdd * washComp.ObjectHeatMultiplier, false, tempComp);
 
-                if (!TryComp<SolutionContainerManagerComponent>(entity, out var solutions))
-                    continue;
-                foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((entity, solutions)))
-                {
-                    var solution = soln.Comp.Solution;
-                    if (solution.Temperature > washComp.TemperatureUpperThreshold)
-                        continue;
+                if (TryComp<SolutionContainerManagerComponent>(entity, out var solutions))
+                    foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((entity, solutions)))
+                    {
+                        var solution = soln.Comp.Solution;
+                        if (solution.Temperature > washComp.TemperatureUpperThreshold)
+                            break;
 
-                    _solutionContainer.AddThermalEnergy(soln, heatToAdd);
-                }
+                        _solutionContainer.AddThermalEnergy(soln, heatToAdd);
+                    }
+                _damageable.TryChangeDamage(entity, damage);
             }
         }
 
@@ -537,6 +548,17 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         private void OnConstructionTemp(Entity<ActivelyWashedComponent> ent, ref OnConstructionTemperatureEvent args)
         {
             args.Result = HandleResult.False;
+        }
+
+        private void OnEmagged(EntityUid uid, WashingMachineComponent _, ref GotEmaggedEvent args)
+        {
+            if (!_emag.CompareFlag(args.Type, EmagType.Interaction))
+                return;
+
+            if (_emag.CheckFlag(uid, EmagType.Interaction))
+                return;
+
+            args.Handled = true;
         }
 
         #endregion
