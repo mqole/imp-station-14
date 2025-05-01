@@ -1,4 +1,5 @@
 using Content.Shared.DeviceLinking;
+using Content.Shared.FixedPoint;
 using Content.Shared.Item;
 using Robust.Shared.Audio;
 using Robust.Shared.Containers;
@@ -86,6 +87,7 @@ public sealed partial class WashingMachineComponent : Component
 
     /// <summary>
     /// Chance of steam occurring when we wash dryer lint
+    /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float SteamChance = .75f;
 
@@ -94,6 +96,18 @@ public sealed partial class WashingMachineComponent : Component
 
     [DataField("malfunctionSteamMultiplier"), ViewVariables(VVAccess.ReadWrite)]
     public float MalfunctionSteamMultiplier = 1000;
+
+    /// <summary>
+    /// Amount of water required to begin a cycle
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public FixedPoint2 WaterRequired = 150;
+
+    /// <summary>
+    /// Amount of cleaner reagent required to begin cleaning
+    /// </summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public FixedPoint2 CleanerRequired = 30;
 }
 
 public sealed class BeingWashedEvent : HandledEntityEventArgs

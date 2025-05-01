@@ -45,11 +45,21 @@
         maxVol: 500
   - type: ExaminableSolution
     solution: tank
+  - type: RefillableSolution
+    solution: tank
+  - type: DrainableSolution
+    solution: tank
   - type: Transform
     anchored: true
   - type: Physics
     bodyType: Static
   - type: WashingMachine
+  - type: ChemicalWashingMachineAdapter
+    solution: tank
+    reagentWater:
+      Water: 1
+    reagentCleaner:
+      Bleach: 1
 
 - type: entity
   parent: ClothingUniformBase

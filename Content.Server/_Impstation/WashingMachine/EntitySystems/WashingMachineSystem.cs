@@ -6,8 +6,6 @@ using Content.Server.Construction.Components;
 using Content.Server.DeviceLinking.Systems;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
-using Content.Server.Kitchen.Components;
-using Content.Server.Lightning;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Storage.Components;
@@ -21,13 +19,10 @@ using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking.Events;
 using Content.Shared.FixedPoint;
-using Content.Shared.Kitchen;
 using Content.Shared.Popups;
 using Content.Shared.Power;
-using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Content.Shared.Verbs;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -36,36 +31,29 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
-using Robust.Shared.Toolshed.TypeParsers;
 using Robust.Shared.Utility;
 using System.Linq;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
+    /// <seealso cref="ChemicalWashingMachineAdapterComponent"/>
     public sealed class WashingMachineSystem : SharedWashingMachineSystem
     {
+        [Dependency] private readonly AtmosphereSystem _atmos = default!;
         [Dependency] private readonly DeviceLinkSystem _deviceLink = default!;
         [Dependency] private readonly ExplosionSystem _explosion = default!;
         [Dependency] private readonly IAdminLogManager _adminLogger = default!;
         [Dependency] private readonly IGameTiming _gameTiming = default!;
-        [Dependency] private readonly IPrototypeManager _prototype = default!;
         [Dependency] private readonly IRobustRandom _random = default!;
-        [Dependency] private readonly LightningSystem _lightning = default!;
         [Dependency] private readonly PowerReceiverSystem _power = default!;
         [Dependency] private readonly PuddleSystem _puddle = default!;
-        [Dependency] private readonly RecipeManager _recipeManager = default!;
         [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
         [Dependency] private readonly SharedAudioSystem _audio = default!;
         [Dependency] private readonly SharedContainerSystem _container = default!;
         [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
         [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
-        [Dependency] private readonly SharedStackSystem _stack = default!;
         [Dependency] private readonly TagSystem _tag = default!;
         [Dependency] private readonly TemperatureSystem _temperature = default!;
-        [Dependency] private readonly AtmosphereSystem _atmos = default!;
-
-        [ValidatePrototypeId<EntityPrototype>]
-        private const string MalfunctionSpark = "Spark";
 
         public override void Initialize()
         {
@@ -83,6 +71,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<ActivelyWashedComponent, OnConstructionTemperatureEvent>(OnConstructionTemp);
 
             SubscribeLocalEvent<DyeableComponent, ComponentGetState>(OnGetState);
+
+            SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, WashingMachineGetReagentsEvent>(ChemicalGetReagents);
+            SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, WashingMachineUseReagent>(ChemicalUseReagent);
         }
 
         #region Startup
@@ -128,7 +119,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                         return;
                     }
 
-                    if (TryComp<SolutionContainerManagerComponent>(uid, out var solComp))
+                    if (GetReagents(uid).Item1 < comp.WaterRequired)
                     {
 
                         _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-water"), uid, args.User);
@@ -265,6 +256,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 DoRecipes(uid, wash, storage);
 
                 StopWashing((uid, wash));
+                RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.WaterRequired, false));
                 storage.Openable = true;
                 _container.EmptyContainer(storage.Contents);
                 wash.CurrentWashTimeEnd = TimeSpan.Zero;
@@ -393,10 +385,12 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 }
             }
             // THE CLEANING PART
-            if (containsCleaner && containsDyed)
+            if (containsCleaner || GetReagents(uid).Item2 >= wash.CleanerRequired && containsDyed)
             {
                 foreach (var dyeableItem in dyedContents)
                 {
+                    if (GetReagents(uid).Item2 < wash.CleanerRequired && !containsCleaner)
+                        break;
                     if (TryComp<DyedComponent>(dyeableItem, out var dyed) && dyed.OriginalEntity != null)
                     {
                         _container.Remove(dyeableItem.Owner, store.Contents);
@@ -406,6 +400,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                     }
                     dyeableItem.Comp.CurrentColor = Color.White;
                     Dirty(dyeableItem.Owner, dyeableItem.Comp);
+
+                    if (GetReagents(uid).Item2 >= wash.CleanerRequired)
+                        RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.CleanerRequired, true));
                 }
             }
         }
@@ -542,22 +539,87 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             args.Result = HandleResult.False;
         }
 
-        private void GetTankStorage(Entity<SolutionContainerManagerComponent> entity)
+        #endregion
+        #region Reagent Helpers
+        public (FixedPoint2, FixedPoint2) GetReagents(EntityUid washing)
         {
-            if (!_solutionContainer.ResolveSolution(entity.Owner, entity.Comp.Solutions, ref entity.Comp, out var solution))
+            WashingMachineGetReagentsEvent getReagentsEvent = default;
+            RaiseLocalEvent(washing, ref getReagentsEvent);
+            return (getReagentsEvent.Water, getReagentsEvent.Cleaner);
+        }
+
+        private void ChemicalGetReagents(Entity<ChemicalWashingMachineAdapterComponent> entity, ref WashingMachineGetReagentsEvent args)
+        {
+            if (!_solutionContainer.ResolveSolution(entity.Owner, entity.Comp.SolutionName, ref entity.Comp.Solution, out var solution))
                 return;
 
-            var fuel = 0f;
-            foreach (var (reagentId, multiplier) in entity.Comp.Reagents)
+            FixedPoint2 water = 0;
+            FixedPoint2 clean = 0;
+            foreach (var (reagentId, multiplier) in entity.Comp.ReagentWater)
             {
-                var reagent = solution.GetTotalPrototypeQuantity(reagentId).Float();
-                reagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon.Float();
+                var reagent = solution.GetTotalPrototypeQuantity(reagentId);
+                reagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon;
 
-                fuel += reagent * multiplier;
+                water += reagent * multiplier;
+            }
+            foreach (var (reagentId, multiplier) in entity.Comp.ReagentCleaner)
+            {
+                var reagent = solution.GetTotalPrototypeQuantity(reagentId);
+                reagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon;
+
+                clean += reagent * multiplier;
             }
 
-            args.Fuel = fuel;
+            args.Water = water;
+            args.Cleaner = clean;
         }
+
+        private void ChemicalUseReagent(Entity<ChemicalWashingMachineAdapterComponent> entity, ref WashingMachineUseReagent args)
+        {
+            if (!_solutionContainer.ResolveSolution(entity.Owner, entity.Comp.SolutionName, ref entity.Comp.Solution, out var solution))
+                return;
+
+            if (!TryComp<WashingMachineComponent>(entity, out var wash))
+                return;
+
+            var reagentUsed = entity.Comp.ReagentWater;
+            var reagentRequired = wash.WaterRequired;
+            if (args.Cleaning)
+            {
+                reagentUsed = entity.Comp.ReagentCleaner;
+                reagentRequired = wash.CleanerRequired;
+            }
+
+            var totalReagent = 0f;
+            foreach (var (reagentId, _) in reagentUsed)
+            {
+                totalReagent += solution.GetTotalPrototypeQuantity(reagentId).Float();
+                totalReagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId);
+            }
+
+            if (totalReagent == 0)
+                return;
+
+            foreach (var (reagentId, _) in reagentUsed)
+            {
+                _solutionContainer.RemoveReagent(entity.Comp.Solution.Value, reagentId, reagentRequired);
+            }
+        }
+
+        /// <summary>
+        /// Raised by <see cref="WashingMachineSystem"/> to calculate the amount of water &/or cleaning agent in the tank.
+        /// </summary>
+        [ByRefEvent]
+        public record struct WashingMachineGetReagentsEvent(FixedPoint2 Water, FixedPoint2 Cleaner);
+
+        /// <summary>
+        /// Raised by <see cref="WashingMachineSystem"/> to draw water/cleaning agent from its adapters.
+        /// </summary>
+        /// <remarks>
+        /// If Cleaning == false, water will be used.
+        /// If Cleaning == true, cleaning agent will be used.
+        /// </remarks>
+        public record struct WashingMachineUseReagent(FixedPoint2 ReagentUsed, bool Cleaning);
 
         #endregion
     }
