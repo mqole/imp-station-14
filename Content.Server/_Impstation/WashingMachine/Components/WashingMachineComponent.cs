@@ -20,7 +20,7 @@ public sealed partial class WashingMachineComponent : Component
     /// <summary>
     /// How long a single cycle lasts, in seconds.
     /// </summary>
-    [DataField("washTimerRime"), ViewVariables(VVAccess.ReadWrite)]
+    [DataField("washTimerTime"), ViewVariables(VVAccess.ReadWrite)]
     public uint WashTimerTime = 10;
 
     /// <summary>
@@ -28,6 +28,9 @@ public sealed partial class WashingMachineComponent : Component
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public TimeSpan CurrentWashTimeEnd = TimeSpan.Zero;
+
+    [DataField("dizzyMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float DizzyMultiplier = 5;
 
     #endregion
     #region storage

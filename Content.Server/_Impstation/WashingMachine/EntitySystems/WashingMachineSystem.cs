@@ -18,7 +18,6 @@ using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Damage;
-using Content.Shared.Damage.Prototypes;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking.Events;
@@ -39,6 +38,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
+using Content.Shared._Impstation.EntityEffects.Effects;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
@@ -48,6 +48,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         [Dependency] private readonly AtmosphereSystem _atmos = default!;
         [Dependency] private readonly DamageableSystem _damageable = default!;
         [Dependency] private readonly DeviceLinkSystem _deviceLink = default!;
+        [Dependency] private readonly DizzySystem _dizzy = default!;
         [Dependency] private readonly EmagSystem _emag = default!;
         [Dependency] private readonly ExplosionSystem _explosion = default!;
         [Dependency] private readonly IAdminLogManager _adminLogger = default!;
@@ -215,9 +216,10 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 RaiseLocalEvent(item, ev);
 
                 if (_tag.HasTag(item, "Lint"))
-                {
                     malfunctioning = true;
-                }
+
+                if (TryComp<BodyComponent>(item, out _))
+                    _dizzy.MakeDizzy(item, component.WashTimerTime * component.WashTimeMultiplier * component.DizzyMultiplier);
 
                 var activeWashedComp = AddComp<ActivelyWashedComponent>(item);
                 activeWashedComp.WashingMachine = uid;
