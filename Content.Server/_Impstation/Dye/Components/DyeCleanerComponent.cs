@@ -1,4 +1,4 @@
-namespace Content.Server._Impstation.WashingMachine.Components;
+namespace Content.Server._Impstation.Dye.Components;
 
 [RegisterComponent]
 public sealed partial class DyeCleanerComponent : Component { }

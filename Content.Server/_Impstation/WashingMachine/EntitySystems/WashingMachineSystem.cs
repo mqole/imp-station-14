@@ -39,11 +39,12 @@ using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
 using Content.Shared._Impstation.EntityEffects.Effects;
+using Content.Server._Impstation.Dye.EntitySystems;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
     /// <seealso cref="ChemicalWashingMachineAdapterComponent"/>
-    public sealed class WashingMachineSystem : SharedWashingMachineSystem
+    public sealed class WashingMachineSystem : EntitySystem
     {
         [Dependency] private readonly AtmosphereSystem _atmos = default!;
         [Dependency] private readonly DamageableSystem _damageable = default!;
@@ -82,10 +83,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<ActiveWashingMachineComponent, ComponentShutdown>(OnWashStop);
             SubscribeLocalEvent<ActivelyWashedComponent, OnConstructionTemperatureEvent>(OnConstructionTemp);
 
-            SubscribeLocalEvent<DyeableComponent, ComponentGetState>(OnGetState);
-
             SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, WashingMachineGetReagentsEvent>(ChemicalGetReagents);
             SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, WashingMachineUseReagent>(ChemicalUseReagent);
+            SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, DyeUseReagent>(ChemicalUseReagent)
         }
 
         #region Startup
@@ -212,7 +212,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             storeComp.Openable = false;
             foreach (var item in storeComp.Contents.ContainedEntities.ToArray())
             {
-                var ev = new BeingWashedEvent(uid, user);
+                var ev = new ActivelyBeingWashedEvent(uid, user);
                 RaiseLocalEvent(item, ev);
 
                 if (_tag.HasTag(item, "Lint"))
@@ -259,7 +259,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 //this means the cycle has finished.
                 AddWashDamage(uid, wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
 
-                DoRecipes(uid, wash, storage);
+                //this event handles dyes, we're calling it on the washing machine itself so DyeableSystem can grab the storage component
+                RaiseLocalEvent(uid, new StorageWashEvent(uid));
+
                 StopWashing((uid, wash));
                 RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.WaterRequired, false));
 
@@ -321,139 +323,9 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// <summary>
         /// Dye + Dyeable item = profit
         /// </summary>
-        private void DoRecipes(EntityUid uid, WashingMachineComponent wash, EntityStorageComponent store)
+        private void DoRecipes(Entity<WashingMachineComponent, EntityStorageComponent> ent)
         {
-            var contents = new List<EntityUid>(store.Contents.ContainedEntities);
 
-            var dyeContents = new List<Entity<DyeComponent>>();
-            var dyeableContents = new List<Entity<DyeableComponent>>();
-            var cleanerContents = new List<Entity<DyeCleanerComponent>>();
-            var dyedContents = new List<Entity<DyeableComponent>>();
-
-            // thui-wa in hell
-            var containsDye = false;
-            var containsDyeable = false;
-            var containsCleaner = false;
-            var containsDyed = false;
-
-            foreach (var item in contents)
-            {
-                if (TryComp<DyeComponent>(item, out var dye))
-                {
-                    dyeContents.Add((item, dye));
-                    containsDye = true;
-                }
-                if (TryComp<DyeableComponent>(item, out var dyeable))
-                {
-                    dyeableContents.Add((item, dyeable));
-                    containsDyeable = true;
-                    if (dyeable.Dyed == true)
-                    {
-                        dyedContents.Add((item, dyeable));
-                        containsDyed = true;
-                    }
-                }
-                if (TryComp<DyeCleanerComponent>(item, out var cleaner))
-                {
-                    cleanerContents.Add((item, cleaner));
-                    containsCleaner = true;
-                }
-            }
-
-            // THE DYEING PART
-            if (containsDye && containsDyeable && !containsCleaner)
-            {
-                foreach (var dyeableItem in dyeableContents)
-                {
-                    var uniqueRecipe = false;
-                    // check for unique recipes first
-                    foreach (var (colorname, ent) in dyeableItem.Comp.Recipes)
-                    {
-                        if (uniqueRecipe)
-                            break;
-                        foreach (var dyeItem in dyeContents)
-                        {
-                            if (dyeItem.Comp.Color == colorname)
-                            {
-                                _container.Remove(dyeableItem.Owner, store.Contents);
-                                Del(dyeableItem.Owner);
-                                var spawned = Spawn(dyeableItem.Comp.Recipes[colorname], Transform(uid).Coordinates);
-                                var spawnDyed = EnsureComp<DyedComponent>(spawned);
-                                uniqueRecipe = true;
-                                spawnDyed.OriginalEntity = MetaData(dyeableItem.Owner).EntityPrototype?.ID;
-                                break;
-                            }
-                        }
-                    }
-                    // not dying something that's been hit by unique recipe beam
-                    if (!uniqueRecipe)
-                        if (dyeableItem.Comp.AcceptAnyColor)
-                        {
-                            var colorString = "";
-                            var dyeTally = 0;
-                            foreach (var dyeItem in dyeContents)
-                            {
-                                colorString = dyeItem.Comp.Color;
-                                dyeTally += 1;
-                            }
-                            if (!Color.TryFromName(colorString, out var color))
-                                color = Color.Transparent;
-                            if (dyeTally > 1)
-                                color = MixColors(dyeContents, dyeTally);
-
-                            dyeableItem.Comp.CurrentColor = color;
-                            dyeableItem.Comp.Dyed = true;
-                            Dirty(dyeableItem.Owner, dyeableItem.Comp);
-                        }
-                }
-            }
-            // THE CLEANING PART
-            if (containsCleaner || GetReagents(uid).Item2 >= wash.CleanerRequired && containsDyed)
-            {
-                foreach (var dyeableItem in dyedContents)
-                {
-                    if (GetReagents(uid).Item2 < wash.CleanerRequired && !containsCleaner)
-                        break;
-                    if (TryComp<DyedComponent>(dyeableItem, out var dyed) && dyed.OriginalEntity != null)
-                    {
-                        _container.Remove(dyeableItem.Owner, store.Contents);
-                        Del(dyeableItem.Owner);
-                        Spawn(dyed.OriginalEntity, Transform(uid).Coordinates);
-                        continue;
-                    }
-                    dyeableItem.Comp.CurrentColor = Color.White;
-                    Dirty(dyeableItem.Owner, dyeableItem.Comp);
-
-                    if (GetReagents(uid).Item2 >= wash.CleanerRequired)
-                        RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.CleanerRequired, true));
-                }
-            }
-        }
-
-        private static Color MixColors(List<Entity<DyeComponent>> contents, int count)
-        {
-            Vector4 hsl = new(0, 0, 0, 255);
-            Vector4 outColor;
-            foreach (var dye in contents)
-            {
-                if (!Color.TryFromName(dye.Comp.Color, out var color))
-                    color = Color.Transparent;
-                outColor = Color.ToHsl(color);
-                hsl.X += outColor.X;
-                hsl.Y += outColor.Y;
-                hsl.Z += outColor.Z;
-            }
-            hsl.X /= count;
-            hsl.Y /= count;
-            hsl.Z /= count;
-            return Color.FromHsl(hsl);
-        }
-        private void OnGetState(EntityUid uid, DyeableComponent component, ref ComponentGetState args)
-        {
-            args.State = new DyeableComponentState()
-            {
-                CurrentColor = component.CurrentColor,
-            };
         }
 
         #endregion

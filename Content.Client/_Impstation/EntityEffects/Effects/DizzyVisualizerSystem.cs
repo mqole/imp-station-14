@@ -1,8 +1,5 @@
-using Content.Client.Atmos.Components;
 using Content.Shared._Impstation.EntityEffects.Effects;
-using Content.Shared.Atmos;
 using Robust.Client.GameObjects;
-using Robust.Shared.Map;
 
 namespace Content.Client._Impstation.EntityEffects.Effects;
 
@@ -44,12 +41,6 @@ public sealed class DizzyVisualizerSystem : VisualizerSystem<DizzyVisualsCompone
             sprite.LayerSetRSI(DizzyVisualLayers.Dizzy, ent.Comp.Sprite);
 
         UpdateAppearance(sprite);
-    }
-
-    protected override void OnAppearanceChange(Entity<DizzyVisualsComponent> ent, ref AppearanceChangeEvent args)
-    {
-        if (args.Sprite != null)
-            UpdateAppearance(args.Sprite);
     }
 
     private static void UpdateAppearance(SpriteComponent sprite)

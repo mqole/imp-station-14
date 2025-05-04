@@ -1,7 +1,7 @@
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared._Impstation.WashingMachine;
+namespace Content.Server._Impstation.Dye.Components;
 
 [RegisterComponent, NetworkedComponent]
 /// <summary>
@@ -10,12 +10,8 @@ namespace Content.Shared._Impstation.WashingMachine;
 public sealed partial class DyeableComponent : Component
 {
     [DataField]
-    public Dictionary<string, EntProtoId> Recipes = new();
+    public Dictionary<string, EntProtoId> Recipes;
 
     [DataField]
     public bool AcceptAnyColor = true;
-    [DataField]
-    public bool Dyed = false;
-    [DataField]
-    public Color CurrentColor = default!;
 }

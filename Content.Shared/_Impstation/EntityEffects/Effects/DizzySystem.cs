@@ -21,14 +21,14 @@ public sealed class DizzySystem : EntitySystem
         if (ent.Comp.Dizzy)
             return;
         ent.Comp.Dizzy = true;
-        UpdateAppearance(ent);
+        UpdateAppearance(ent.Owner);
     }
 
     private void OnShutdown(Entity<DizzyComponent> ent, ref ComponentShutdown args)
     {
         _drunkSystem.TryRemoveDrunkenessTime(ent, ent.Comp.StatusTime.TotalSeconds);
         ent.Comp.StatusTime = TimeSpan.Zero;
-        UpdateAppearance(ent);
+        UpdateAppearance(ent.Owner);
     }
 
     /// <summary>

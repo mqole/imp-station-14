@@ -1,23 +1,21 @@
-using Content.Client.Clothing;
-using Content.Shared._Impstation.WashingMachine;
+using Content.Shared._Impstation.Dye;
 using Content.Shared.Clothing.Components;
 using Robust.Client.GameObjects;
 using Robust.Shared.GameStates;
-using Robust.Shared.Reflection;
 
-namespace Content.Client._Impstation.WashingMachine;
+namespace Content.Client._Impstation.Dye;
 
-public sealed class WashingMachineSystem : SharedWashingMachineSystem
+public sealed class DyeableSystem : SharedDyeableSystem
 {
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<DyeableComponent, ComponentHandleState>(OnHandleState);
+        SubscribeLocalEvent<DyedComponent, ComponentHandleState>(OnHandleState);
     }
 
-    private void OnHandleState(Entity<DyeableComponent> ent, ref ComponentHandleState args)
+    private void OnHandleState(Entity<DyedComponent> ent, ref ComponentHandleState args)
     {
-        if (args.Current is not DyeableComponentState state)
+        if (args.Current is not DyedComponentState state)
             return;
 
         if (state.CurrentColor == ent.Comp.CurrentColor)
@@ -30,7 +28,7 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
         UpdateClothingComponentAppearance(ent);
     }
 
-    private void UpdateClothingComponentAppearance(Entity<DyeableComponent, ClothingComponent?> ent)
+    private void UpdateClothingComponentAppearance(Entity<DyedComponent, ClothingComponent?> ent)
     {
         if (!Resolve(ent, ref ent.Comp2, false))
             return;
@@ -40,7 +38,7 @@ public sealed class WashingMachineSystem : SharedWashingMachineSystem
                 layer.Color = ent.Comp1.CurrentColor;
     }
 
-    private void UpdateSpriteComponentAppearance(Entity<DyeableComponent, SpriteComponent?> ent)
+    private void UpdateSpriteComponentAppearance(Entity<DyedComponent, SpriteComponent?> ent)
     {
         if (!Resolve(ent, ref ent.Comp2, false))
             return;

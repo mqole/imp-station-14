@@ -146,15 +146,28 @@ public sealed partial class WashingMachineComponent : Component
 }
 
 #region  events
-public sealed class BeingWashedEvent : HandledEntityEventArgs
+public sealed class ActivelyBeingWashedEvent : HandledEntityEventArgs
 {
     public EntityUid WashingMachine;
     public EntityUid? User;
 
-    public BeingWashedEvent(EntityUid washingMachine, EntityUid? user)
+    public ActivelyBeingWashedEvent(EntityUid washingMachine, EntityUid? user)
     {
         WashingMachine = washingMachine;
         User = user;
+    }
+}
+
+/// <summary>
+/// Raised by <see cref="WashingMachineSystem"/> on a washing machine when washing is complete.
+/// </summary>
+public sealed class StorageWashEvent : HandledEntityEventArgs
+{
+    public EntityUid Storage;
+
+    public StorageWashEvent(EntityUid storage)
+    {
+        Storage = storage;
     }
 }
 #endregion
