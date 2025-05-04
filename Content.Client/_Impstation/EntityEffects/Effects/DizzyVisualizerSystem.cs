@@ -21,38 +21,38 @@ public sealed class DizzyVisualizerSystem : VisualizerSystem<DizzyVisualsCompone
         SubscribeLocalEvent<DizzyVisualsComponent, ComponentShutdown>(OnShutdown);
     }
 
-    private void OnShutdown(EntityUid uid, DizzyVisualsComponent component, ComponentShutdown args)
+    private void OnShutdown(Entity<DizzyVisualsComponent> ent, ref ComponentShutdown args)
     {
         // Need LayerMapTryGet because Init fails if there's no existing sprite / appearancecomp
         // which means in some setups (most frequently no AppearanceComp) the layer never exists.
-        if (TryComp<SpriteComponent>(uid, out var sprite) &&
+        if (TryComp<SpriteComponent>(ent, out var sprite) &&
             sprite.LayerMapTryGet(DizzyVisualLayers.Dizzy, out var layer))
         {
             sprite.RemoveLayer(layer);
         }
     }
 
-    private void OnComponentInit(EntityUid uid, DizzyVisualsComponent component, ComponentInit args)
+    private void OnComponentInit(Entity<DizzyVisualsComponent> ent, ref ComponentInit args)
     {
-        if (!TryComp<SpriteComponent>(uid, out var sprite) || !TryComp(uid, out AppearanceComponent? appearance))
+        if (!TryComp<SpriteComponent>(ent, out var sprite) || !TryComp(ent, out AppearanceComponent? appearance))
             return;
 
         sprite.LayerMapReserveBlank(DizzyVisualLayers.Dizzy);
         sprite.LayerSetVisible(DizzyVisualLayers.Dizzy, false);
         sprite.LayerSetShader(DizzyVisualLayers.Dizzy, "unshaded");
-        if (component.Sprite != null)
-            sprite.LayerSetRSI(DizzyVisualLayers.Dizzy, component.Sprite);
+        if (ent.Comp.Sprite != null)
+            sprite.LayerSetRSI(DizzyVisualLayers.Dizzy, ent.Comp.Sprite);
 
         UpdateAppearance(sprite);
     }
 
-    protected override void OnAppearanceChange(EntityUid uid, DizzyVisualsComponent component, ref AppearanceChangeEvent args)
+    protected override void OnAppearanceChange(Entity<DizzyVisualsComponent> ent, ref AppearanceChangeEvent args)
     {
         if (args.Sprite != null)
             UpdateAppearance(args.Sprite);
     }
 
-    private void UpdateAppearance(SpriteComponent sprite)
+    private static void UpdateAppearance(SpriteComponent sprite)
     {
         if (!sprite.LayerMapTryGet(DizzyVisualLayers.Dizzy, out var index))
             return;

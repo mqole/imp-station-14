@@ -16,29 +16,40 @@ public sealed class DizzySystem : EntitySystem
         SubscribeLocalEvent<DizzyComponent, ComponentShutdown>(OnShutdown);
     }
 
-    public void MakeDizzy(EntityUid uid, float length)
+    private void OnStartup(Entity<DizzyComponent> ent, ref ComponentStartup args)
     {
-        var dizzy = EnsureComp<DizzyComponent>(uid);
+        if (ent.Comp.Dizzy)
+            return;
+        ent.Comp.Dizzy = true;
+        UpdateAppearance(ent);
+    }
+
+    private void OnShutdown(Entity<DizzyComponent> ent, ref ComponentShutdown args)
+    {
+        _drunkSystem.TryRemoveDrunkenessTime(ent, ent.Comp.StatusTime.TotalSeconds);
+        ent.Comp.StatusTime = TimeSpan.Zero;
+        UpdateAppearance(ent);
+    }
+
+    /// <summary>
+    /// Applies the dizzy status effect to the specified entity.
+    /// </summary>
+    /// <param name="uid"> Entity to apply effect to </param>
+    /// <param name="length"> Total time in seconds to apply effect for </param>
+    public void MakeDizzy(EntityUid ent, float length)
+    {
+        var dizzy = EnsureComp<DizzyComponent>(ent);
         dizzy.TimeRemaining = length;
         dizzy.Dizzy = true;
 
-        if (TryComp<AppearanceComponent>(uid, out var appearance))
-            UpdateAppearance(uid, dizzy, appearance);
-    }
-    private void OnStartup(EntityUid uid, DizzyComponent dizzy, ref ComponentStartup args)
-    {
-        if (dizzy.Dizzy)
-            return;
-        dizzy.Dizzy = true;
-        if (TryComp<AppearanceComponent>(uid, out var appearance))
-            UpdateAppearance(uid, dizzy, appearance);
+        UpdateAppearance(ent);
     }
 
-    public void UpdateAppearance(EntityUid uid, DizzyComponent? dizzy = null, AppearanceComponent? appearance = null)
+    public void UpdateAppearance(Entity<DizzyComponent?, AppearanceComponent?> ent)
     {
-        if (!Resolve(uid, ref dizzy, ref appearance))
+        if (!Resolve(ent, ref ent.Comp1, ref ent.Comp2))
             return;
-        _appearance.SetData(uid, DizzyVisuals.Stars, dizzy.Dizzy, appearance);
+        _appearance.SetData(ent, DizzyVisuals.Stars, ent.Comp1.Dizzy, ent.Comp2);
     }
 
     public override void Update(float frameTime)
@@ -62,14 +73,5 @@ public sealed class DizzySystem : EntitySystem
             // after time runs out
             RemCompDeferred<DizzyComponent>(uid);
         }
-    }
-
-    private void OnShutdown(EntityUid uid, DizzyComponent dizzy, ref ComponentShutdown args)
-    {
-        _drunkSystem.TryRemoveDrunkenessTime(uid, dizzy.StatusTime.TotalSeconds);
-        dizzy.StatusTime = TimeSpan.Zero;
-
-        if (TryComp<AppearanceComponent>(uid, out var appearance))
-            UpdateAppearance(uid, dizzy, appearance);
     }
 }

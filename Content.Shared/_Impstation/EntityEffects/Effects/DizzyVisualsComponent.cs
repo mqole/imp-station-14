@@ -6,9 +6,9 @@ namespace Content.Shared._Impstation.EntityEffects.Effects;
 [RegisterComponent]
 public sealed partial class DizzyVisualsComponent : Component
 {
-    [DataField("state")]
+    [DataField]
     public string? State;
 
-    [DataField("sprite")]
+    [DataField]
     public string? Sprite;
 }

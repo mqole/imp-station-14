@@ -1,53 +1,54 @@
 using Content.Client.Clothing;
+using Content.Shared._Impstation.WashingMachine;
 using Content.Shared.Clothing.Components;
 using Robust.Client.GameObjects;
 using Robust.Shared.GameStates;
 using Robust.Shared.Reflection;
-using Content.Shared._Impstation.WashingMachine;
 
 namespace Content.Client._Impstation.WashingMachine;
+
 public sealed class WashingMachineSystem : SharedWashingMachineSystem
 {
-    [Dependency] private readonly IReflectionManager _reflection = default!;
-    [Dependency] private readonly ClientClothingSystem _clothing = default!;
-
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<DyeableComponent, ComponentHandleState>(OnHandleState);
     }
 
-    private void OnHandleState(EntityUid uid, DyeableComponent component, ref ComponentHandleState args)
+    private void OnHandleState(Entity<DyeableComponent> ent, ref ComponentHandleState args)
     {
         if (args.Current is not DyeableComponentState state)
             return;
 
-        if (state.CurrentColor == component.CurrentColor)
+        if (state.CurrentColor == ent.Comp.CurrentColor)
             return;
 
-        component.CurrentColor = state.CurrentColor;
+        // state.currentcolor will be changed by washing machines
+        ent.Comp.CurrentColor = state.CurrentColor;
 
-        UpdateSpriteComponentAppearance(uid, component);
-        UpdateClothingComponentAppearance(uid, component);
+        UpdateSpriteComponentAppearance(ent);
+        UpdateClothingComponentAppearance(ent);
     }
 
-    private void UpdateClothingComponentAppearance(EntityUid uid, DyeableComponent component, ClothingComponent? clothing = null)
+    private void UpdateClothingComponentAppearance(Entity<DyeableComponent, ClothingComponent?> ent)
     {
-        if (!Resolve(uid, ref clothing, false))
+        if (!Resolve(ent, ref ent.Comp2, false))
             return;
 
-        foreach (var slotPair in clothing.ClothingVisuals)
-            foreach (var layer in clothing.ClothingVisuals[slotPair.Key])
-                layer.Color = component.CurrentColor;
+        foreach (var slotPair in ent.Comp2.ClothingVisuals)
+            foreach (var layer in ent.Comp2.ClothingVisuals[slotPair.Key])
+                layer.Color = ent.Comp1.CurrentColor;
     }
 
-    private void UpdateSpriteComponentAppearance(EntityUid uid, DyeableComponent component, SpriteComponent? sprite = null)
+    private void UpdateSpriteComponentAppearance(Entity<DyeableComponent, SpriteComponent?> ent)
     {
-        if (!Resolve(uid, ref sprite, false))
+        if (!Resolve(ent, ref ent.Comp2, false))
             return;
-        foreach (var layer in sprite.AllLayers)
+
+        // TODO figure out why this doesnt work for inhands
+        foreach (var layer in ent.Comp2.AllLayers)
         {
-            layer.Color = component.CurrentColor;
+            layer.Color = ent.Comp1.CurrentColor;
         }
     }
 }

@@ -8,13 +8,21 @@ namespace Content.Server._Impstation.WashingMachine.Components;
 [RegisterComponent, AutoGenerateComponentPause]
 public sealed partial class ActiveWashingMachineComponent : Component
 {
-    [ViewVariables(VVAccess.ReadWrite)]
+    /// <summary>
+    /// Remaining time before cycle ends
+    /// </summary>
+    [DataField]
     public float WashTimeRemaining;
 
-    [ViewVariables(VVAccess.ReadWrite)]
+    /// <summary>
+    /// Actual time of cycle, unaffected by multiplier
+    /// </summary>
+    [DataField]
     public float TotalTime;
 
-    [ViewVariables(VVAccess.ReadWrite)]
+    /// <summary>
+    /// How long between rolls for malfunction
+    /// </summary>
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoPausedField]
     public TimeSpan MalfunctionTime = TimeSpan.Zero;

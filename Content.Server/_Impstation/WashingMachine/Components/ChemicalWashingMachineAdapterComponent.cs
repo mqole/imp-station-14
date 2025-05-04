@@ -20,7 +20,7 @@ public sealed partial class ChemicalWashingMachineAdapterComponent : Component
     public Dictionary<ProtoId<ReagentPrototype>, float> ReagentWater = new();
 
     /// <summary>
-    /// A dictionary relating reagent/s to accept as input that will clean all items in the cycle of dye.
+    /// A dictionary relating reagent/s to accept as input that will clean all items in the cycle of dye. The float affects how much of the reagent is needed (like a multiplier).
     /// </summary>
     [DataField]
     public Dictionary<ProtoId<ReagentPrototype>, float> ReagentCleaner = new();
@@ -29,7 +29,6 @@ public sealed partial class ChemicalWashingMachineAdapterComponent : Component
     /// The name of <see cref="Solution"/>.
     /// </summary>
     [DataField("solution")]
-    [ViewVariables(VVAccess.ReadWrite)]
     public string SolutionName = "tank";
 
     /// <summary>
