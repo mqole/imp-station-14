@@ -55,7 +55,8 @@ namespace Content.Server._Impstation.Dye.EntitySystems
 
             foreach (var item in dyeables)
             {
-                RaiseLocalEvent(item, new GotDyedEvent(dyes));
+                var ev = new GotDyedEvent(dyes);
+                RaiseLocalEvent(item, ref ev);
             }
 
             TryComp<WashingMachineComponent>(ent.Owner, out var wash);
@@ -64,8 +65,8 @@ namespace Content.Server._Impstation.Dye.EntitySystems
                 // cancel if we have no cleaning agents or reagents
                 if (wash != null && _washing.GetReagents(ent.Owner).Item2 < wash.CleanerRequired && cleaners.Count == 0)
                     break;
-
-                RaiseLocalEvent(item, new GotCleanedEvent());
+                var ev = new GotCleanedEvent();
+                RaiseLocalEvent(item, ref ev);
 
                 // subtract cleaners if eligible
                 if (wash != null && _washing.GetReagents(ent.Owner).Item2 >= wash.CleanerRequired)
@@ -157,11 +158,13 @@ namespace Content.Server._Impstation.Dye.EntitySystems
         /// <summary>
         /// Raised by <see cref="DyeableSystem"/> to dye an item.
         /// </summary>
+        [ByRefEvent]
         public record struct GotDyedEvent(List<Entity<DyeComponent>> Dyes);
 
         /// <summary>
         /// Raised by <see cref="DyeableSystem"/> to clean a dyed item.
         /// </summary>
+        [ByRefEvent]
         public record struct GotCleanedEvent;
     }
 }
