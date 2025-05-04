@@ -1,10 +1,9 @@
-using Content.Shared._Impstation.Dye;
 using Content.Server._Impstation.Dye.Components;
 using Content.Server._Impstation.WashingMachine.Components;
 using Content.Server._Impstation.WashingMachine.EntitySystems;
-using Robust.Shared.GameStates;
 using Content.Server.Storage.Components;
-using Content.Shared.FixedPoint;
+using Content.Shared._Impstation.Dye;
+using Robust.Shared.GameStates;
 
 namespace Content.Server._Impstation.Dye.EntitySystems
 {
@@ -70,7 +69,8 @@ namespace Content.Server._Impstation.Dye.EntitySystems
 
                 // subtract cleaners if eligible
                 if (wash != null && _washing.GetReagents(ent.Owner).Item2 >= wash.CleanerRequired)
-                    RaiseLocalEvent(ent.Owner, new DyeUseReagent(wash.CleanerRequired));
+                    _washing.ChemicalUseReagent(ent.Owner, true);
+
             }
         }
 
@@ -163,10 +163,5 @@ namespace Content.Server._Impstation.Dye.EntitySystems
         /// Raised by <see cref="DyeableSystem"/> to clean a dyed item.
         /// </summary>
         public record struct GotCleanedEvent;
-
-        /// <summary>
-        /// Raised by <see cref="DyeableSystem"/> to draw cleaning agent from a washing machine.
-        /// </summary>
-        public record struct DyeUseReagent(FixedPoint2 ReagentUsed);
     }
 }

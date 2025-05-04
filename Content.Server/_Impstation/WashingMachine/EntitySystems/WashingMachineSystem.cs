@@ -11,6 +11,7 @@ using Content.Server.Power.EntitySystems;
 using Content.Server.Storage.Components;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
+using Content.Shared._Impstation.EntityEffects.Effects;
 using Content.Shared._Impstation.WashingMachine;
 using Content.Shared.Atmos;
 using Content.Shared.Body.Components;
@@ -31,15 +32,12 @@ using Content.Shared.Verbs;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
-using Robust.Shared.GameStates;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
-using Content.Shared._Impstation.EntityEffects.Effects;
-using Content.Server._Impstation.Dye.EntitySystems;
 
 namespace Content.Server._Impstation.WashingMachine.EntitySystems
 {
@@ -84,8 +82,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             SubscribeLocalEvent<ActivelyWashedComponent, OnConstructionTemperatureEvent>(OnConstructionTemp);
 
             SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, WashingMachineGetReagentsEvent>(ChemicalGetReagents);
-            SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, WashingMachineUseReagent>(ChemicalUseReagent);
-            SubscribeLocalEvent<ChemicalWashingMachineAdapterComponent, DyeUseReagent>(ChemicalUseReagent)
         }
 
         #region Startup
@@ -94,7 +90,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         {
             _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
         }
-        private void AddWashVerb(EntityUid uid, WashingMachineComponent comp, GetVerbsEvent<ActivationVerb> args) // if interacting gets annoying, change to alternativeverb
+        private void AddWashVerb(Entity<WashingMachineComponent> ent, ref GetVerbsEvent<ActivationVerb> args) // if interacting gets annoying, change to alternativeverb
         {
             // We need an actor to give the verb.
             if (!TryComp<ActorComponent>(args.User, out var actor))
@@ -109,41 +105,41 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 Text = Loc.GetString("washing-verb-wash"),
                 Act = () =>
                 {
-                    if (HasComp<ActiveWashingMachineComponent>(uid))
-                    {
-                        _popupSystem.PopupEntity(Loc.GetString("washing-popup-notify-wash-locked"), uid, actor.PlayerSession, PopupType.Large);
-                        return;
-                    }
-
                     // If either the actor or comp have magically vanished
-                    if (actor.PlayerSession.AttachedEntity == null || !HasComp<WashingMachineComponent>(uid))
+                    if (actor.PlayerSession.AttachedEntity == null || !HasComp<WashingMachineComponent>(ent))
                         return;
 
-                    if (!(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
+                    if (HasComp<ActiveWashingMachineComponent>(ent))
                     {
-                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-power"), uid, args.User);
+                        _popupSystem.PopupEntity(Loc.GetString("washing-popup-notify-wash-locked"), ent, actor.PlayerSession, PopupType.Large);
                         return;
                     }
 
-                    if (comp.Broken)
+                    if (!(TryComp<ApcPowerReceiverComponent>(ent, out var apc) && apc.Powered))
                     {
-                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-broken"), uid, args.User);
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-power"), ent, actor.PlayerSession);
                         return;
                     }
 
-                    if (GetReagents(uid).Item1 < comp.WaterRequired)
+                    if (ent.Comp.Broken)
                     {
-                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-water"), uid, args.User);
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-broken"), ent, actor.PlayerSession);
                         return;
                     }
 
-                    if (TryComp<EntityStorageComponent>(uid, out var storage) && storage.Open)
+                    if (GetReagents(ent).Item1 < ent.Comp.WaterRequired)
                     {
-                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-open"), uid, args.User);
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-no-water"), ent, actor.PlayerSession);
                         return;
                     }
 
-                    StartWash(uid, comp, args.User);
+                    if (TryComp<EntityStorageComponent>(ent, out var storage) && storage.Open)
+                    {
+                        _popupSystem.PopupEntity(Loc.GetString("washingmachine-component-interact-using-open"), ent, actor.PlayerSession);
+                        return;
+                    }
+
+                    StartWash(ent, actor.PlayerSession.AttachedEntity);
                 },
                 Impact = LogImpact.Low,
             };
@@ -168,7 +164,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             if (ent.Comp.Broken || !_power.IsPowered(ent))
                 return;
 
-            StartWash(ent.Owner, ent.Comp, null);
+            StartWash(ent, null);
         }
 
         private void OnBreak(Entity<WashingMachineComponent> ent, ref BreakageEventArgs args)
@@ -201,38 +197,37 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// <remarks>
         /// im NOT fucking naming this wrhzhzh -mq
         /// </remarks>
-        public void StartWash(EntityUid uid, WashingMachineComponent component, EntityUid? user)
+        public void StartWash(Entity<WashingMachineComponent> ent, EntityUid? user)
         {
-            if (HasComp<ActiveWashingMachineComponent>(uid) || !(TryComp<ApcPowerReceiverComponent>(uid, out var apc) && apc.Powered))
+            if (HasComp<ActiveWashingMachineComponent>(ent) || !(TryComp<ApcPowerReceiverComponent>(ent, out var apc) && apc.Powered))
                 return;
 
             var malfunctioning = false;
 
-            EnsureComp<EntityStorageComponent>(uid, out var storeComp); // if we got this far we should already have the thing
+            EnsureComp<EntityStorageComponent>(ent, out var storeComp); // if we got this far we should already have the thing
             storeComp.Openable = false;
             foreach (var item in storeComp.Contents.ContainedEntities.ToArray())
             {
-                var ev = new ActivelyBeingWashedEvent(uid, user);
+                var ev = new ActivelyBeingWashedEvent(ent, user);
                 RaiseLocalEvent(item, ev);
 
                 if (_tag.HasTag(item, "Lint"))
                     malfunctioning = true;
 
                 if (TryComp<BodyComponent>(item, out _))
-                    _dizzy.MakeDizzy(item, component.WashTimerTime * component.WashTimeMultiplier * component.DizzyMultiplier);
+                    _dizzy.MakeDizzy(item, ent.Comp.WashTimerTime * ent.Comp.WashTimeMultiplier * ent.Comp.DizzyMultiplier);
 
                 var activeWashedComp = AddComp<ActivelyWashedComponent>(item);
-                activeWashedComp.WashingMachine = uid;
+                activeWashedComp.WashingMachine = ent.Owner;
             }
 
-            _audio.PlayPvs(component.StartWashingSound, uid);
-            var activeComp = AddComp<ActiveWashingMachineComponent>(uid); // washing machine is go!
-            activeComp.WashTimeRemaining = component.WashTimerTime * component.WashTimeMultiplier;
-            activeComp.TotalTime = component.WashTimerTime; //this doesn't scale so that we can have the "actual" time
-            // Maybe this works maybe this doesnt idk.
-            component.CurrentWashTimeEnd = _gameTiming.CurTime + TimeSpan.FromSeconds(component.WashTimerTime * component.WashTimeMultiplier);
+            _audio.PlayPvs(ent.Comp.StartWashingSound, ent);
+            var activeComp = AddComp<ActiveWashingMachineComponent>(ent); // washing machine is go!
+            activeComp.WashTimeRemaining = ent.Comp.WashTimerTime * ent.Comp.WashTimeMultiplier;
+            activeComp.TotalTime = ent.Comp.WashTimerTime; //this doesn't scale so that we can have the "actual" time
+            ent.Comp.CurrentWashTimeEnd = _gameTiming.CurTime + TimeSpan.FromSeconds(ent.Comp.WashTimerTime * ent.Comp.WashTimeMultiplier);
             if (malfunctioning)
-                activeComp.MalfunctionTime = _gameTiming.CurTime + TimeSpan.FromSeconds(component.MalfunctionInterval);
+                activeComp.MalfunctionTime = _gameTiming.CurTime + TimeSpan.FromSeconds(ent.Comp.MalfunctionInterval);
         }
 
         public override void Update(float frameTime)
@@ -251,19 +246,19 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 //check if there's still wash time left
                 if (active.WashTimeRemaining > 0)
                 {
-                    AddWashDamage(uid, wash, storage, frameTime);
+                    AddWashDamage(uid, frameTime);
                     tileMix?.AdjustMoles(Gas.WaterVapor, wash.BaseSteamOutput);
                     continue;
                 }
 
                 //this means the cycle has finished.
-                AddWashDamage(uid, wash, storage, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
+                AddWashDamage(uid, Math.Max(frameTime + active.WashTimeRemaining, 0)); //Though there's still a little bit more heat to pump out
 
                 //this event handles dyes, we're calling it on the washing machine itself so DyeableSystem can grab the storage component
                 RaiseLocalEvent(uid, new StorageWashEvent(uid));
 
                 StopWashing((uid, wash));
-                RaiseLocalEvent(uid, new WashingMachineUseReagent(wash.WaterRequired, false));
+                ChemicalUseReagent(uid, false);
 
                 var ents = storage.Contents.ContainedEntities.ToList();
                 if (_emag.CheckFlag(uid, EmagType.Interaction))
@@ -285,27 +280,30 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// <param name="washComp">The washing machine that is heating up.</param>
         /// <param name="storeComp">The entity storage attached to the washing machine.</param>
         /// <param name="time">The time on the washing machine, in seconds.</param>
-        private void AddWashDamage(EntityUid uid, WashingMachineComponent washComp, EntityStorageComponent storeComp, float time)
+        private void AddWashDamage(Entity<WashingMachineComponent?, EntityStorageComponent?> ent, float time)
         {
-            var heatToAdd = time * washComp.BaseHeatMultiplier;
-            var damageToDo = time * washComp.Damage;
+            if (!Resolve(ent, ref ent.Comp1, ref ent.Comp2))
+                return;
+
+            var heatToAdd = time * ent.Comp1.BaseHeatMultiplier;
+            var damageToDo = time * ent.Comp1.Damage;
             var emaggedDamage = damageToDo;
-            foreach (var entity in storeComp.Contents.ContainedEntities)
+            foreach (var entity in ent.Comp2.Contents.ContainedEntities)
             {
                 if (TryComp<TemperatureComponent>(entity, out var tempComp))
-                    _temperature.ChangeHeat(entity, heatToAdd * washComp.ObjectHeatMultiplier, false, tempComp);
+                    _temperature.ChangeHeat(entity, heatToAdd * ent.Comp1.ObjectHeatMultiplier, false, tempComp);
 
                 if (TryComp<SolutionContainerManagerComponent>(entity, out var solutions))
                     foreach (var (_, soln) in _solutionContainer.EnumerateSolutions((entity, solutions)))
                     {
                         var solution = soln.Comp.Solution;
-                        if (solution.Temperature > washComp.TemperatureUpperThreshold)
+                        if (solution.Temperature > ent.Comp1.TemperatureUpperThreshold)
                             break;
 
                         _solutionContainer.AddThermalEnergy(soln, heatToAdd);
                     }
                 // ideally if emagged, the entity should be crit (half dead) JUST as the cycle ends. theyre getting gibbed anyway so the specifics dont matter.
-                if (_emag.CheckFlag(uid, EmagType.Interaction)
+                if (_emag.CheckFlag(ent, EmagType.Interaction)
                 && TryComp<MobThresholdsComponent>(entity, out var threshold)
                 && TryComp<DamageableComponent>(entity, out var damageable))
                 {
@@ -315,17 +313,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
                 }
                 _damageable.TryChangeDamage(entity, damageToDo);
             }
-        }
-
-        #endregion
-        #region Recipe Shit
-
-        /// <summary>
-        /// Dye + Dyeable item = profit
-        /// </summary>
-        private void DoRecipes(Entity<WashingMachineComponent, EntityStorageComponent> ent)
-        {
-
         }
 
         #endregion
@@ -379,15 +366,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         #endregion
         #region Helpers
 
-        public bool HasContents(EntityUid uid)
-        {
-            if (TryComp<EntityStorageComponent>(uid, out var comp))
-            {
-                return comp.Contents.ContainedEntities.Any();
-            }
-            else return false;
-        }
-
         public void SetAppearance(EntityUid uid, WashingMachineVisualState state, WashingMachineComponent? component = null, AppearanceComponent? appearanceComponent = null)
         {
             if (!Resolve(uid, ref component, ref appearanceComponent, false))
@@ -434,12 +412,12 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             args.Result = HandleResult.False;
         }
 
-        private void OnEmagged(EntityUid uid, WashingMachineComponent _, ref GotEmaggedEvent args)
+        private void OnEmagged(Entity<WashingMachineComponent> ent, ref GotEmaggedEvent args)
         {
             if (!_emag.CompareFlag(args.Type, EmagType.Interaction))
                 return;
 
-            if (_emag.CheckFlag(uid, EmagType.Interaction))
+            if (_emag.CheckFlag(ent, EmagType.Interaction))
                 return;
 
             args.Handled = true;
@@ -454,24 +432,24 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             return (getReagentsEvent.Water, getReagentsEvent.Cleaner);
         }
 
-        private void ChemicalGetReagents(Entity<ChemicalWashingMachineAdapterComponent> entity, ref WashingMachineGetReagentsEvent args)
+        private void ChemicalGetReagents(Entity<ChemicalWashingMachineAdapterComponent> ent, ref WashingMachineGetReagentsEvent args)
         {
-            if (!_solutionContainer.ResolveSolution(entity.Owner, entity.Comp.SolutionName, ref entity.Comp.Solution, out var solution))
+            if (!_solutionContainer.ResolveSolution(ent.Owner, ent.Comp.SolutionName, ref ent.Comp.Solution, out var solution))
                 return;
 
             FixedPoint2 water = 0;
             FixedPoint2 clean = 0;
-            foreach (var (reagentId, multiplier) in entity.Comp.ReagentWater)
+            foreach (var (reagentId, multiplier) in ent.Comp.ReagentWater)
             {
                 var reagent = solution.GetTotalPrototypeQuantity(reagentId);
-                reagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon;
+                reagent += ent.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon;
 
                 water += reagent * multiplier;
             }
-            foreach (var (reagentId, multiplier) in entity.Comp.ReagentCleaner)
+            foreach (var (reagentId, multiplier) in ent.Comp.ReagentCleaner)
             {
                 var reagent = solution.GetTotalPrototypeQuantity(reagentId);
-                reagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon;
+                reagent += ent.Comp.FractionalReagents.GetValueOrDefault(reagentId) * FixedPoint2.Epsilon;
 
                 clean += reagent * multiplier;
             }
@@ -480,19 +458,28 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             args.Cleaner = clean;
         }
 
-        private void ChemicalUseReagent(Entity<ChemicalWashingMachineAdapterComponent> entity, ref WashingMachineUseReagent args)
+        /// <summary>
+        /// Draw water/cleaning agent from its adapters.
+        /// </summary>
+        /// <remarks>
+        /// If Cleaning == false, water will be used.
+        /// If Cleaning == true, cleaning agent will be used.
+        /// </remarks>
+        public void ChemicalUseReagent(Entity<ChemicalWashingMachineAdapterComponent?> ent, bool cleaning)
         {
-            if (!_solutionContainer.ResolveSolution(entity.Owner, entity.Comp.SolutionName, ref entity.Comp.Solution, out var solution))
+            if (!Resolve(ent, ref ent.Comp))
+                return;
+            if (!_solutionContainer.ResolveSolution(ent.Owner, ent.Comp.SolutionName, ref ent.Comp.Solution, out var solution))
                 return;
 
-            if (!TryComp<WashingMachineComponent>(entity, out var wash))
+            if (!TryComp<WashingMachineComponent>(ent, out var wash))
                 return;
 
-            var reagentUsed = entity.Comp.ReagentWater;
+            var reagentUsed = ent.Comp.ReagentWater;
             var reagentRequired = wash.WaterRequired;
-            if (args.Cleaning)
+            if (cleaning)
             {
-                reagentUsed = entity.Comp.ReagentCleaner;
+                reagentUsed = ent.Comp.ReagentCleaner;
                 reagentRequired = wash.CleanerRequired;
             }
 
@@ -500,7 +487,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
             foreach (var (reagentId, _) in reagentUsed)
             {
                 totalReagent += solution.GetTotalPrototypeQuantity(reagentId).Float();
-                totalReagent += entity.Comp.FractionalReagents.GetValueOrDefault(reagentId);
+                totalReagent += ent.Comp.FractionalReagents.GetValueOrDefault(reagentId);
             }
 
             if (totalReagent == 0)
@@ -508,7 +495,7 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
 
             foreach (var (reagentId, _) in reagentUsed)
             {
-                _solutionContainer.RemoveReagent(entity.Comp.Solution.Value, reagentId, reagentRequired);
+                _solutionContainer.RemoveReagent(ent.Comp.Solution.Value, reagentId, reagentRequired);
             }
         }
 
@@ -517,15 +504,6 @@ namespace Content.Server._Impstation.WashingMachine.EntitySystems
         /// </summary>
         [ByRefEvent]
         public record struct WashingMachineGetReagentsEvent(FixedPoint2 Water, FixedPoint2 Cleaner);
-
-        /// <summary>
-        /// Raised by <see cref="WashingMachineSystem"/> to draw water/cleaning agent from its adapters.
-        /// </summary>
-        /// <remarks>
-        /// If Cleaning == false, water will be used.
-        /// If Cleaning == true, cleaning agent will be used.
-        /// </remarks>
-        public record struct WashingMachineUseReagent(FixedPoint2 ReagentUsed, bool Cleaning);
 
         #endregion
     }
