@@ -125,6 +125,7 @@ namespace Content.Server._Impstation.Dye.EntitySystems
                 Spawn(ent.Comp.OriginalEntity, Transform(ent).Coordinates);
                 Del(ent.Owner);
             }
+            ent.Comp.CurrentColor = Color.White; // setting to white before deleting, so client can update sprite
             RemCompDeferred<DyedComponent>(ent);
             Dirty(ent);
         }

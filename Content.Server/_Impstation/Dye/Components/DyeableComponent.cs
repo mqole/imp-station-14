@@ -1,9 +1,8 @@
-using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Impstation.Dye.Components;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent]
 /// <summary>
 /// Allows an entity with this component to be dyed in a washing machine.
 /// </summary>
