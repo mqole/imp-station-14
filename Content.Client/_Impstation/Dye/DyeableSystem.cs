@@ -1,5 +1,6 @@
 using Content.Shared._Impstation.Dye;
 using Content.Shared.Clothing.Components;
+using Content.Shared.Item;
 using Robust.Client.GameObjects;
 using Robust.Shared.GameStates;
 
@@ -26,6 +27,7 @@ public sealed class DyeableSystem : SharedDyeableSystem
 
         UpdateSpriteComponentAppearance(ent);
         UpdateClothingComponentAppearance(ent);
+        UpdateItemComponentAppearance(ent);
     }
 
     private void UpdateClothingComponentAppearance(Entity<DyedComponent, ClothingComponent?> ent)
@@ -45,8 +47,16 @@ public sealed class DyeableSystem : SharedDyeableSystem
 
         // TODO figure out why this doesnt work for inhands
         foreach (var layer in ent.Comp2.AllLayers)
-        {
             layer.Color = ent.Comp1.CurrentColor;
-        }
+    }
+
+    private void UpdateItemComponentAppearance(Entity<DyedComponent, ItemComponent?> ent)
+    {
+        if (!Resolve(ent, ref ent.Comp2, false))
+            return;
+
+        foreach (var hand in ent.Comp2.InhandVisuals.Values)
+            foreach (var layer in hand)
+                layer.Color = ent.Comp1.CurrentColor;
     }
 }

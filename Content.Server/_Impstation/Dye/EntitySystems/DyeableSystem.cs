@@ -3,7 +3,9 @@ using Content.Server._Impstation.WashingMachine.Components;
 using Content.Server._Impstation.WashingMachine.EntitySystems;
 using Content.Server.Storage.Components;
 using Content.Shared._Impstation.Dye;
+using Content.Shared.Climbing.Events;
 using Robust.Shared.GameStates;
+using Robust.Shared.Toolshed.Commands.Generic;
 
 namespace Content.Server._Impstation.Dye.EntitySystems
 {
@@ -125,9 +127,9 @@ namespace Content.Server._Impstation.Dye.EntitySystems
                 Spawn(ent.Comp.OriginalEntity, Transform(ent).Coordinates);
                 Del(ent.Owner);
             }
-            ent.Comp.CurrentColor = Color.White; // setting to white before deleting, so client can update sprite
-            RemCompDeferred<DyedComponent>(ent);
+            ent.Comp.CurrentColor = Color.White;
             Dirty(ent);
+            // ideally we would remcomp here but doing so before we have a chance to get the component state breaks the sprite.
         }
 
         private static Color MixColors(List<DyeComponent> contents, int count)
