@@ -6,6 +6,9 @@ using Robust.Shared.GameStates;
 
 namespace Content.Client._Impstation.Dye;
 
+/// <summary>
+/// Handles sprite appearance for dyed and dyeable items.
+/// </summary>
 public sealed class DyeableSystem : SharedDyeableSystem
 {
     public override void Initialize()

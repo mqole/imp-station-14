@@ -51,6 +51,7 @@
   - type: Physics
     bodyType: Static
   - type: Destructible
+  #- TODO explosive or whatever
     thresholds:
     - trigger:
         !type:DamageTrigger

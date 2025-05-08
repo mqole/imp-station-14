@@ -15,9 +15,6 @@ public sealed partial class WashingMachineComponent : Component
 {
     #region time
 
-    [DataField]
-    public float WashTimeMultiplier = 1;
-
     /// <summary>
     /// How long a single cycle lasts, in seconds.
     /// </summary>
@@ -31,7 +28,7 @@ public sealed partial class WashingMachineComponent : Component
     public TimeSpan CurrentWashTimeEnd = TimeSpan.Zero;
 
     /// <summary>
-    /// How long this washing machine will apply the dizzy status effect for on eligible entities.
+    /// How long this washing machine will apply the dizzy status effect to eligible entities.
     /// </summary>
     [DataField]
     public float DizzyMultiplier = 5;
@@ -78,7 +75,7 @@ public sealed partial class WashingMachineComponent : Component
     [DataField]
     public float ObjectHeatMultiplier = 100;
 
-    // TODO: make TemperatureUpperThreshold its own component, and have microwave use it
+    // TODO: make heating of components in a container its own component, and have microwave use it
     /// <summary>
     /// The max temperature that this washing machine can heat objects to.
     /// </summary>
@@ -151,21 +148,20 @@ public sealed class ActivelyBeingWashedEvent : HandledEntityEventArgs
     public EntityUid WashingMachine;
     public EntityUid? User;
 
-    public ActivelyBeingWashedEvent(EntityUid washingMachine, EntityUid? user)
+    public ActivelyBeingWashedEvent(EntityUid washingMachine)
     {
         WashingMachine = washingMachine;
-        User = user;
     }
 }
 
 /// <summary>
 /// Raised by <see cref="WashingMachineSystem"/> on a washing machine when washing is complete.
 /// </summary>
-public sealed class StorageWashEvent : HandledEntityEventArgs
+public sealed class WashEndEvent : HandledEntityEventArgs
 {
     public EntityUid Storage;
 
-    public StorageWashEvent(EntityUid storage)
+    public WashEndEvent(EntityUid storage)
     {
         Storage = storage;
     }

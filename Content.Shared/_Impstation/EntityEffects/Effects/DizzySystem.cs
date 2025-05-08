@@ -3,6 +3,9 @@ using Content.Shared.Movement.Systems;
 
 namespace Content.Shared._Impstation.EntityEffects.Effects;
 
+/// <summary>
+/// Handles the 'dizzy' status effect (reversing a user's controls).
+/// </summary>
 public sealed class DizzySystem : EntitySystem
 {
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
