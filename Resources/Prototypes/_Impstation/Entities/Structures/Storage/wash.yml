@@ -1,6 +1,6 @@
 - type: entity
   parent: [ CrateBaseWeldable, BaseMachinePowered ]
-  id: WashingMachine
+  id: WashingMachineEmpty
   name: washing machine
   components:
   - type: Icon
@@ -39,9 +39,6 @@
   - type: SolutionContainerManager
     solutions:
       tank:
-        reagents:
-        - ReagentId: Water
-          Quantity: 500
         maxVol: 500
   - type: ExaminableSolution
     solution: tank
@@ -53,6 +50,23 @@
     anchored: true
   - type: Physics
     bodyType: Static
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Breakage"]
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalGlassBreak
   - type: WashingMachine
   - type: ChemicalWashingMachineAdapter
     solution: tank
@@ -60,6 +74,19 @@
       Water: 1
     reagentCleaner:
       Bleach: 1
+
+- type: entity
+  parent: WashingMachineEmpty
+  id: WashingMachine
+  suffix: Full
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      tank:
+        reagents:
+        - ReagentId: Water
+          Quantity: 500
+        maxVol: 500
 
 - type: entity
   parent: ClothingUniformBase

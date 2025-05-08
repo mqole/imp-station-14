@@ -45,7 +45,6 @@ public sealed class DyeableSystem : SharedDyeableSystem
         if (!Resolve(ent, ref ent.Comp2, false))
             return;
 
-        // TODO figure out why this doesnt work for inhands
         foreach (var layer in ent.Comp2.AllLayers)
             layer.Color = ent.Comp1.CurrentColor;
     }
