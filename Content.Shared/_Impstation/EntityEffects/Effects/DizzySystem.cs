@@ -1,5 +1,7 @@
 using Content.Shared.Drunk;
+using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Systems;
+using Robust.Shared.Toolshed.Commands.Generic;
 
 namespace Content.Shared._Impstation.EntityEffects.Effects;
 
@@ -17,6 +19,7 @@ public sealed class DizzySystem : EntitySystem
         base.Initialize();
         SubscribeLocalEvent<DizzyComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<DizzyComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<DizzyComponent, MoveInputEvent>(OnMoveInput);
     }
 
     private void OnStartup(Entity<DizzyComponent> ent, ref ComponentStartup args)
@@ -76,5 +79,10 @@ public sealed class DizzySystem : EntitySystem
             // after time runs out
             RemCompDeferred<DizzyComponent>(uid);
         }
+    }
+
+    private void OnMoveInput(Entity<DizzyComponent> ent, ref MoveInputEvent args)
+    {
+        //TODO: some shit
     }
 }

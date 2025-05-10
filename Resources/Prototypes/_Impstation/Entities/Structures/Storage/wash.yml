@@ -75,6 +75,9 @@
       Water: 1
     reagentCleaner:
       Bleach: 1
+  - type: CleansForensics
+    cleanDelay: 0
+  - type: DoAfter #we need this so we can clean forensics off things :/
 
 - type: entity
   parent: WashingMachineEmpty

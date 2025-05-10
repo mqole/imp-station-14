@@ -4,8 +4,11 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Server.Construction;
 using Content.Server.Construction.Components;
 using Content.Server.DeviceLinking.Systems;
+using Content.Server.DoAfter;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
+using Content.Server.Forensics;
+using Content.Server.Jittering;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Storage.Components;
@@ -22,8 +25,11 @@ using Content.Shared.Damage;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking.Events;
+using Content.Shared.DoAfter;
 using Content.Shared.Emag.Systems;
 using Content.Shared.FixedPoint;
+using Content.Shared.Forensics;
+using Content.Shared.Jittering;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
 using Content.Shared.Power;
@@ -51,8 +57,10 @@ public sealed class WashingMachineSystem : EntitySystem
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly DeviceLinkSystem _deviceLink = default!;
     [Dependency] private readonly DizzySystem _dizzy = default!;
+    [Dependency] private readonly DoAfterSystem _doAfter = default!;
     [Dependency] private readonly EmagSystem _emag = default!;
     [Dependency] private readonly ExplosionSystem _explosion = default!;
+    [Dependency] private readonly ForensicsSystem _forensics = default!;
     [Dependency] private readonly IAdminLogManager _adminLogger = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
@@ -63,6 +71,7 @@ public sealed class WashingMachineSystem : EntitySystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedBodySystem _body = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
+    [Dependency] private readonly SharedJitteringSystem _jitter = default!;
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
     [Dependency] private readonly TagSystem _tag = default!;
@@ -242,7 +251,7 @@ public sealed class WashingMachineSystem : EntitySystem
 
         var query = EntityQueryEnumerator<ActiveWashingMachineComponent, WashingMachineComponent>();
 
-        while (query.MoveNext(out var uid, out var active, out var wash)) //so this wont trigger if someone manually makes something a washing machine without also giving it entitystorage. if they try to wash them, then im pretty sure they'll be stuck making washing noises forever. things to consider.
+        while (query.MoveNext(out var uid, out var active, out var wash))
         {
             active.WashTimeRemaining -= frameTime;
             var tileMix = _atmos.GetTileMixture(uid, excite: true);
@@ -370,6 +379,7 @@ public sealed class WashingMachineSystem : EntitySystem
             return;
         SetAppearance(ent.Owner, WashingMachineVisualState.Active, comp);
 
+        _jitter.AddJitter(ent, -2, 80);
         comp.PlayingStream =
             _audio.PlayPvs(comp.LoopingSound, ent, AudioParams.Default.WithLoop(true).WithMaxDistance(5))?.Entity;
     }
@@ -388,6 +398,13 @@ public sealed class WashingMachineSystem : EntitySystem
             foreach (var user in ents)
                 if (TryComp<BodyComponent>(user, out _))
                     _body.GibBody(user, true);
+
+        if (TryComp<CleansForensicsComponent>(ent.Owner, out var cleansForensics))
+            foreach (var item in ents)
+            {
+                var doAfterArgs = new DoAfterArgs(EntityManager, ent.Owner, TimeSpan.Zero, new CleanForensicsDoAfterEvent(), ent, target: item, used: ent);
+                _doAfter.TryStartDoAfter(doAfterArgs); // this just begs for a forensics refactor
+            }
 
         _container.EmptyContainer(storage.Contents);
     }
@@ -411,6 +428,7 @@ public sealed class WashingMachineSystem : EntitySystem
             return;
 
         SetAppearance(ent.Owner, WashingMachineVisualState.Idle, comp);
+        RemComp<JitteringComponent>(ent);
         comp.PlayingStream = _audio.Stop(comp.PlayingStream);
     }
 
