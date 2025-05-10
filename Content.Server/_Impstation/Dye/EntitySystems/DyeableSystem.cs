@@ -109,7 +109,7 @@ public sealed class DyeableSystem : EntitySystem
 
             EnsureComp<DyedComponent>(ent, out var outDyed);
             outDyed.CurrentColor = outColor;
-            Dirty(ent.Owner, outDyed);
+            Dirty(ent.Owner, outDyed); // this is now bugged somehow. what the fuck!!!
         }
     }
 

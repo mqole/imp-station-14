@@ -6,7 +6,7 @@ namespace Content.Shared._Impstation.EntityEffects.Effects;
 /// <summary>
 /// Status effect that reverses your controls. up is down, left is right.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 [Access(typeof(DizzySystem))]
 public sealed partial class DizzyComponent : Component
 {
@@ -29,4 +29,10 @@ public sealed partial class DizzyComponent : Component
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float TimeRemaining;
+
+    [ViewVariables, AutoNetworkedField]
+    public float SprintSpeedModifier = -1;
+
+    [ViewVariables, AutoNetworkedField]
+    public float WalkSpeedModifier = -1;
 }

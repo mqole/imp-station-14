@@ -399,14 +399,12 @@ public sealed class WashingMachineSystem : EntitySystem
                 if (TryComp<BodyComponent>(user, out _))
                     _body.GibBody(user, true);
 
-        if (TryComp<CleansForensicsComponent>(ent.Owner, out var cleansForensics))
+        if (TryComp<CleansForensicsComponent>(ent.Owner, out _))
             foreach (var item in ents)
             {
                 var doAfterArgs = new DoAfterArgs(EntityManager, ent.Owner, TimeSpan.Zero, new CleanForensicsDoAfterEvent(), ent, target: item, used: ent);
                 _doAfter.TryStartDoAfter(doAfterArgs); // this just begs for a forensics refactor
             }
-
-        _container.EmptyContainer(storage.Contents);
     }
 
     // StopWashing is called whenever washing stops abruptly, in addition to when it naturally ends

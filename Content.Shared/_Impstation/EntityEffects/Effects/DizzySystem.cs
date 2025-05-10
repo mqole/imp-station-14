@@ -1,7 +1,5 @@
 using Content.Shared.Drunk;
-using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Systems;
-using Robust.Shared.Toolshed.Commands.Generic;
 
 namespace Content.Shared._Impstation.EntityEffects.Effects;
 
@@ -10,16 +8,17 @@ namespace Content.Shared._Impstation.EntityEffects.Effects;
 /// </summary>
 public sealed class DizzySystem : EntitySystem
 {
+    [Dependency] private readonly MovementSpeedModifierSystem _movementSpeedModifier = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly SharedDrunkSystem _drunkSystem = default!;
-    [Dependency] private readonly SharedContentEyeSystem _eyeSystem = default!;
 
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<DizzyComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<DizzyComponent, ComponentShutdown>(OnShutdown);
-        SubscribeLocalEvent<DizzyComponent, MoveInputEvent>(OnMoveInput);
+
+        SubscribeLocalEvent<DizzyComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
     }
 
     private void OnStartup(Entity<DizzyComponent> ent, ref ComponentStartup args)
@@ -27,6 +26,7 @@ public sealed class DizzySystem : EntitySystem
         if (ent.Comp.Dizzy)
             return;
         ent.Comp.Dizzy = true;
+        _movementSpeedModifier.RefreshMovementSpeedModifiers(ent);
         UpdateAppearance(ent.Owner);
     }
 
@@ -34,6 +34,11 @@ public sealed class DizzySystem : EntitySystem
     {
         _drunkSystem.TryRemoveDrunkenessTime(ent, ent.Comp.StatusTime.TotalSeconds);
         ent.Comp.StatusTime = TimeSpan.Zero;
+
+        ent.Comp.SprintSpeedModifier = 1f;
+        ent.Comp.WalkSpeedModifier = 1f;
+
+        _movementSpeedModifier.RefreshMovementSpeedModifiers(ent);
         UpdateAppearance(ent.Owner);
     }
 
@@ -81,8 +86,8 @@ public sealed class DizzySystem : EntitySystem
         }
     }
 
-    private void OnMoveInput(Entity<DizzyComponent> ent, ref MoveInputEvent args)
+    private void OnRefreshMovespeed(EntityUid uid, DizzyComponent component, RefreshMovementSpeedModifiersEvent args)
     {
-        //TODO: some shit
+        args.ModifySpeed(component.WalkSpeedModifier, component.SprintSpeedModifier);
     }
 }
