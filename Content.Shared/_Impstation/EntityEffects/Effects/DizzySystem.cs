@@ -1,4 +1,5 @@
 using Content.Shared.Drunk;
+using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 
 namespace Content.Shared._Impstation.EntityEffects.Effects;
@@ -86,8 +87,11 @@ public sealed class DizzySystem : EntitySystem
         }
     }
 
-    private void OnRefreshMovespeed(EntityUid uid, DizzyComponent component, RefreshMovementSpeedModifiersEvent args)
+    private void OnRefreshMovespeed(Entity<DizzyComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
     {
-        args.ModifySpeed(component.WalkSpeedModifier, component.SprintSpeedModifier);
+        args.ModifySpeed(ent.Comp.WalkSpeedModifier, ent.Comp.SprintSpeedModifier);
+        Dirty(ent);
+        if (TryComp<MovementSpeedModifierComponent>(ent.Owner, out var move))
+            Dirty(ent, move);
     }
 }
