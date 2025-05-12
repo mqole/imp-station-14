@@ -89,10 +89,13 @@ public sealed class DyeableSystem : EntitySystem
             foreach (var dye in args.Dyes)
             {
                 if (dye.Comp.Color == colorname)
+                {
                     UniqueDye(ent, colorname);
+                    return;
+                }
             }
         }
-        // not dying something that's been hit by unique recipe beam
+        // not dying something that only accepts unique recipes
         if (ent.Comp.AcceptAnyColor)
         {
             var dyes = new List<Color>();
@@ -120,7 +123,7 @@ public sealed class DyeableSystem : EntitySystem
         dyed.CurrentColor = Color.White;
         dyed.OriginalEntity = MetaData(ent.Owner).EntityPrototype?.ID;
 
-        Del(ent.Owner);
+        QueueDel(ent.Owner);
         return;
     }
 
