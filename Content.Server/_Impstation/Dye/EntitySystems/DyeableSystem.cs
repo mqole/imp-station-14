@@ -64,8 +64,7 @@ public sealed class DyeableSystem : EntitySystem
 
         // cancel if we have no cleaning agents or reagents
         if (!TryComp<WashingMachineComponent>(ent.Owner, out var wash)
-        && wash != null
-        && _washing.GetReagents(ent.Owner).Item2 < wash.CleanerRequired
+        || _washing.GetReagents(ent.Owner).Item2 < wash.CleanerRequired
         && cleaners.Count == 0)
             return;
 

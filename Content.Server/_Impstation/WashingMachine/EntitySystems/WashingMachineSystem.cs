@@ -35,6 +35,7 @@ using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Tag;
 using Content.Shared.Verbs;
+using Content.Shared.Weapons.Melee;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -153,11 +154,6 @@ public sealed class WashingMachineSystem : EntitySystem
         SetAppearance(ent, WashingMachineVisualState.Broken, ent.Comp);
         StopWashing(ent);
 
-        if (TryComp<EntityStorageComponent>(ent, out var storeComp))
-        {
-            _container.EmptyContainer(storeComp.Contents);
-        }
-
         if (TryComp<SolutionContainerManagerComponent>(ent, out var solComp))
         {
             _solutionContainer.TryGetSolution(solComp, "tank", out var solution);
@@ -226,7 +222,7 @@ public sealed class WashingMachineSystem : EntitySystem
             var ev = new ActivelyBeingWashedEvent(ent);
             RaiseLocalEvent(item, ev);
 
-            if (_tag.HasTag(item, "Lint"))
+            if (_tag.HasTag(item, "Lint") || _tag.HasTag(item, "Metal"))
                 malfunctioning = true;
 
             if (TryComp<BodyComponent>(item, out _))
@@ -287,6 +283,7 @@ public sealed class WashingMachineSystem : EntitySystem
         var heatToAdd = time * ent.Comp1.BaseHeatMultiplier;
         var damageToDo = time * ent.Comp1.Damage;
         var emaggedDamage = damageToDo;
+        DamageSpecifier meleeDamage = new();
         foreach (var entity in ent.Comp2.Contents.ContainedEntities)
         {
             if (TryComp<TemperatureComponent>(entity, out var tempComp))
@@ -311,7 +308,15 @@ public sealed class WashingMachineSystem : EntitySystem
                 damageToDo = emaggedDamage;
             }
             _damageable.TryChangeDamage(entity, damageToDo);
+
+            if (TryComp<MeleeWeaponComponent>(entity, out var melee) && !melee.MustBeEquippedToUse) // dont wash knives!!!
+                if (_random.Prob(ent.Comp1.WeaponHitChance))
+                {
+                    meleeDamage += melee.Damage;
+                    _audio.PlayPvs(melee.HitSound, ent);
+                }
         }
+        _damageable.TryChangeDamage(ent, meleeDamage);
     }
 
     #endregion
@@ -388,8 +393,6 @@ public sealed class WashingMachineSystem : EntitySystem
     {
         if (!TryComp<WashingMachineComponent>(ent.Owner, out var wash))
             return;
-        StopWashing((ent.Owner, wash));
-        ChemicalUseReagent(ent.Owner, false);
 
         if (!TryComp<EntityStorageComponent>(ent.Owner, out var storage))
             return;
@@ -405,6 +408,11 @@ public sealed class WashingMachineSystem : EntitySystem
                 var doAfterArgs = new DoAfterArgs(EntityManager, ent.Owner, TimeSpan.Zero, new CleanForensicsDoAfterEvent(), ent, target: item, used: ent);
                 _doAfter.TryStartDoAfter(doAfterArgs); // this just begs for a forensics refactor
             }
+
+        if (_random.Prob(wash.LintChance))
+            Spawn(wash.LintPrototype, Transform(ent).Coordinates);
+        StopWashing((ent.Owner, wash));
+        ChemicalUseReagent(ent.Owner, false);
     }
 
     // StopWashing is called whenever washing stops abruptly, in addition to when it naturally ends
@@ -416,9 +424,11 @@ public sealed class WashingMachineSystem : EntitySystem
             foreach (var item in comp.Contents.ContainedEntities)
                 RemCompDeferred<ActivelyWashedComponent>(item);
             comp.Openable = true;
+            _container.EmptyContainer(comp.Contents);
         }
         ent.Comp.CurrentWashTimeEnd = TimeSpan.Zero;
-        _audio.PlayPvs(ent.Comp.CycleDoneSound, ent.Owner);
+        if (!ent.Comp.Broken)
+            _audio.PlayPvs(ent.Comp.CycleDoneSound, ent.Owner);
     }
     private void OnWashStop(Entity<ActiveWashingMachineComponent> ent, ref ComponentShutdown args)
     {

@@ -98,6 +98,18 @@ public sealed partial class WashingMachineComponent : Component
     #region malfunction
 
     /// <summary>
+    /// Entity prototype that has a chance to be spawned as dryer lint.
+    /// </summary>
+    [DataField]
+    public EntProtoId LintPrototype = "WashingLintTest";
+
+    /// <summary>
+    /// Chance per cycle of dryer lint spawning.
+    /// </summary>
+    [DataField]
+    public float LintChance = 0.1f;
+
+    /// <summary>
     /// How frequently in seconds the washing machine can malfunction (can roll multiple times).
     /// </summary>
     [DataField]
@@ -120,6 +132,12 @@ public sealed partial class WashingMachineComponent : Component
 
     [DataField]
     public float MalfunctionSteamMultiplier = 1000;
+
+    /// <summary>
+    /// Chance of a melee weapon in the wash damaging the machine.
+    /// </summary>
+    [DataField]
+    public float WeaponHitChance = 0.05f;
 
     #endregion
     #region  audio

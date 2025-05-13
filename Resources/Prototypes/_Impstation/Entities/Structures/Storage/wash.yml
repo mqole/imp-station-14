@@ -1,5 +1,5 @@
 - type: entity
-  parent: [ CrateBaseWeldable, BaseMachinePowered ]
+  parent: [ CrateGeneric, BaseMachinePowered ]
   id: WashingMachineEmpty
   name: washing machine
   components:
@@ -50,6 +50,9 @@
     anchored: true
   - type: Physics
     bodyType: Static
+  - type: Damageable
+    damageContainer: StructuralInorganic
+    damageModifierSet: Metallic
   - type: Destructible
   #- TODO explosive or whatever
     thresholds:
@@ -59,6 +62,9 @@
       behaviors:
       - !type:DoActsBehavior
         acts: ["Breakage"]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalGlassBreak
     - trigger:
         !type:DamageTrigger
         damage: 200
