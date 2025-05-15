@@ -5,6 +5,7 @@
   components:
   - type: Icon
     sprite: _Impstation/Structures/Storage/Wash.rsi
+    state: "base"
   - type: Sprite
     sprite: _Impstation/Structures/Storage/Wash.rsi
     layers:
