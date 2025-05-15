@@ -8,11 +8,11 @@
   - type: Sprite
     sprite: _Impstation/Structures/Storage/Wash.rsi
     layers:
-    - state: base
-      map: ["enum.StorageVisualLayers.Base"]
-    - state: closed
-      map: ["enum.StorageVisualLayers.Door"]
-    - map: ["enum.EntityHeaterVisuals.Setting"]
+    - map: ["enum.WashingMachineVisualLayers.Base"]
+    - map: ["enum.WashingMachineVisualLayers.Fabric"]
+    - map: ["enum.WashingMachineVisualLayers.Reagent"]
+    - map: ["enum.StorageVisualLayers.Door"]
+    - map: ["enum.WashingMachineVisualLayers.Cycle"]
       shader: unshaded
       visible: false
   - type: ApcPowerReceiver
@@ -21,10 +21,15 @@
   - type: PowerSwitch
   - type: GenericVisualizer
     visuals:
-      enum.EntityHeaterVisuals.Setting:
-        enum.EntityHeaterVisuals.Setting:
-          Off: { visible: true, state: washOff }
-          On: { visible: true, state: washOn }
+      enum.WashingMachineVisualLayers.Base:
+        Idle: { state: "base" }
+        Broken: { state: "baseBroken" }
+      enum.WashingMachineVisualLayers.Fabric:
+      enum.WashingMachineVisualLayers.Reagent:
+        enum.WashingMachineVisualLayers.Cycle:
+          Idle: { visible: true, state: washOff }
+          Active: { visible: true, state: washOn }
+          Broken: { visible, false }
   - type: LitOnPowered
   - type: PointLight
     radius: 1.5
