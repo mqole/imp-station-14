@@ -76,7 +76,9 @@ public sealed class DyeableSystem : EntitySystem
             // subtract cleaners if eligible
             if (wash != null && _washing.GetReagents(ent.Owner).Item2 >= wash.CleanerRequired)
                 _washing.ChemicalUseReagent(ent.Owner, true);
-
+            foreach (var cleanerItem in cleaners)
+                if (cleanerItem.Comp.DeleteOnUse)
+                    QueueDel(cleanerItem);
         }
     }
 
