@@ -9,33 +9,70 @@
   - type: Sprite
     sprite: _Impstation/Structures/Storage/Wash.rsi
     layers:
-    - map: ["enum.WashingMachineVisualLayers.Base"]
-    - map: ["enum.WashingMachineVisualLayers.Fabric"]
-    - map: ["enum.WashingMachineVisualLayers.Reagent"]
-    - map: ["enum.StorageVisualLayers.Door"]
-    - map: ["enum.WashingMachineVisualLayers.Cycle"]
+    - map: ["base"]
+      state: base
+    - map: ["fabric"]
+      state: fabric
+      visible: false
+    - map: ["reagent"]
+      state: reagent
+      visible: false
+    - map: ["door"]
+      state: doorClosed
+    - map: ["cycle"]
+      state: washOff
       shader: unshaded
       visible: false
-  - type: ApcPowerReceiver
-    powerDisabled: true
-  - type: WiredNetworkConnection
-  - type: PowerSwitch
+  - type: Appearance
   - type: GenericVisualizer
     visuals:
       enum.WashingMachineVisualLayers.Base:
-        Idle: { state: "base" }
-        Broken: { state: "baseBroken" }
+        base:
+          Idle: { state: "base" }
+          Broken: { state: "baseBroken" }
       enum.WashingMachineVisualLayers.Fabric:
+        fabric:
+          enum.StorageVisuals.HasContents:
+              false: { visible: false }
+              true: { visible: true }
+          Idle: { state: "fabric" }
+          Active: { state: "fabricCycle" }
       enum.WashingMachineVisualLayers.Reagent:
-        enum.WashingMachineVisualLayers.Cycle:
-          Idle: { visible: true, state: washOff }
-          Active: { visible: true, state: washOn }
-          Broken: { visible, false }
+        reagent:
+          Idle:
+            enum.StorageVisuals.HasContents: # my crazy fucking yaml or statements dont piskun work
+              false: { state: "reagent" }
+              true: { state: "reagentFabric" }
+          Active: { state: "reagentCycle" }
+      enum.StorageVisuals.Open:
+        door:
+          true:
+            enum.WashingMachineVisualLayers.Door:
+              Idle: { state: "doorOpen" }
+              Bloody: { state: "doorOpenBloody" }
+              Broken: { state: "doorOpenBroken" }
+          false:
+            enum.WashingMachineVisualLayers.Door:
+              Idle: { state: "doorClosed" }
+              Bloody: { state: "doorClosedBloody" }
+              Broken: { state: "doorClosedBroken" }
+      enum.WashingMachineVisualLayers.Cycle:
+        cycle:
+          Idle: { state: "washOff" }
+          Active: { state: "washOn" }
+          Broken: { visible: false }
+      enum.PowerDeviceVisuals.Powered:
+        cycle:
+          True: { visible: true }
+          False: { visible: false }
+  - type: ApcPowerReceiver
+    powerDisabled: true
+  - type: WiredNetworkConnection
   - type: LitOnPowered
   - type: PointLight
     radius: 1.5
     energy: 1.5
-    color: "#47bfff"
+    color: "#8bd6ff"
   - type: AmbientSound
     enabled: false
     volume: -5

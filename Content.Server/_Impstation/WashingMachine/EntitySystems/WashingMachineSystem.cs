@@ -135,7 +135,7 @@ public sealed class WashingMachineSystem : EntitySystem
     {
         if (!args.Powered)
         {
-            SetAppearance(ent, WashingMachineVisualState.Idle, ent.Comp);
+            SetAppearance(ent.Owner, WashingMachineVisualState.Idle);
             StopWashing(ent);
         }
     }
@@ -151,7 +151,7 @@ public sealed class WashingMachineSystem : EntitySystem
     private void OnBreak(Entity<WashingMachineComponent> ent, ref BreakageEventArgs args)
     {
         ent.Comp.Broken = true;
-        SetAppearance(ent, WashingMachineVisualState.Broken, ent.Comp);
+        SetAppearance(ent.Owner, WashingMachineVisualState.Broken);
         StopWashing(ent);
 
         if (TryComp<SolutionContainerManagerComponent>(ent, out var solComp))
@@ -367,22 +367,43 @@ public sealed class WashingMachineSystem : EntitySystem
             $"{ToPrettyString(ent)} exploded from unsafe washing!");
     }
 
+    public void DoGibBehaviour(Entity<WashingMachineComponent?> ent, List<EntityUid> storage)
+    {
+        if (!Resolve(ent, ref ent.Comp))
+            return;
+        foreach (var user in storage)
+            if (TryComp<BodyComponent>(user, out _))
+                _body.GibBody(user, true);
+        ent.Comp.Bloody = true;
+        SetAppearance(ent, WashingMachineVisualState.Bloody);
+    }
+
     #endregion
     #region Helpers
 
-    public void SetAppearance(EntityUid uid, WashingMachineVisualState state, WashingMachineComponent? component = null, AppearanceComponent? appearanceComponent = null)
+    public void SetAppearance(Entity<WashingMachineComponent?, AppearanceComponent?> ent, WashingMachineVisualState state)
     {
-        if (!Resolve(uid, ref component, ref appearanceComponent, false))
+        if (!Resolve(ent, ref ent.Comp1, ref ent.Comp2, false))
             return;
-        var display = component.Broken ? WashingMachineVisualState.Broken : state;
-        _appearance.SetData(uid, PowerDeviceVisuals.VisualState, display, appearanceComponent);
+
+        // we want to prioritize setting layers to broken first.
+        // door MIGHT be bloodied, if it is we should keep it bloodied. broken should be prioritized over bloodied.
+        var breakOrState = ent.Comp1.Broken ? WashingMachineVisualState.Broken : state;
+        foreach (var layer in Enum.GetValues<WashingMachineVisualLayers>())
+            _appearance.SetData(ent, layer, breakOrState);
+        if (ent.Comp1.Bloody && !ent.Comp1.Broken)
+            _appearance.SetData(ent, WashingMachineVisualLayers.Door, WashingMachineVisualState.Bloody);
+
+        // handling lights when unpowered
+        if (TryComp<ApcPowerReceiverComponent>(ent, out var power))
+            _appearance.SetData(ent, PowerDeviceVisuals.VisualState, power.Powered);
     }
 
     private void OnWashStart(Entity<ActiveWashingMachineComponent> ent, ref ComponentStartup args)
     {
         if (!TryComp<WashingMachineComponent>(ent, out var comp))
             return;
-        SetAppearance(ent.Owner, WashingMachineVisualState.Active, comp);
+        SetAppearance(ent.Owner, WashingMachineVisualState.Active);
 
         _jitter.AddJitter(ent, -2, 80);
         comp.PlayingStream =
@@ -398,9 +419,7 @@ public sealed class WashingMachineSystem : EntitySystem
             return;
         var ents = storage.Contents.ContainedEntities.ToList();
         if (_emag.CheckFlag(ent.Owner, EmagType.Interaction))
-            foreach (var user in ents)
-                if (TryComp<BodyComponent>(user, out _))
-                    _body.GibBody(user, true);
+            DoGibBehaviour(ent.Owner, ents);
 
         if (TryComp<CleansForensicsComponent>(ent.Owner, out _))
             foreach (var item in ents)
@@ -413,6 +432,8 @@ public sealed class WashingMachineSystem : EntitySystem
             Spawn(wash.LintPrototype, Transform(ent).Coordinates);
         StopWashing((ent.Owner, wash));
         ChemicalUseReagent(ent.Owner, false);
+        if (!wash.Broken)
+            _audio.PlayPvs(wash.CycleDoneSound, ent.Owner);
     }
 
     // StopWashing is called whenever washing stops abruptly, in addition to when it naturally ends
@@ -427,15 +448,13 @@ public sealed class WashingMachineSystem : EntitySystem
             _container.EmptyContainer(comp.Contents);
         }
         ent.Comp.CurrentWashTimeEnd = TimeSpan.Zero;
-        if (!ent.Comp.Broken)
-            _audio.PlayPvs(ent.Comp.CycleDoneSound, ent.Owner);
     }
     private void OnWashStop(Entity<ActiveWashingMachineComponent> ent, ref ComponentShutdown args)
     {
         if (!TryComp<WashingMachineComponent>(ent, out var comp))
             return;
 
-        SetAppearance(ent.Owner, WashingMachineVisualState.Idle, comp);
+        SetAppearance(ent.Owner, WashingMachineVisualState.Idle);
         RemComp<JitteringComponent>(ent);
         comp.PlayingStream = _audio.Stop(comp.PlayingStream);
     }

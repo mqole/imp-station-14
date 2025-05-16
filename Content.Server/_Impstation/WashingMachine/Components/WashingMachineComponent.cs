@@ -51,6 +51,9 @@ public sealed partial class WashingMachineComponent : Component
     [ViewVariables]
     public bool Broken;
 
+    [ViewVariables]
+    public bool Bloody;
+
     [DataField]
     public ProtoId<SinkPortPrototype> OnPort = "On";
 
