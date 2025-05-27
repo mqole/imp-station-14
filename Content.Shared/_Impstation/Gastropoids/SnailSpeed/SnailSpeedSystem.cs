@@ -1,6 +1,6 @@
 using Content.Shared.Movement.Systems;
 
-namespace Content.Shared.SnailSpeed;
+namespace Content.Shared._Impstation.SnailSpeed;
 
 /// <summary>
 /// Allows mobs to produce materials using Thirst with <see cref="ExcretionComponent"/>.
@@ -17,18 +17,18 @@ public abstract partial class SharedSnailSpeedSystem : EntitySystem
         SubscribeLocalEvent<SnailSpeedComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
     }
 
-    private void OnMapInit(EntityUid uid, SnailSpeedComponent comp, MapInitEvent args)
+    private void OnMapInit(Entity<SnailSpeedComponent> ent, ref MapInitEvent args)
     {
-        _movement.RefreshMovementSpeedModifiers(uid);
+        _movement.RefreshMovementSpeedModifiers(ent);
     }
 
     /// apply constant movespeed modifier as long as entity is not flying
-	private void OnRefreshMovespeed(EntityUid uid, SnailSpeedComponent component, RefreshMovementSpeedModifiersEvent args)
+	private void OnRefreshMovespeed(Entity<SnailSpeedComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
     {
-        if (_jetpack.IsUserFlying(uid))
+        if (_jetpack.IsUserFlying(ent))
             return;
 
-        args.ModifySpeed(component.SnailSlowdownModifier, component.SnailSlowdownModifier);
+        args.ModifySpeed(ent.Comp.SnailSlowdownModifier, ent.Comp.SnailSlowdownModifier);
     }
 
 }

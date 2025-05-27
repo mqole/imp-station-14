@@ -1,8 +1,6 @@
 using Robust.Shared.GameStates;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
-namespace Content.Shared.SnailSpeed;
+namespace Content.Shared._Impstation.SnailSpeed;
 
 /// <summary>
 /// Should be applied to any mob that you want to be able to produce any material with an action and the cost of thirst.
@@ -11,10 +9,9 @@ namespace Content.Shared.SnailSpeed;
 [RegisterComponent, NetworkedComponent, Access(typeof(SharedSnailSpeedSystem)), AutoGenerateComponentState]
 public sealed partial class SnailSpeedComponent : Component
 {
-		    /// <summary>
+    /// <summary>
     /// The amount of slowdown applied to snails.
     /// </summary>
-    [DataField("snailSlowdownModifier"), ViewVariables(VVAccess.ReadWrite)]
-    [AutoNetworkedField]
+    [DataField, AutoNetworkedField]
     public float SnailSlowdownModifier = 0.5f;
 }

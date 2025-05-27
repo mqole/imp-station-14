@@ -11,7 +11,7 @@ using Robust.Shared.Map.Components;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared._Impstation.SnailSprint;
+namespace Content.Shared._Impstation.Gastropoids.SnailSprint;
 
 /// <summary>
 /// Allows an entity to use thirst for a speed boost. Also allows that speed boost to produce a fluid.
