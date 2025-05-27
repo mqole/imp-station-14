@@ -1,3 +1,5 @@
+using Content.Shared.Damage;
+using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
@@ -19,7 +21,22 @@ public sealed partial class SnailShellComponent : Component
     public EntityUid? ActionEntity;
 
     /// <summary>
-    /// True if the snail is curled up in its shell.
+    /// Damage modifiers granted to this entity when shell is activated.
     /// </summary>
+    [DataField]
+    public DamageModifierSet DamageModifier = default!;
     public bool Active = false;
+    public bool Broken = false;
+
+    /// <summary>
+    /// Sound the shell makes when hit.
+    /// </summary>
+    [DataField]
+    public SoundSpecifier ShellHitSound = new SoundPathSpecifier("/Audio/Weapons/block_metal1.ogg"); // FIX LATER
+
+    /// <summary>
+    /// Sound the shell makes when broken
+    /// </summary>
+    [DataField]
+    public SoundSpecifier ShellBreakSound = new SoundPathSpecifier("/Audio/Effects/metal_break1.ogg"); // FIX LATER
 }
