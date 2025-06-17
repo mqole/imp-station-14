@@ -5,9 +5,6 @@
   id: BaseMobGastropoid
   abstract: true
   components:
-  #- type: MovementSpeedModifier
-  #  baseWalkSpeed: 2
-  #  baseSprintSpeed: 3
   - type: Absorbable
   - type: Hunger
   - type: Thirst
@@ -103,8 +100,8 @@
         messages: [ "snail-hurt-by-chem-popup" ]
         probability: 1
   - type: MovementSpeedModifier
-    baseSprintSpeed: 3.5
-    baseWalkSpeed: 1.5
+    baseSprintSpeed: 3
+    baseWalkSpeed: 2
   - type: Temperature
     heatDamageThreshold: 380
     coldDamageThreshold: 285

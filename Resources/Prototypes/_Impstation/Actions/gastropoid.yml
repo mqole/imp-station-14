@@ -14,5 +14,6 @@
   description: Curl up into your shell, negating damage.
   components:
   - type: InstantAction
+    icon: _Impstation/Interface/Actions/shell.png
     event: !type:SnailShellActionEvent
     useDelay: 5
