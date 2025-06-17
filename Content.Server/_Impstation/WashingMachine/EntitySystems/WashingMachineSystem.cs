@@ -222,7 +222,7 @@ public sealed class WashingMachineSystem : EntitySystem
             var ev = new ActivelyBeingWashedEvent(ent);
             RaiseLocalEvent(item, ev);
 
-            if (_tag.HasTag(item, "Lint") || _tag.HasTag(item, "Metal"))
+            if (_tag.HasTag(item, ent.Comp.LintTag) || _tag.HasTag(item, ent.Comp.MetalTag))
                 malfunctioning = true;
 
             if (TryComp<BodyComponent>(item, out _))

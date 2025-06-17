@@ -1,5 +1,7 @@
 using Content.Shared._Impstation.EntityEffects.Effects;
+using Content.Shared.Movement.Systems;
 using Robust.Client.GameObjects;
+using Robust.Client.UserInterface.Controls;
 
 namespace Content.Client._Impstation.EntityEffects.Effects;
 
@@ -8,7 +10,7 @@ namespace Content.Client._Impstation.EntityEffects.Effects;
 /// </summary>
 public sealed class DizzyVisualizerSystem : VisualizerSystem<DizzyVisualsComponent>
 {
-    [Dependency] private readonly PointLightSystem _lights = default!;
+    [Dependency] private readonly SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {
@@ -22,10 +24,10 @@ public sealed class DizzyVisualizerSystem : VisualizerSystem<DizzyVisualsCompone
     {
         // Need LayerMapTryGet because Init fails if there's no existing sprite / appearancecomp
         // which means in some setups (most frequently no AppearanceComp) the layer never exists.
-        if (TryComp<SpriteComponent>(ent, out var sprite) &&
-            sprite.LayerMapTryGet(DizzyVisualLayers.Dizzy, out var layer))
+        if (TryComp<SpriteComponent>(ent, out _) &&
+            _sprite.LayerMapTryGet(ent.Owner, DizzyVisualLayers.Dizzy, out var layer, false))
         {
-            sprite.RemoveLayer(layer);
+            _sprite.RemoveLayer(ent.Owner, layer);
         }
     }
 
@@ -34,20 +36,22 @@ public sealed class DizzyVisualizerSystem : VisualizerSystem<DizzyVisualsCompone
         if (!TryComp<SpriteComponent>(ent, out var sprite) || !TryComp(ent, out AppearanceComponent? appearance))
             return;
 
-        sprite.LayerMapReserveBlank(DizzyVisualLayers.Dizzy);
-        sprite.LayerSetVisible(DizzyVisualLayers.Dizzy, false);
+        _sprite.LayerMapReserve(ent.Owner, DizzyVisualLayers.Dizzy);
+        _sprite.LayerSetVisible(ent.Owner, DizzyVisualLayers.Dizzy, false);
         sprite.LayerSetShader(DizzyVisualLayers.Dizzy, "unshaded");
-        if (ent.Comp.Sprite != null)
-            sprite.LayerSetRSI(DizzyVisualLayers.Dizzy, ent.Comp.Sprite);
+        // there was some stuff here but it broke & doesnt really seem necessary i will do thsi later
 
-        UpdateAppearance(sprite);
+        UpdateAppearance(ent.Owner);
     }
 
-    private static void UpdateAppearance(SpriteComponent sprite)
+    private void UpdateAppearance(Entity<SpriteComponent?> ent)
     {
-        if (!sprite.LayerMapTryGet(DizzyVisualLayers.Dizzy, out var index))
+        if (!Resolve(ent, ref ent.Comp))
             return;
-        sprite.LayerSetVisible(index, true);
+
+        if (!_sprite.LayerMapTryGet(ent, DizzyVisualLayers.Dizzy, out var index, false))
+            return;
+        _sprite.LayerSetVisible(ent, index, true);
     }
 }
 

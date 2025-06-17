@@ -101,6 +101,18 @@ public sealed partial class WashingMachineComponent : Component
     #region malfunction
 
     /// <summary>
+    /// Tag used to declare an item as lint
+    /// </summary>
+    [DataField]
+    public string LintTag = "Lint";
+
+    /// <summary>
+    /// Tag used to declare an item as metal
+    /// </summary>
+    [DataField]
+    public string MetalTag = "Metal";
+
+    /// <summary>
     /// Entity prototype that has a chance to be spawned as dryer lint.
     /// </summary>
     [DataField]
