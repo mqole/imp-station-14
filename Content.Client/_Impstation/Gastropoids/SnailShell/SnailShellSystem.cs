@@ -1,4 +1,5 @@
 using Content.Shared._Impstation.Gastropoids.SnailShell;
+using Content.Shared.Humanoid;
 using Robust.Client.GameObjects;
 
 namespace Content.Client._Impstation.Gastropoids.SnailShell;
@@ -6,6 +7,7 @@ namespace Content.Client._Impstation.Gastropoids.SnailShell;
 public sealed partial class SnailShellSystem : SharedSnailShellSystem
 {
     [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoid = default!;
 
     public override void Initialize()
     {
@@ -16,22 +18,16 @@ public sealed partial class SnailShellSystem : SharedSnailShellSystem
 
     private void ToggleShellSprite(Entity<SnailShellComponent> ent, ref ToggleShellSpriteEvent args)
     {
-        // make a new list of layers on the entity which will remain visible
-        var shellLayerList = new List<int>();
-        foreach (var shellLayer in ent.Comp.ShellLayers)
-        {
-            _sprite.LayerMapTryGet(ent.Owner, shellLayer, out var shellLayerMap, false);
-            shellLayerList.Add(shellLayerMap);
-        }
+        if (!TryComp<HumanoidAppearanceComponent>(ent, out var humanoid))
+            return;
 
         if (!ent.Comp.Active)
         {
-            _sprite.SetVisible(ent.Owner, false);
-            foreach (var layer in shellLayerList)
-                _sprite.LayerSetVisible(ent.Owner, layer, true);
-            return;
+            _humanoid.SetLayersVisibility(ent.Owner, humanoid.BaseLayers.Keys, false);
+            foreach (var shellLayer in ent.Comp.ShellLayers)
+                _humanoid.SetLayerVisibility(ent.Owner, shellLayer, true);
         }
-
-        _sprite.SetVisible(ent.Owner, true);
+        else
+            _humanoid.SetLayersVisibility(ent.Owner, humanoid.BaseLayers.Keys, true);
     }
 }

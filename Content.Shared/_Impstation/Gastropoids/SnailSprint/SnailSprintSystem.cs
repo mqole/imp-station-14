@@ -43,7 +43,7 @@ public sealed partial class SharedSnailSprintSystem : EntitySystem
     /// </summary>
     private void OnComponentStartup(Entity<SnailSprintComponent> ent, ref ComponentStartup args)
     {
-        _actionsSystem.AddAction(ent.Owner, ref ent.Comp.ActionEntity, ent.Comp.Action);
+        _actionsSystem.AddAction(ent, ref ent.Comp.ActionEntity, ent.Comp.Action);
     }
 
     /// <summary>

@@ -23,7 +23,7 @@ public abstract partial class SharedSnailShellSystem : EntitySystem
     /// </summary>
     private void OnStartup(Entity<SnailShellComponent> ent, ref ComponentStartup args)
     {
-        _actions.AddAction(ent.Owner, ref ent.Comp.ActionEntity, ent.Comp.Action);
+        _actions.AddAction(ent, ref ent.Comp.ActionEntity, ent.Comp.Action);
     }
 
     /// <summary>

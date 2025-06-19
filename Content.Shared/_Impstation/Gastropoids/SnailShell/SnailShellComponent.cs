@@ -1,5 +1,5 @@
 using Content.Shared.Damage;
-using JetBrains.Annotations;
+using Content.Shared.Humanoid;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -33,7 +33,7 @@ public sealed partial class SnailShellComponent : Component
     /// Layers on the entity to be declared as 'shell', these will not be hidden when the entity goes into the shell
     /// </summary>
     [DataField]
-    public List<string> ShellLayers = new();
+    public HashSet<HumanoidVisualLayers> ShellLayers = [HumanoidVisualLayers.Tail];
 
     /// <summary>
     /// Sound the shell makes when hit.
