@@ -3,13 +3,14 @@ using Content.Shared.Humanoid;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared._Impstation.Gastropoids.SnailShell;
 
 /// <summary>
 /// Grants the entity with this component the ability to curl up in its shell, applying a temporary (breakable) damage barrier.
 /// </summary>
-[RegisterComponent, NetworkedComponent, Access(typeof(SharedSnailShellSystem)), AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class SnailShellComponent : Component
 {
     /// <summary>
@@ -46,4 +47,11 @@ public sealed partial class SnailShellComponent : Component
     /// </summary>
     [DataField]
     public SoundSpecifier ShellBreakSound = new SoundPathSpecifier("/Audio/Effects/metal_break1.ogg"); // FIX LATER
+}
+
+[Serializable, NetSerializable]
+public enum ShellVisuals : byte
+{
+    Base,
+    On
 }
