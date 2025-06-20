@@ -36,6 +36,8 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
 
     private void OnDamaged(Entity<DamageBarrierComponent> ent, ref BeforeDamageChangedEvent args)
     {
+        if (!args.Damage.AnyPositive())
+            return;
         // TODO: maybe we want to let through damage dealt by ourself. cant think of a use case for this rn
 
         // making a new modifier set which will affect our barrier.
@@ -49,6 +51,7 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
         // for flat reduction, we're just accumulating all these numbers to deal to our barrier at once.
         // but ONLY IF that damage type is in our args.
         var barrierDamageTotal = 0f;
+
         foreach (var (modKey, modValue) in ent.Comp.DamageModifier.FlatReduction)
             foreach (var (damKey, damValue) in args.Damage.DamageDict)
                 if (damKey == modKey)
@@ -73,6 +76,7 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
 
         // and let through all the unabsorbed damage when we're done.
         args.Damage = DamageSpecifier.ApplyModifierSet(args.Damage, ent.Comp.DamageModifier);
+        return;
     }
 
     private void OnBreak(Entity<DamageBarrierComponent> ent)

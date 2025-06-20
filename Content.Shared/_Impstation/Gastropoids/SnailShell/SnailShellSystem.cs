@@ -55,7 +55,7 @@ public sealed partial class SnailShellSystem : EntitySystem
 
     private void OnSnailShellBreak(Entity<SnailShellComponent> ent, ref DamageBarrierBreakEvent args)
     {
-        ent.Comp.Broken = true;
+        // ent.Comp.Broken = true;
         var ev = new SnailShellBreakEvent();
         RaiseLocalEvent(ent, ref ev);
         // how tf are we healing it?
