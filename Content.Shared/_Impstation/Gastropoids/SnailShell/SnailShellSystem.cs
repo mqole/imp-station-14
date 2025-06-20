@@ -1,10 +1,9 @@
-using Content.Shared._Impstation.Gastropoids.SnailShell;
 using Content.Shared._Impstation.DamageBarrier;
 using Content.Shared.Actions;
 
-namespace Content.Server._Impstation.Gastropoids.SnailShell;
+namespace Content.Shared._Impstation.Gastropoids.SnailShell;
 
-public sealed partial class SnailShellSystem : SharedSnailShellSystem
+public sealed partial class SnailShellSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly SharedDamageBarrierSystem _barrier = default!;
@@ -73,3 +72,9 @@ public record struct SnailShellBreakEvent;
 /// Relayed upon using the action
 /// </summary>
 public sealed partial class SnailShellActionEvent : InstantActionEvent { }
+
+/// <summary>
+/// Relayed by <see cref="SharedSnailShellSystem"/> to toggle shell sprites when using the snail shell
+/// </summary>
+[ByRefEvent]
+public record struct ToggleShellSpriteEvent;
