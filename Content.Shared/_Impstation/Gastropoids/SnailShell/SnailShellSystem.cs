@@ -42,22 +42,18 @@ public sealed partial class SnailShellSystem : EntitySystem
 
     private void OnSnailShellAction(Entity<SnailShellComponent> ent, ref SnailShellActionEvent args)
     {
-        if (args.Handled)
-            return;
-
         if (ent.Comp.Active)
         {
             RemCompDeferred<DamageBarrierComponent>(ent);
             SetShellVisibility(ent, false);
             ent.Comp.Active = false;
-            args.Handled = true;
+            Dirty(ent);
             return;
         }
 
         if (ent.Comp.Broken)
         {
             _popupSystem.PopupClient(Loc.GetString(ent.Comp.BrokenPopup), ent.Owner, ent.Owner);
-            args.Handled = true;
             return;
         }
 
@@ -65,7 +61,7 @@ public sealed partial class SnailShellSystem : EntitySystem
         SetShellVisibility(ent, true);
         _audio.PlayPvs(ent.Comp.ShellActivateSound, ent);
         ent.Comp.Active = true;
-        args.Handled = true;
+        Dirty(ent);
     }
 
     private void OnSnailShellBreak(Entity<SnailShellComponent> ent, ref DamageBarrierBreakEvent args)
