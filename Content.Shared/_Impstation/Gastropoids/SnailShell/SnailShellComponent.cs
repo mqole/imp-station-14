@@ -25,7 +25,7 @@ public sealed partial class SnailShellComponent : Component
     /// <summary>
     /// Damage modifiers granted to this entity when shell is activated.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public DamageModifierSet DamageModifier = default!;
     public bool Active = false;
     public bool Broken = false;
@@ -33,19 +33,34 @@ public sealed partial class SnailShellComponent : Component
     /// <summary>
     /// Layers on the entity to be declared as 'shell', these will not be hidden when the entity goes into the shell
     /// </summary>
-    [DataField]
-    public HashSet<HumanoidVisualLayers> ShellLayers = [HumanoidVisualLayers.Tail];
+    public HashSet<HumanoidVisualLayers> ShellLayers = [HumanoidVisualLayers.Tail, HumanoidVisualLayers.TailBehind, HumanoidVisualLayers.TailBehindBackpack, HumanoidVisualLayers.TailOversuit, HumanoidVisualLayers.TailUnderlay]; // hoo boy
+
+    /// <summary>
+    /// Popup text for when the action fails due to the shell being broken.
+    /// </summary>
+    public LocId BrokenPopup = "snailshell-failure-broken";
+
+    /// <summary>
+    /// Popup text for when the shell breaks.
+    /// </summary>
+    public LocId BreakPopup = "snailshell-break";
+
+    /// <summary>
+    /// Sound the shell makes when you go in it.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public SoundSpecifier ShellActivateSound = new SoundPathSpecifier("/Audio/Weapons/block_metal1.ogg"); // FIX LATER
 
     /// <summary>
     /// Sound the shell makes when hit.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public SoundSpecifier ShellHitSound = new SoundPathSpecifier("/Audio/Weapons/block_metal1.ogg"); // FIX LATER
 
     /// <summary>
-    /// Sound the shell makes when broken
+    /// Sound the shell makes when broken.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public SoundSpecifier ShellBreakSound = new SoundPathSpecifier("/Audio/Effects/metal_break1.ogg"); // FIX LATER
 }
 

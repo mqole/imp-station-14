@@ -1,12 +1,18 @@
 using Content.Shared._Impstation.DamageBarrier;
 using Content.Shared.Actions;
+using Content.Shared.Humanoid;
+using Content.Shared.Popups;
+using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared._Impstation.Gastropoids.SnailShell;
 
 public sealed partial class SnailShellSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actions = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedDamageBarrierSystem _barrier = default!;
+    [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoid = default!;
+    [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
 
     public override void Initialize()
     {
@@ -36,29 +42,58 @@ public sealed partial class SnailShellSystem : EntitySystem
 
     private void OnSnailShellAction(Entity<SnailShellComponent> ent, ref SnailShellActionEvent args)
     {
+        if (args.Handled)
+            return;
+
         if (ent.Comp.Active)
         {
             RemCompDeferred<DamageBarrierComponent>(ent);
-            var ev1 = new ToggleShellSpriteEvent();
-            RaiseLocalEvent(ent, ref ev1);
+            SetShellVisibility(ent, false);
+            ent.Comp.Active = false;
+            args.Handled = true;
             return;
         }
 
-        if (ent.Comp.Broken) // could prolly use a popup
+        if (ent.Comp.Broken)
+        {
+            _popupSystem.PopupClient(Loc.GetString(ent.Comp.BrokenPopup), ent.Owner, ent.Owner);
+            args.Handled = true;
             return;
+        }
 
         _barrier.ApplyDamageBarrier(ent, ent.Comp.DamageModifier, null, ent.Comp.ShellHitSound, ent.Comp.ShellBreakSound);
-        var ev2 = new ToggleShellSpriteEvent();
-        RaiseLocalEvent(ent, ref ev2);
+        SetShellVisibility(ent, true);
+        _audio.PlayPvs(ent.Comp.ShellActivateSound, ent);
+        ent.Comp.Active = true;
         args.Handled = true;
     }
 
     private void OnSnailShellBreak(Entity<SnailShellComponent> ent, ref DamageBarrierBreakEvent args)
     {
         // ent.Comp.Broken = true;
+        _popupSystem.PopupClient(Loc.GetString(ent.Comp.BreakPopup), ent.Owner, ent.Owner);
         var ev = new SnailShellBreakEvent();
         RaiseLocalEvent(ent, ref ev);
         // how tf are we healing it?
+    }
+
+    private void SetShellVisibility(Entity<SnailShellComponent, HumanoidAppearanceComponent?> ent, bool shellVisible)
+    {
+        if (!Resolve(ent, ref ent.Comp2))
+            return;
+
+        HashSet<HumanoidVisualLayers> hideLayers = [];
+        foreach (var layer in ent.Comp2.BaseLayers.Keys)
+            foreach (var shellLayer in ent.Comp1.ShellLayers)
+            {
+                if (layer == shellLayer)
+                    break;
+                hideLayers.Add(layer);
+            }
+
+        _humanoid.SetLayersVisibility(ent.Owner, hideLayers, !shellVisible);
+
+        Dirty(ent, ent.Comp2);
     }
 }
 
@@ -72,9 +107,3 @@ public record struct SnailShellBreakEvent;
 /// Relayed upon using the action
 /// </summary>
 public sealed partial class SnailShellActionEvent : InstantActionEvent { }
-
-/// <summary>
-/// Relayed by <see cref="SharedSnailShellSystem"/> to toggle shell sprites when using the snail shell
-/// </summary>
-[ByRefEvent]
-public record struct ToggleShellSpriteEvent;

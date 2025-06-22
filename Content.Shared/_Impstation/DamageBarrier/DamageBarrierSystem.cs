@@ -69,11 +69,7 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
         if (barrierDamageTotal > 0 && ent.Comp.BarrierHealth > 0)
             _audio.PlayPvs(ent.Comp.HitSound, ent);
         else if (ent.Comp.BarrierHealth <= 0)
-        {
             OnBreak(ent);
-            // make sure we're only dealing carryover damage, not all damage!
-            return;
-        }
 
         // and let through all the unabsorbed damage when we're done.
         args.Damage = DamageSpecifier.ApplyModifierSet(args.Damage, ent.Comp.DamageModifier);
