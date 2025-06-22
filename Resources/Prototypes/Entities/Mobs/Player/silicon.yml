@@ -304,6 +304,13 @@
     attributes:
       proper: true
   - type: SkipLoadingCharacterRecords #imp edit - make it so the AI doesn't show up in the character records list
+  - type: GhostTakeoverAvailable # imp
+  - type: GhostRole # imp
+    name: ghost-role-information-station-ai-name
+    description: ghost-role-information-station-ai-description
+    rules: ghost-role-information-silicon-rules
+    raffle:
+      settings: default
 
 # Hologram projection that the AI's eye tracks.
 - type: entity
