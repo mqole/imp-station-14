@@ -14,7 +14,7 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<DamageBarrierComponent, BeforeDamageChangedEvent>(OnDamaged);
+        SubscribeLocalEvent<DamageBarrierComponent, DamageModifyEvent>(OnDamaged);
     }
 
     public void ApplyDamageBarrier(EntityUid uid, DamageModifierSet damageModifier, float? time = null, SoundSpecifier? hitSound = null, SoundSpecifier? breakSound = null)
@@ -34,7 +34,7 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
         comp.DamageModifier = damageModifier;
     }
 
-    private void OnDamaged(Entity<DamageBarrierComponent> ent, ref BeforeDamageChangedEvent args)
+    private void OnDamaged(Entity<DamageBarrierComponent> ent, ref DamageModifyEvent args)
     {
         if (!args.Damage.AnyPositive())
             return;
@@ -71,6 +71,7 @@ public sealed partial class SharedDamageBarrierSystem : EntitySystem
         else if (ent.Comp.BarrierHealth <= 0)
         {
             OnBreak(ent);
+            // make sure we're only dealing carryover damage, not all damage!
             return;
         }
 

@@ -10,7 +10,7 @@ namespace Content.Shared._Impstation.Gastropoids.SnailShell;
 /// <summary>
 /// Grants the entity with this component the ability to curl up in its shell, applying a temporary (breakable) damage barrier.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent, Access(typeof(SnailShellSystem)), AutoGenerateComponentState]
 public sealed partial class SnailShellComponent : Component
 {
     /// <summary>
