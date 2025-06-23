@@ -3,11 +3,13 @@ using Content.Shared.Actions;
 using Content.Shared.Humanoid;
 using Content.Shared.Popups;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Timing;
 
 namespace Content.Shared._Impstation.Gastropoids.SnailShell;
 
 public sealed partial class SnailShellSystem : EntitySystem
 {
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedDamageBarrierSystem _barrier = default!;
@@ -42,6 +44,9 @@ public sealed partial class SnailShellSystem : EntitySystem
 
     private void OnSnailShellAction(Entity<SnailShellComponent> ent, ref SnailShellActionEvent args)
     {
+        if (!_timing.IsFirstTimePredicted)
+            return;
+
         if (ent.Comp.Active)
         {
             RemCompDeferred<DamageBarrierComponent>(ent);
@@ -59,7 +64,7 @@ public sealed partial class SnailShellSystem : EntitySystem
 
         _barrier.ApplyDamageBarrier(ent, ent.Comp.DamageModifier, null, ent.Comp.ShellHitSound, ent.Comp.ShellBreakSound);
         SetShellVisibility(ent, true);
-        _audio.PlayPvs(ent.Comp.ShellActivateSound, ent);
+        _audio.PlayPredicted(ent.Comp.ShellActivateSound, ent, ent);
         ent.Comp.Active = true;
         Dirty(ent);
     }
@@ -78,16 +83,14 @@ public sealed partial class SnailShellSystem : EntitySystem
         if (!Resolve(ent, ref ent.Comp2))
             return;
 
-        HashSet<HumanoidVisualLayers> hideLayers = [];
         foreach (var layer in ent.Comp2.BaseLayers.Keys)
             foreach (var shellLayer in ent.Comp1.ShellLayers)
             {
                 if (layer == shellLayer)
-                    break;
-                hideLayers.Add(layer);
+                    continue;
+                _humanoid.SetLayerVisibility(ent.Owner, layer, !shellVisible);
             }
 
-        _humanoid.SetLayersVisibility(ent.Owner, hideLayers, !shellVisible);
 
         Dirty(ent, ent.Comp2);
     }
