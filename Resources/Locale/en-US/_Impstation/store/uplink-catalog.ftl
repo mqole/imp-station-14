@@ -34,6 +34,9 @@ uplink-bloodredrosekit-desc = A set of roses for the romantic killer to get clos
 uplink-saw-ammo-name = Ammunition box (.20 rifle)
 uplink-saw-ammo-desc = A box of 50 cartridges compatible with the L6 Nidhogg light machine gun. Doesn't come with any ammo boxes, load it yourself!
 
+uplink-caseless-ammo-name = Ammunition box (.25 caseless)
+uplink-caseless-ammo-desc = A box of 50 cartridges compatible with the Basilisk-11 and the Cobra. Doesn't come with any magazines, load it yourself!
+
 uplink-mixed-rejects-name = Dan's Soaked Smokes Rejects
 uplink-mixed-rejects-desc = Dan worked with Interdyne chemistry to dispose of excess chemicals, ENJOY CAUTIOUSLY.
 
@@ -45,3 +48,6 @@ uplink-poison-injector-desc = A single dose of a lethal toxin mix, courtesy of G
 
 uplink-mascot-cindy-suit-bundle-name = Cindy, the Red Chaos Cat bundle
 uplink-mascot-cindy-suit-bundle-desc = A suit in the image of Cindy, The Red Carnage Cat! Space-safe, and equipped with minimal armor to wreak maximum morale damage against those NanoTrasen dogs!
+
+uplink-nullrod-upgrade-name = Profane Censer
+uplink-nullrod-upgrade-desc = A vile incense burner used to transform nullrod items into more sinister forms.
