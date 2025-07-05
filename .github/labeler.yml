@@ -29,10 +29,7 @@
 
 "Changes: Upstream":
 - changed-files:
-  # a bit deceptively named.
-  # as long as no paths contain underscores it'll trigger.
-  # really, this should be called "not not upstream", but thats just ridiculous
-  - all-globs-to-all-files: "!**/_*/**"
+  - any-glob-to-any-file: "**/!(_*)/**"
 
 "Changes: Port":
 - changed-files:
