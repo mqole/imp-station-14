@@ -24,3 +24,20 @@
 - changed-files:
   # Equiv to any-glob-to-all as long as this has one matcher. If ALL changed files are not C# files, then apply label.
   - all-globs-to-all-files: "!**/*.cs"
+
+# Imp additions
+
+"Changes: Upstream":
+- changed-files:
+  # a bit deceptively named.
+  # as long as no paths contain underscores it'll trigger.
+  # really, this should be called "not not upstream", but thats just ridiculous
+  - all-globs-to-all-files: "!**/_*/**"
+
+"Changes: Port":
+- changed-files:
+  - any-glob-to-any-file: '**/_!(Impstation)/**'
+
+"Changes: Guidebook":
+- changed-files:
+  - any-glob-to-any-file: '**/*.xml'
