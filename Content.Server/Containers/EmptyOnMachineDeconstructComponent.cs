@@ -1,7 +1,7 @@
 namespace Content.Server.Containers
 {
     /// <summary>
-    /// Empties a list of containers when the machine is deconstructed via MachineDeconstructedEvent. PENIS
+    /// Empties a list of containers when the machine is deconstructed via MachineDeconstructedEvent. PENIS2
     /// </summary>
     [RegisterComponent]
     public sealed partial class EmptyOnMachineDeconstructComponent : Component
