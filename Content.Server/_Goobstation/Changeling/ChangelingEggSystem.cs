@@ -3,7 +3,7 @@ using Content.Shared.Changeling;
 using Content.Shared.Mind;
 using Robust.Shared.Timing;
 
-namespace Content.Server.Changeling; //abababab
+namespace Content.Server.Changeling; // waga baga bobo
 
 public sealed partial class ChangelingEggSystem : EntitySystem
 {
