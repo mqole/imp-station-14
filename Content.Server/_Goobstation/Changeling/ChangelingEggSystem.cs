@@ -3,7 +3,7 @@ using Content.Shared.Changeling;
 using Content.Shared.Mind;
 using Robust.Shared.Timing;
 
-namespace Content.Server.Changeling; // weewoo
+namespace Content.Server.Changeling;
 
 public sealed partial class ChangelingEggSystem : EntitySystem
 {
