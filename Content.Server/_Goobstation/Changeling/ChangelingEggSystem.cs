@@ -5,7 +5,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Server.Changeling;
 
-public sealed partial class ChangelingEggSystem : EntitySystem
+public sealed partial class ChangelingEggSystem : EntitySystem //woman
 {
     [Dependency] private readonly BodySystem _bodySystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
