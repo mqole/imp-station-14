@@ -29,7 +29,7 @@
 
 "Changes: Upstream":
 - changed-files:
-  - any-glob-to-any-file: "**/!(_*)/**"
+  - any-glob-to-any-file: "!**/_*/**"
 
 "Changes: Port":
 - changed-files:
