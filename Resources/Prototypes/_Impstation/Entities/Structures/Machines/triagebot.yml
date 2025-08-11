@@ -1,0 +1,75 @@
+- type: entity
+  parent: BaseMachinePowered
+  id: Triagebot
+  name: triage-bot
+  description: blah blah blah blah
+  components:
+  - type: Sprite
+    sprite: blah
+    drawdepth: SmallObjects
+    layers:
+      - state: blah
+        map: blah
+  - type: Icon
+    sprite: blah
+    state: blah
+  - type: Appearance
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.25,0.25,0.25"
+        density: 25
+        mask:
+        - TabletopMachineMask
+        layer:
+        - TabletopMachineLayer
+  - type: ActivatableUI
+    key: blah
+  - type: ActivatableUIRequiresPower
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access:
+    - [ Medical ]
+  - type: UserInterface
+    interfaces:
+      the announce:
+        type: blah
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface
+  - type: StationAiWhitelist
+  - type: ApcPowerReceiver
+    powerLoad: 250
+  - type: GenericVisualizer
+    visuals:
+      powered whatever
+      unpowered whatever
+  - type: WiresPanel
+  - type: Wires
+    boardName: blah
+    layoutId: blah
+  - type: WiresVisuals
+  - type: Speech
+    speechVerb: Robotic
+    speechSounds: blah
+  - type: Vocalizer
+    minVocalizeInterval: 8m
+    maxVocalizeInterval: 10m
+    hideChat: true
+  - type: VocalizerRequiresPower
+  - type: SpookySpeaker
+    messageSet: SpookySpeakerMessagesGeneric
+    speakChance: 0.2
+  - type: IntrinsicRadioReceiver
+  - type: ActiveRadio
+    channels:
+    - Medical
+  - type: PointLight
+    enabled: false
+    castShadows: false
+    radius: 1.5
+  - type: LitOnPowered
+  - type: SentienceTarget
+    flavorKind: station-event-random-sentience-flavor-mechanical
+    weight: blah
