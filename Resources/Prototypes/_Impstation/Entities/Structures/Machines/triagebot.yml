@@ -62,6 +62,13 @@
     messageSet: SpookySpeakerMessagesGeneric
     speakChance: 0.2
   - type: IntrinsicRadioReceiver
+  - type: ToggleRadioMessage
+    standardMessage: blah
+    toggledMessage: blah
+    radioChannel: Medical
+  - type: SentienceTarget
+    flavorKind: station-event-random-sentience-flavor-mechanical
+    weight: blah
   - type: ActiveRadio
     channels:
     - Medical
@@ -70,6 +77,3 @@
     castShadows: false
     radius: 1.5
   - type: LitOnPowered
-  - type: SentienceTarget
-    flavorKind: station-event-random-sentience-flavor-mechanical
-    weight: blah
