@@ -19,7 +19,7 @@ public sealed class FullCharacterRecords(
     string jobTitle,
     ProtoId<JobIconPrototype> jobIcon,
     ProtoId<SpeciesPrototype> species,
-    Gender gender,
+    Pronoun pronoun,
     Sex sex,
     string? fingerprint,
     string? dna,
@@ -67,10 +67,10 @@ public sealed class FullCharacterRecords(
     public ProtoId<SpeciesPrototype> Species = species;
 
     /// <summary>
-    ///     Gender identity tied to this record.
+    ///     Pronoun ID tied to this record.
     /// </summary>
     [ViewVariables]
-    public Gender Gender = gender;
+    public Pronoun Pronoun = pronoun;
 
     /// <summary>
     ///     Sex identity tied to this record.

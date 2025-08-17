@@ -28,7 +28,7 @@ public sealed partial class HumanoidAppearanceComponent : Component
     // Couldn't these be somewhere else?
 
     [DataField, AutoNetworkedField]
-    public Gender Gender;
+    public Pronoun Pronoun;
 
     [DataField, AutoNetworkedField]
     public int Age = 18;

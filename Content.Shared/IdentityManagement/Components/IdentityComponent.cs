@@ -1,5 +1,6 @@
 ﻿using Robust.Shared.Containers;
 using Robust.Shared.Enums;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.IdentityManagement.Components;
 
@@ -24,17 +25,17 @@ public sealed partial class IdentityComponent : Component
 public sealed class IdentityRepresentation
 {
     public string TrueName;
-    public Gender TrueGender;
+    public Pronoun TruePronoun;
 
     public string AgeString;
 
     public string? PresumedName;
     public string? PresumedJob;
 
-    public IdentityRepresentation(string trueName, Gender trueGender, string ageString, string? presumedName=null, string? presumedJob=null)
+    public IdentityRepresentation(string trueName, Pronoun truePronoun, string ageString, string? presumedName = null, string? presumedJob = null)
     {
         TrueName = trueName;
-        TrueGender = trueGender;
+        TruePronoun = truePronoun;
 
         AgeString = ageString;
 
@@ -56,16 +57,12 @@ public sealed class IdentityRepresentation
     /// </summary>
     public string ToStringUnknown()
     {
-        var genderString = TrueGender switch
-        {
-            Gender.Female => Loc.GetString("identity-gender-feminine"),
-            Gender.Male => Loc.GetString("identity-gender-masculine"),
-            Gender.Epicene or Gender.Neuter or _ => Loc.GetString("identity-gender-person")
-        };
+        // we're degendering everyone until someone has a better idea. TODO make this woke so people can be they/them men or he/him women
+        var pronounString = Loc.GetString("identity-gender-person");
 
         // i.e. 'young assistant man' or 'old cargo technician person' or 'middle-aged captain'
         return PresumedJob is null
-            ? $"{AgeString} {genderString}"
-            : $"{AgeString} {PresumedJob} {genderString}";
+            ? $"{AgeString} {pronounString}"
+            : $"{AgeString} {PresumedJob} {pronounString}";
     }
 }

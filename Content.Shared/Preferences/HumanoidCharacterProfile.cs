@@ -26,6 +26,7 @@ namespace Content.Shared.Preferences
     [Serializable, NetSerializable]
     public sealed partial class HumanoidCharacterProfile : ICharacterProfile
     {
+        [Dependency] IPrototypeManager _proto = default!;
         private static readonly Regex RestrictedNameRegex = new(@"[^A-Za-z0-9 '\-]");
         private static readonly Regex ICNameCaseRegex = new(@"^(?<word>\w)|\b(?<word>\w)(?=\w*$)");
 
@@ -82,7 +83,7 @@ namespace Content.Shared.Preferences
         public Sex Sex { get; set; } = Sex.Male; //IMP public set
 
         [DataField]
-        public Gender Gender { get; set; } = Gender.Male; //IMP public set
+        public Pronoun Pronoun { get; set; } = _proto.Index<Pronoun>("they"); //IMP public set
 
         /// <summary>
         /// <see cref="Appearance"/>
@@ -134,7 +135,7 @@ namespace Content.Shared.Preferences
             string species,
             int age,
             Sex sex,
-            Gender gender,
+            Pronoun pronoun,
             HumanoidCharacterAppearance appearance,
             SpawnPriorityPreference spawnPriority,
             Dictionary<ProtoId<JobPrototype>, JobPriority> jobPriorities,
@@ -152,7 +153,7 @@ namespace Content.Shared.Preferences
             Species = species;
             Age = age;
             Sex = sex;
-            Gender = gender;
+            Pronoun = pronoun;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
             _jobPriorities = jobPriorities;
@@ -186,7 +187,7 @@ namespace Content.Shared.Preferences
                 other.Species,
                 other.Age,
                 other.Sex,
-                other.Gender,
+                other.Pronoun,
                 other.Appearance.Clone(),
                 other.SpawnPriority,
                 new Dictionary<ProtoId<JobPrototype>, JobPriority>(other.JobPriorities),
@@ -252,26 +253,16 @@ namespace Content.Shared.Preferences
                 age = random.Next(speciesPrototype.MinAge, speciesPrototype.AncientAge); // people don't look and keep making 119 year old characters with zero rp, cap it at middle aged. imp edit: capped it at old age instead
             }
 
-            var gender = Gender.Epicene;
+            var pronoun = random.Pick(prototypeManager.EnumeratePrototypes<Pronoun>);
 
-            switch (sex)
-            {
-                case Sex.Male:
-                    gender = Gender.Male;
-                    break;
-                case Sex.Female:
-                    gender = Gender.Female;
-                    break;
-            }
-
-            var name = GetName(species, gender);
+            var name = GetName(species);
 
             return new HumanoidCharacterProfile()
             {
                 Name = name,
                 Sex = sex,
                 Age = age,
-                Gender = gender,
+                Pronoun = pronoun,
                 Species = species,
                 Appearance = HumanoidCharacterAppearance.Random(species, sex),
             };
@@ -297,9 +288,9 @@ namespace Content.Shared.Preferences
             return new(this) { Sex = sex };
         }
 
-        public HumanoidCharacterProfile WithGender(Gender gender)
+        public HumanoidCharacterProfile WithPronoun(Pronoun pronoun)
         {
-            return new(this) { Gender = gender };
+            return new(this) { Pronoun = pronoun };
         }
 
         public HumanoidCharacterProfile WithSpecies(string species)
@@ -472,7 +463,7 @@ namespace Content.Shared.Preferences
             Loc.GetString(
                 "humanoid-character-profile-summary",
                 ("name", Name),
-                ("gender", Gender.ToString().ToLowerInvariant()),
+                ("pronoun", Pronoun.ID.ToLowerInvariant()),
                 ("age", Age)
             );
 
@@ -482,7 +473,7 @@ namespace Content.Shared.Preferences
             if (Name != other.Name) return false;
             if (Age != other.Age) return false;
             if (Sex != other.Sex) return false;
-            if (Gender != other.Gender) return false;
+            if (Pronoun != other.Pronoun) return false;
             if (Species != other.Species) return false;
             if (PreferenceUnavailable != other.PreferenceUnavailable) return false;
             if (SpawnPriority != other.SpawnPriority) return false;
@@ -521,7 +512,7 @@ namespace Content.Shared.Preferences
 
             var age = Math.Clamp(Age, speciesPrototype.MinAge, speciesPrototype.MaxAge);
 
-            var gender = Gender switch
+            var pronoun = Pronoun switch
             {
                 Gender.Epicene => Gender.Epicene,
                 Gender.Female => Gender.Female,
@@ -534,7 +525,7 @@ namespace Content.Shared.Preferences
             var maxNameLength = configManager.GetCVar(CCVars.MaxNameLength);
             if (string.IsNullOrEmpty(Name))
             {
-                name = GetName(Species, gender);
+                name = GetName(Species);
             }
             else if (Name.Length > maxNameLength)
             {
@@ -560,7 +551,7 @@ namespace Content.Shared.Preferences
 
             if (string.IsNullOrEmpty(name))
             {
-                name = GetName(Species, gender);
+                name = GetName(Species);
             }
 
             string flavortext;
@@ -624,7 +615,7 @@ namespace Content.Shared.Preferences
             FlavorText = flavortext;
             Age = age;
             Sex = sex;
-            Gender = gender;
+            Pronoun = pronoun;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
 
@@ -722,10 +713,10 @@ namespace Content.Shared.Preferences
 
         // sorry this is kind of weird and duplicated,
         /// working inside these non entity systems is a bit wack
-        public static string GetName(string species, Gender gender)
+        public static string GetName(string species)
         {
             var namingSystem = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<NamingSystem>();
-            return namingSystem.GetName(species, gender);
+            return namingSystem.GetName(species);
         }
 
         public override bool Equals(object? obj)
@@ -745,7 +736,7 @@ namespace Content.Shared.Preferences
             hashCode.Add(Species);
             hashCode.Add(Age);
             hashCode.Add((int)Sex);
-            hashCode.Add((int)Gender);
+            hashCode.Add(Pronoun);
             hashCode.Add(Appearance);
             hashCode.Add((int)SpawnPriority);
             hashCode.Add((int)PreferenceUnavailable);

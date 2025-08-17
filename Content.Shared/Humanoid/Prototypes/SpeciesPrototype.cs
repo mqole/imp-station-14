@@ -84,10 +84,7 @@ public sealed partial class SpeciesPrototype : IPrototype
     public HumanoidSkinColor SkinColoration { get; private set; }
 
     [DataField]
-    public ProtoId<LocalizedDatasetPrototype> MaleFirstNames { get; private set; } = "NamesFirstMale";
-
-    [DataField]
-    public ProtoId<LocalizedDatasetPrototype> FemaleFirstNames { get; private set; } = "NamesFirstFemale";
+    public ProtoId<LocalizedDatasetPrototype> FirstNames { get; private set; } = "NamesFirst";
 
     [DataField]
     public ProtoId<LocalizedDatasetPrototype> MiddleNames { get; private set; } = "NamesMiddle"; // Imp addition
