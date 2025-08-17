@@ -1,8 +1,6 @@
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using Content.Shared.CCVar;
-using Content.Shared.Decals;
 using Content.Shared.Examine;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
@@ -11,7 +9,6 @@ using Content.Shared.Inventory;
 using Content.Shared.Preferences;
 using Robust.Shared;
 using Robust.Shared.Configuration;
-using Robust.Shared.Enums;
 using Robust.Shared.GameObjects.Components.Localization;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
@@ -43,7 +40,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
     [Dependency] private readonly SharedIdentitySystem _identity = default!;
 
     public static readonly ProtoId<SpeciesPrototype> DefaultSpecies = "Human";
-
+    public static readonly ProtoId<PronounPrototype> DefaultPronoun = "they"; // TODO FIX THIS
     public override void Initialize()
     {
         base.Initialize();
@@ -157,7 +154,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         targetHumanoid.MarkingSet = new(sourceHumanoid.MarkingSet);
 
         SetSex(target, sourceHumanoid.Sex, false, targetHumanoid);
-        SetGender((target, targetHumanoid), sourceHumanoid.Gender);
+        SetPronoun((target, targetHumanoid), sourceHumanoid.Pronoun);
 
         Dirty(target, targetHumanoid);
     }
@@ -262,18 +259,18 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
     }
 
     /// <summary>
-    /// Sets the gender in the entity's HumanoidAppearanceComponent and GrammarComponent.
+    /// Sets the pronoun in the entity's HumanoidAppearanceComponent and GrammarComponent.
     /// </summary>
-    public void SetGender(Entity<HumanoidAppearanceComponent?> ent, Gender gender)
+    public void SetPronoun(Entity<HumanoidAppearanceComponent?> ent, PronounPrototype pronoun)
     {
         if (!Resolve(ent, ref ent.Comp))
             return;
 
-        ent.Comp.Gender = gender;
+        ent.Comp.Pronoun = pronoun;
         Dirty(ent);
 
         if (TryComp<GrammarComponent>(ent, out var grammar))
-            _grammarSystem.SetGender((ent, grammar), gender);
+            _grammarSystem.SetPronoun((ent, grammar), pronoun);
 
         _identity.QueueIdentityUpdate(ent);
     }
@@ -452,10 +449,10 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
 
         EnsureDefaultMarkings(uid, humanoid);
 
-        humanoid.Gender = profile.Gender;
+        humanoid.Pronoun = profile.Pronoun;
         if (TryComp<GrammarComponent>(uid, out var grammar))
         {
-            _grammarSystem.SetGender((uid, grammar), profile.Gender);
+            _grammarSystem.SetPronoun((uid, grammar), profile.Pronoun);
         }
 
         humanoid.Age = profile.Age;

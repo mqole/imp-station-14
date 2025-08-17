@@ -24,6 +24,7 @@ namespace Content.Shared.Preferences
     [Serializable, NetSerializable]
     public sealed partial class HumanoidCharacterProfile : ICharacterProfile
     {
+        [Dependency] private readonly IPrototypeManager _proto = default!;
         private static readonly Regex RestrictedNameRegex = new(@"[^A-Za-z0-9 '\-]");
         private static readonly Regex ICNameCaseRegex = new(@"^(?<word>\w)|\b(?<word>\w)(?=\w*$)");
 
@@ -80,7 +81,7 @@ namespace Content.Shared.Preferences
         public Sex Sex { get; private set; } = Sex.Male;
 
         [DataField]
-        public Pronoun Pronoun { get; private set; } = ;
+        public PronounPrototype Pronoun { get; private set; } = SharedHumanoidAppearanceSystem.DefaultPronoun;
 
         /// <summary>
         /// <see cref="Appearance"/>
@@ -127,7 +128,7 @@ namespace Content.Shared.Preferences
             string species,
             int age,
             Sex sex,
-            Pronoun pronoun,
+            PronounPrototype pronoun,
             HumanoidCharacterAppearance appearance,
             SpawnPriorityPreference spawnPriority,
             Dictionary<ProtoId<JobPrototype>, JobPriority> jobPriorities,
@@ -237,9 +238,9 @@ namespace Content.Shared.Preferences
                 age = random.Next(speciesPrototype.MinAge, speciesPrototype.OldAge); // people don't look and keep making 119 year old characters with zero rp, cap it at middle aged
             }
 
-            var gender = random.Pick(prototypeManager.EnumeratePrototypes<Pronoun>);
+            var pronoun = random.Pick(prototypeManager.EnumeratePrototypes<PronounPrototype>().ToList());
 
-            var name = GetName(species, gender);
+            var name = GetName(species);
 
             return new HumanoidCharacterProfile()
             {
@@ -272,7 +273,7 @@ namespace Content.Shared.Preferences
             return new(this) { Sex = sex };
         }
 
-        public HumanoidCharacterProfile WithPronoun(Pronoun pronoun)
+        public HumanoidCharacterProfile WithPronoun(PronounPrototype pronoun)
         {
             return new(this) { Pronoun = pronoun };
         }
@@ -487,7 +488,10 @@ namespace Content.Shared.Preferences
 
             var age = Math.Clamp(Age, speciesPrototype.MinAge, speciesPrototype.MaxAge);
 
-            var pronoun =;
+            if (!prototypeManager.TryIndex<PronounPrototype>(Pronoun, out var pronoun))
+            {
+                pronoun = SharedHumanoidAppearanceSystem.DefaultPronoun;
+            }
 
             string name;
             var maxNameLength = configManager.GetCVar(CCVars.MaxNameLength);

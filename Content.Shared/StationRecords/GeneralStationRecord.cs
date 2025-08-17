@@ -1,4 +1,4 @@
-using Robust.Shared.Enums;
+using Content.Shared.Humanoid;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
@@ -48,7 +48,7 @@ public sealed record GeneralStationRecord
     /// </summary>
     /// <remarks>Sex should be placed in a medical record, not a general record.</remarks>
     [DataField]
-    public Pronoun Pronoun;
+    public PronounPrototype Pronoun = SharedHumanoidAppearanceSystem.DefaultPronoun;
 
     /// <summary>
     ///     The priority to display this record at.

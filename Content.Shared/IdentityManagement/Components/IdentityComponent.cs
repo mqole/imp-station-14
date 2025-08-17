@@ -24,14 +24,14 @@ public sealed partial class IdentityComponent : Component
 public sealed class IdentityRepresentation
 {
     public string TrueName;
-    public Pronoun TruePronoun;
+    public PronounPrototype TruePronoun;
 
     public string AgeString;
 
     public string? PresumedName;
     public string? PresumedJob;
 
-    public IdentityRepresentation(string trueName, Pronoun truePronoun, string ageString, string? presumedName = null, string? presumedJob = null)
+    public IdentityRepresentation(string trueName, PronounPrototype truePronoun, string ageString, string? presumedName = null, string? presumedJob = null)
     {
         TrueName = trueName;
         TruePronoun = truePronoun;
