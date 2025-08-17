@@ -2,7 +2,6 @@ using Content.Shared.DisplacementMap;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Inventory;
-using Robust.Shared.Enums;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -27,7 +26,7 @@ public sealed partial class HumanoidAppearanceComponent : Component
     // Couldn't these be somewhere else?
 
     [DataField, AutoNetworkedField]
-    public Gender Gender;
+    public Pronoun Pronoun;
 
     [DataField, AutoNetworkedField]
     public int Age = 18;

@@ -1,9 +1,7 @@
 using Content.Shared.Humanoid.Prototypes;
-using Content.Shared.Dataset;
 using Content.Shared.Random.Helpers;
 using Robust.Shared.Random;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Enums;
 
 namespace Content.Shared.Humanoid
 {
@@ -17,7 +15,7 @@ namespace Content.Shared.Humanoid
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
 
-        public string GetName(string species, Gender? gender = null)
+        public string GetName(string species)
         {
             // if they have an old species or whatever just fall back to human I guess?
             // Some downstream is probably gonna have this eventually but then they can deal with fallbacks.
@@ -31,34 +29,23 @@ namespace Content.Shared.Humanoid
             {
                 case SpeciesNaming.First:
                     return Loc.GetString("namepreset-first",
-                        ("first", GetFirstName(speciesProto, gender)));
+                        ("first", GetFirstName(speciesProto)));
                 case SpeciesNaming.TheFirstofLast:
                     return Loc.GetString("namepreset-thefirstoflast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
+                        ("first", GetFirstName(speciesProto)), ("last", GetLastName(speciesProto)));
                 case SpeciesNaming.FirstDashFirst:
                     return Loc.GetString("namepreset-firstdashfirst",
-                        ("first1", GetFirstName(speciesProto, gender)), ("first2", GetFirstName(speciesProto, gender)));
+                        ("first1", GetFirstName(speciesProto)), ("first2", GetFirstName(speciesProto)));
                 case SpeciesNaming.FirstLast:
                 default:
                     return Loc.GetString("namepreset-firstlast",
-                        ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
+                        ("first", GetFirstName(speciesProto)), ("last", GetLastName(speciesProto)));
             }
         }
 
-        public string GetFirstName(SpeciesPrototype speciesProto, Gender? gender = null)
+        public string GetFirstName(SpeciesPrototype speciesProto)
         {
-            switch (gender)
-            {
-                case Gender.Male:
-                    return _random.Pick(_prototypeManager.Index(speciesProto.MaleFirstNames));
-                case Gender.Female:
-                    return _random.Pick(_prototypeManager.Index(speciesProto.FemaleFirstNames));
-                default:
-                    if (_random.Prob(0.5f))
-                        return _random.Pick(_prototypeManager.Index(speciesProto.MaleFirstNames));
-                    else
-                        return _random.Pick(_prototypeManager.Index(speciesProto.FemaleFirstNames));
-            }
+            return _random.Pick(_prototypeManager.Index(speciesProto.FirstNames));
         }
 
         public string GetLastName(SpeciesPrototype speciesProto)

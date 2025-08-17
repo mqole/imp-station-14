@@ -1,4 +1,5 @@
 using Robust.Shared.Enums;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.StationRecords;
@@ -43,11 +44,11 @@ public sealed record GeneralStationRecord
     public string Species = string.Empty;
 
     /// <summary>
-    ///     Gender identity tied to this station record.
+    ///     Pronoun ID tied to this station record.
     /// </summary>
     /// <remarks>Sex should be placed in a medical record, not a general record.</remarks>
     [DataField]
-    public Gender Gender = Gender.Epicene;
+    public Pronoun Pronoun;
 
     /// <summary>
     ///     The priority to display this record at.
