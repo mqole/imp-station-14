@@ -8,14 +8,14 @@ public sealed partial class PointingModifierComponent : Component
     ///     eg. "You POINT at it".
     /// </summary>
     [DataField]
-    public string TextSelf = "point";
+    public LocId TextSelf = "point";
 
     /// <summary>
     ///     Verb shown in the popup to viewers.
     ///     eg. "The person POINTS at it".
     /// </summary>
     [DataField]
-    public string TextOther = "points";
+    public LocId TextOther = "points";
 
     /// <summary>
     ///     Name of the entity to spawn at point location.

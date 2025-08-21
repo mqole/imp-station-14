@@ -13,3 +13,8 @@ imp-pointing-system-point-in-other-inventory-self = You {$verb} at {THE($wearer)
 imp-pointing-system-point-in-other-inventory-target = {CAPITALIZE(THE($pointer))} {$verb} at your {$item}.
 imp-pointing-system-point-in-other-inventory-others = {CAPITALIZE(THE($pointer))} {$verb} at {THE($wearer)}'s {$item}.
 imp-pointing-system-other-point-at-tile = {CAPITALIZE(THE($otherName))} {$verb} at the {$tileName}.
+
+pointing-system-verb-point-self = point
+pointing-system-verb-point-other = points
+pointing-system-verb-take-aim-self = take aim
+pointing-system-verb-take-aim-other = takes aim

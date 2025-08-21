@@ -89,8 +89,8 @@
         Blunt: 5
 #imp edit end
   - type: PointingModifier
-    textSelf: take aim
-    textOther: takes aim
+    textSelf: pointing-system-verb-take-aim-self
+    textOther: pointing-system-verb-take-aim-other
     pointingArrow: PointingCrosshair
 
 - type: entity
