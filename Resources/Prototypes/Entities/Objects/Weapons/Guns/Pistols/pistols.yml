@@ -88,6 +88,9 @@
       types:
         Blunt: 5
 #imp edit end
+  - type: PointingTextModifier
+    textSelf: take aim
+    textOther: takes aim
 
 - type: entity
   name: Viper
