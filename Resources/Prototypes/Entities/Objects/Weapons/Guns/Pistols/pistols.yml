@@ -91,6 +91,7 @@
   - type: PointingTextModifier
     textSelf: take aim
     textOther: takes aim
+    pointingArrow: PointingCrosshair
 
 - type: entity
   name: Viper
