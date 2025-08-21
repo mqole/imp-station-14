@@ -61,6 +61,7 @@ namespace Content.Server.Pointing.EntitySystems
         private const float PointingRange = 15f;
         private const string PointVerbSelf = "point"; // imp
         private const string PointVerbOther = "points"; // imp
+        private const string PointingArrow = "PointingArrow"; // imp
 
         private void GetCompState(Entity<PointingArrowComponent> entity, ref ComponentGetState args)
         {
@@ -165,7 +166,18 @@ namespace Content.Server.Pointing.EntitySystems
             var mapCoordsPointed = _transform.ToMapCoordinates(coordsPointed);
             _rotateToFaceSystem.TryFaceCoordinates(player, mapCoordsPointed.Position);
 
-            var arrow = Spawn("PointingArrow", coordsPointed);
+            var verbSelf = PointVerbSelf;
+            var verbOther = PointVerbOther;
+            var pointArrow = PointingArrow;
+            var heldItem = _hands.GetHeldItem(player, _hands.GetActiveHand(player)); // imp
+            if (TryComp<PointingModifierComponent>(heldItem, out var pointMod)) // imp edit to modify verb
+            {
+                verbSelf = pointMod.TextSelf;
+                verbOther = pointMod.TextOther;
+                pointArrow = pointMod.PointingArrow;
+            }
+
+            var arrow = Spawn(pointArrow, coordsPointed);
 
             if (TryComp<PointingArrowComponent>(arrow, out var pointing))
             {
@@ -207,8 +219,6 @@ namespace Content.Server.Pointing.EntitySystems
                 .AddWhere(session1 => ViewerPredicate(session1))
                 .Recipients;
 
-            var verbSelf = PointVerbSelf;
-            var verbOther = PointVerbOther;
             string selfMessage;
             string viewerMessage;
             string? viewerPointedAtMessage = null;
@@ -217,13 +227,6 @@ namespace Content.Server.Pointing.EntitySystems
             if (Exists(pointed))
             {
                 var pointedName = Identity.Entity(pointed, EntityManager);
-
-                var heldItem = _hands.GetHeldItem(player, _hands.GetActiveHand(player)); // imp
-                if (TryComp<PointingTextModifierComponent>(heldItem, out var textMod)) // imp edit to modify verb
-                {
-                    verbSelf = textMod.TextSelf;
-                    verbOther = textMod.TextOther;
-                }
 
                 EntityUid? containingInventory = null;
                 // Search up through the target's containing containers until we find an inventory

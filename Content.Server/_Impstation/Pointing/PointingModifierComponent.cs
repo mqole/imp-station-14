@@ -1,7 +1,7 @@
 namespace Content.Server._Impstation.Pointing;
 
 [RegisterComponent]
-public sealed partial class PointingTextModifierComponent : Component
+public sealed partial class PointingModifierComponent : Component
 {
     /// <summary>
     ///     Verb shown in the popup to the pointer.
@@ -16,4 +16,10 @@ public sealed partial class PointingTextModifierComponent : Component
     /// </summary>
     [DataField]
     public string TextOther = "points";
+
+    /// <summary>
+    ///     Name of the entity to spawn at point location.
+    /// </summary>
+    [DataField]
+    public string PointingArrow = "PointingArrow";
 }
