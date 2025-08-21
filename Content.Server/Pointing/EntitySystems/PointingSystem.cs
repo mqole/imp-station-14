@@ -60,7 +60,7 @@ namespace Content.Server.Pointing.EntitySystems
 
         private const float PointingRange = 15f;
         private const string PointVerbSelf = "point"; // imp
-        private const string PointVerbOther = "other"; // imp
+        private const string PointVerbOther = "points"; // imp
 
         private void GetCompState(Entity<PointingArrowComponent> entity, ref ComponentGetState args)
         {
@@ -274,11 +274,11 @@ namespace Content.Server.Pointing.EntitySystems
                         // You point at yourself
                         ? Loc.GetString("imp-pointing-system-point-at-self", ("verb", verbSelf)) // imp locale & verb
                         // You point at Urist McTarget
-                        : Loc.GetString("imp-pointing-system-point-at-other", ("other", pointedName), ("verb", verbOther)); // imp locale & verb
+                        : Loc.GetString("imp-pointing-system-point-at-other", ("other", pointedName), ("verb", verbSelf)); // imp locale & verb
 
                     viewerMessage = pointingAtSelf
                         // Urist McPointer points at himself
-                        ? Loc.GetString("imp-pointing-system-point-at-self-others", ("otherName", playerName), ("other", playerName), ("verb", verbSelf)) // imp locale & verb
+                        ? Loc.GetString("imp-pointing-system-point-at-self-others", ("otherName", playerName), ("other", playerName), ("verb", verbOther)) // imp locale & verb
                         // Urist McPointer points at Urist McTarget
                         : Loc.GetString("imp-pointing-system-point-at-other-others", ("otherName", playerName), ("other", pointedName), ("verb", verbOther)); // imp locale & verb
 
