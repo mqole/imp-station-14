@@ -88,7 +88,7 @@
       types:
         Blunt: 5
 #imp edit end
-  - type: PointingTextModifier
+  - type: PointingModifier
     textSelf: take aim
     textOther: takes aim
     pointingArrow: PointingCrosshair
