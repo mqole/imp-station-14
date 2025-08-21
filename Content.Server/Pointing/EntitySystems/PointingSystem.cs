@@ -172,8 +172,8 @@ namespace Content.Server.Pointing.EntitySystems
             var heldItem = _hands.GetHeldItem(player, _hands.GetActiveHand(player)); // imp
             if (TryComp<PointingModifierComponent>(heldItem, out var pointMod)) // imp edit to modify verb
             {
-                verbSelf = pointMod.TextSelf;
-                verbOther = pointMod.TextOther;
+                verbSelf = Loc.GetString(pointMod.TextSelf);
+                verbOther = Loc.GetString(pointMod.TextOther);
                 pointArrow = pointMod.PointingArrow;
             }
 
