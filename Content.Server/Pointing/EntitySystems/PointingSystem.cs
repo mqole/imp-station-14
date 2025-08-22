@@ -1,5 +1,4 @@
 using System.Linq;
-using Content.Server._Impstation.Pointing;
 using Content.Server.Administration.Logs;
 using Content.Server.Pointing.Components;
 using Content.Shared.CCVar;
@@ -7,7 +6,6 @@ using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Eye;
 using Content.Shared.Ghost;
-using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Interaction;
@@ -27,6 +25,8 @@ using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Replays;
 using Robust.Shared.Timing;
+using Content.Server._Impstation.Pointing; // imp
+using Content.Shared.Hands.EntitySystems; // imp
 
 namespace Content.Server.Pointing.EntitySystems
 {
@@ -166,11 +166,12 @@ namespace Content.Server.Pointing.EntitySystems
             var mapCoordsPointed = _transform.ToMapCoordinates(coordsPointed);
             _rotateToFaceSystem.TryFaceCoordinates(player, mapCoordsPointed.Position);
 
+            // imp edit start: modular verbs & arrow
             var verbSelf = PointVerbSelf;
             var verbOther = PointVerbOther;
             var pointArrow = PointingArrow;
-            var heldItem = _hands.GetHeldItem(player, _hands.GetActiveHand(player)); // imp
-            if (TryComp<PointingModifierComponent>(heldItem, out var pointMod)) // imp edit to modify verb
+            var heldItem = _hands.GetHeldItem(player, _hands.GetActiveHand(player));
+            if (TryComp<PointingModifierComponent>(heldItem, out var pointMod))
             {
                 verbSelf = Loc.GetString(pointMod.TextSelf);
                 verbOther = Loc.GetString(pointMod.TextOther);
@@ -178,6 +179,7 @@ namespace Content.Server.Pointing.EntitySystems
             }
 
             var arrow = Spawn(pointArrow, coordsPointed);
+            // imp end
 
             if (TryComp<PointingArrowComponent>(arrow, out var pointing))
             {
