@@ -1,5 +1,6 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.DisplacementMap; // imp
 
 namespace Content.Shared.Humanoid.Markings
 {
@@ -44,6 +45,12 @@ namespace Content.Shared.Humanoid.Markings
 
         [DataField]
         public string? Shader { get; private set; } = null; // imp
+
+        /// <summary>
+        ///     Allows this marking to optionally apply additional displacements to humanoid visual layers..
+        /// </summary>
+        [DataField]
+        public Dictionary<HumanoidVisualLayers, DisplacementData> AppliedDisplacement = [];
 
         /// <summary>
         /// Allows specific images to be put into any arbitrary layer on the mob.
