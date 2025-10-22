@@ -5,6 +5,7 @@ using Content.Client.Inventory;
 using Content.Shared.Clothing;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.EntitySystems;
+using Content.Shared.DisplacementMap;
 using Content.Shared.Humanoid;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
@@ -326,11 +327,34 @@ public sealed class ClientClothingSystem : ClothingSystem
             _sprite.LayerSetData((equipee, sprite), index, layerData);
             _sprite.LayerSetOffset(layer, layer.Offset + slotDef.Offset);
 
+            // IMP ADD START - appendable displacements
+            // we store a raw appended map seperate, in case there's a vox wearing a vox-specific sprite that we need to append Only the markings to
+            var rawAppend = new DisplacementData();
+
+            if (TryComp<HumanoidAppearanceComponent>(equipee, out var humanoid))
+            {
+                var appendQuery = from marking in humanoid.AppendedDisplacements where marking.Key == slot select marking.Value;
+                foreach (var appendDisplacement in appendQuery)
+                {
+                    displacementData = _displacement.AppendDisplacement(appendDisplacement, displacementData);
+                    displacementData.IgnoreSpeciesClothing = true;
+
+                    rawAppend = _displacement.AppendDisplacement(appendDisplacement, rawAppend);
+                }
+            }
+            // IMP ADD END
+
             if (displacementData is not null)
             {
                 //Checking that the state is not tied to the current race. In this case we don't need to use the displacement maps.
-                if (layerData.State is not null && inventory.SpeciesId is not null && layerData.State.EndsWith(inventory.SpeciesId))
+                // IMP EDIT START- moving some of this logic around.
+                // even if the state IS tied to the current race, we want to append our raw marking additive displacements.
+                if (!displacementData.IgnoreSpeciesClothing)
                     continue;
+
+                if (layerData.State is not null && inventory.SpeciesId is not null && layerData.State.EndsWith(inventory.SpeciesId))
+                    displacementData = rawAppend;
+                // IMP EDIT END
 
                 if (_displacement.TryAddDisplacement(displacementData, (equipee, sprite), index, key, out var displacementKey))
                 {

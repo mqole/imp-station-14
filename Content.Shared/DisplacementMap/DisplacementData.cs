@@ -19,4 +19,10 @@ public sealed partial class DisplacementData
 
     [DataField]
     public string ShaderOverrideAdditive = "DisplacedStencilDrawAdditive"; // imp
+
+    /// <summary>
+    ///     When true, will apply this displacement to clothing regardless of whether the clothing layer is specified to be for a particular species.
+    /// </summary>
+    [DataField]
+    public bool IgnoreSpeciesClothing = false;
 }

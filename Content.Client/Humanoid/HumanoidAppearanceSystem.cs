@@ -476,6 +476,12 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
 
             if (humanoid.MarkingsDisplacement.TryGetValue(markingPrototype.BodyPart, out var displacementData) && markingPrototype.CanBeDisplaced)
                 _displacement.TryAddDisplacement(displacementData, (entity.Owner, sprite), targetLayer + j + 1, layerId, out _);
+
+            // IMP ADD START- markings that append displacements to a doll
+            if (markingPrototype.AppliedDisplacement is { } appliedDisplacement)
+                foreach ((var slot, var displacement) in appliedDisplacement)
+                    humanoid.AppendedDisplacements.Add(slot, displacement);
+            // IMP END
         }
     }
 

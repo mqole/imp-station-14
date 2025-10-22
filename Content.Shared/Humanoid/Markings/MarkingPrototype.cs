@@ -46,11 +46,13 @@ namespace Content.Shared.Humanoid.Markings
         [DataField]
         public string? Shader { get; private set; } = null; // imp
 
+        // IMP ADD
         /// <summary>
-        ///     Allows this marking to optionally apply additional displacements to humanoid visual layers..
+        ///     Allows this marking to optionally apply additional displacements to inventory layers.
+        ///     String must be a valid inventory slot on the entity. (Why isnt this an enum?)
         /// </summary>
         [DataField]
-        public Dictionary<HumanoidVisualLayers, DisplacementData> AppliedDisplacement = [];
+        public Dictionary<string, DisplacementData> AppliedDisplacement = [];
 
         /// <summary>
         /// Allows specific images to be put into any arbitrary layer on the mob.
