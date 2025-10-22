@@ -18,14 +18,16 @@ void vertex() {
 
 void fragment() {
 
-    highp vec2 displacementValue1 = getDisplacementValue(displacementMap, displacementUVOut);
-    highp vec2 displacementValue2 = getDisplacementValue(displacementMap2, displacementUVOut2);
+    highp vec4 displacementSample1 = texture2D(displacementMap, displacementUVOut);
+    highp vec4 displacementSample2 = texture2D(displacementMap2, displacementUVOut2);
+    highp vec4 addedDisplacementSamples = displacementSample1 + displacementSample2;
 
-    COLOR = zTexture(UV + (displacementValue1 + displacementValue2) * TEXTURE_PIXEL_SIZE * displacementSize * vec2(1.0, -1.0)); //literally just add them together
-    COLOR.a *= displacementSample.a;
+    highp vec2 addedDisplacementValues = (getDisplacementValue(addedDisplacementSamples));
+
+    COLOR = zTexture(UV + (addedDisplacementValues) * TEXTURE_PIXEL_SIZE * displacementSize * vec2(1.0, -1.0)); //literally just add them together
+    COLOR.a *= addedDisplacementSamples.a;
 }
 
-highp vec2 getDisplacementValue(Sampler2D tex, highp vec2 coords) {
-    highp vec4 displacementSample = texture2D(tex, coords); //get the displacement colour
-    return new highp vec2(displacementSample.xy - vec2(128.0 / 255.0)) / (1.0 - 128.0 / 255.0); //wangle it into an offset
+highp vec2 getDisplacementValue(highp vec4 displacementSample) {
+    return vec2(displacementSample.xy - vec2(128.0 / 255.0)) / (1.0 - 128.0 / 255.0); //wangle it into an offset
 }

@@ -7,7 +7,7 @@
   markingCategory: Chest
   speciesRestriction: [ Human, Dwarf ]
   sprites:
-  - sprite: _Impstation/displace-demo.rsi
+  - sprite: _Impstation/displace-demo-marking.rsi
     state: displace-demo-marking
   appliedDisplacement:
     jumpsuit:

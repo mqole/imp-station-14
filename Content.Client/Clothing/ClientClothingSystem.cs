@@ -5,7 +5,6 @@ using Content.Client.Inventory;
 using Content.Shared.Clothing;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.EntitySystems;
-using Content.Shared.DisplacementMap;
 using Content.Shared.Humanoid;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
@@ -327,41 +326,63 @@ public sealed class ClientClothingSystem : ClothingSystem
             _sprite.LayerSetData((equipee, sprite), index, layerData);
             _sprite.LayerSetOffset(layer, layer.Offset + slotDef.Offset);
 
-            // IMP ADD START - appendable displacements
-            // we store a raw appended map seperate, in case there's a vox wearing a vox-specific sprite that we need to append Only the markings to
-            var rawAppend = new DisplacementData();
-
-            if (TryComp<HumanoidAppearanceComponent>(equipee, out var humanoid))
-            {
-                var appendQuery = from marking in humanoid.AppendedDisplacements where marking.Key == slot select marking.Value;
-                foreach (var appendDisplacement in appendQuery)
-                {
-                    displacementData = _displacement.AppendDisplacement(appendDisplacement, displacementData);
-                    displacementData.IgnoreSpeciesClothing = true;
-
-                    rawAppend = _displacement.AppendDisplacement(appendDisplacement, rawAppend);
-                }
-            }
-            // IMP ADD END
-
+            string? displacementKey = null; // imp add, surprise tool that will help us later
             if (displacementData is not null)
             {
                 //Checking that the state is not tied to the current race. In this case we don't need to use the displacement maps.
-                // IMP EDIT START- moving some of this logic around.
-                // even if the state IS tied to the current race, we want to append our raw marking additive displacements.
-                if (!displacementData.IgnoreSpeciesClothing)
+                if (layerData.State is not null && inventory.SpeciesId is not null && layerData.State.EndsWith(inventory.SpeciesId))
                     continue;
 
-                if (layerData.State is not null && inventory.SpeciesId is not null && layerData.State.EndsWith(inventory.SpeciesId))
-                    displacementData = rawAppend;
-                // IMP EDIT END
-
-                if (_displacement.TryAddDisplacement(displacementData, (equipee, sprite), index, key, out var displacementKey))
+                if (_displacement.TryAddDisplacement(displacementData, (equipee, sprite), index, key, out displacementKey)) // imp remove var
                 {
                     revealedLayers.Add(displacementKey);
                     index++;
                 }
             }
+
+            // IMP ADD START - appendable displacements
+            var appendIndex = 1;
+            if (TryComp<HumanoidAppearanceComponent>(equipee, out var humanoid))
+            {
+                var appendQuery = from marking in humanoid.AppendedDisplacements where marking.Key == slot select marking.Value;
+                foreach (var appendLayer in appendQuery)
+                {
+                    // if theres no existing displacement, just treat it like a regular displacement
+                    if (displacementData is null
+                        && _displacement.TryAddDisplacement(appendLayer, (equipee, sprite), index, key, out var emptyAppendKey))
+                    {
+                        revealedLayers.Add(emptyAppendKey);
+                        index++;
+                        continue;
+                    }
+
+                    // otherwise we need to add our displacement with the append shader.
+                    appendLayer.ShaderOverride = appendLayer.ShaderOverrideAdditive;
+
+                    if (_displacement.TryAddDisplacement(appendLayer, (equipee, sprite), index, key + "-append" + appendIndex, out var appendKey))
+                    {
+                        revealedLayers.Add(appendKey);
+                        index++;
+                    }
+
+                    // CASE: we have a species with existing displacement & unique clothing species sprite.
+                    // TODO: fix this
+                    if (displacementKey is null)
+                        continue;
+
+                    // if we have a species with existing displacement,
+                    // then we need to make sure the layer's copytoshaderparameters point to our 1st displacement.
+
+                    // get the PrototypeLayerData of the layer we just added (appendKey)
+                    if (_sprite.TryGetLayer((equipee, sprite), index - 1, out var appendLayerData, false))
+                        appendLayerData.CopyToShaderParameters = new CopyToShaderParameters(displacementKey)
+                        {
+                            ParameterTexture = "displacementMap2",
+                            ParameterUV = "displacementUV2"
+                        };
+                }
+            }
+            // IMP ADD END
         }
 
         RaiseLocalEvent(equipment, new EquipmentVisualsUpdatedEvent(equipee, slot, revealedLayers), true);
