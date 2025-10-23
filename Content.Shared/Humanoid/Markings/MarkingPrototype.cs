@@ -49,7 +49,7 @@ namespace Content.Shared.Humanoid.Markings
         // IMP ADD
         /// <summary>
         ///     Allows this marking to optionally apply additional displacements to inventory layers.
-        ///     String must be a valid inventory slot on the entity. (Why isnt this an enum?)
+        ///     String must be a valid inventory slot on the entity.
         /// </summary>
         [DataField]
         public Dictionary<string, DisplacementData> AppliedDisplacement = [];

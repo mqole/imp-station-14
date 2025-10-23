@@ -5,7 +5,7 @@
   id: DisplacementDemoMarking
   bodyPart: Chest
   markingCategory: Chest
-  speciesRestriction: [ Human, Dwarf ]
+  speciesRestriction: [ Human, Vox ]
   sprites:
   - sprite: _Impstation/displace-demo-marking.rsi
     state: displace-demo-marking
