@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -8,14 +7,11 @@ using Content.Server.Chat.Managers;
 using Content.Server.GameTicking;
 using Content.Server.Speech.EntitySystems;
 using Content.Server.Speech.Prototypes;
-using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
-using Content.Shared.Abilities.Mime; // imp
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
-using Content.Shared.CollectiveMind;
 using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Ghost;
@@ -24,6 +20,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Players;
 using Content.Shared.Players.RateLimiting;
 using Content.Shared.Radio;
+using Content.Shared.Station.Components;
 using Content.Shared.Whitelist;
 using Robust.Server.Player;
 using Robust.Shared.Audio;
@@ -37,6 +34,8 @@ using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using Robust.Shared.Utility;
 using Content.Server._Wizden.Chat.Systems; // Imp edit for Last Message Before Death Webhook
+using Content.Shared.Abilities.Mime; // imp
+using Content.Shared.CollectiveMind; // imp
 
 namespace Content.Server.Chat.Systems;
 
@@ -63,13 +62,8 @@ public sealed partial class ChatSystem : SharedChatSystem
     [Dependency] private readonly ReplacementAccentSystem _wordreplacement = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
     [Dependency] private readonly ExamineSystemShared _examineSystem = default!;
-    [Dependency] private readonly CollectiveMindUpdateSystem _collectiveMind = default!;
+    [Dependency] private readonly CollectiveMindUpdateSystem _collectiveMind = default!; //imp
     [Dependency] private readonly LastMessageBeforeDeathSystem _lastMessageBeforeDeathSystem = default!; // Imp Edit LastMessageBeforeDeath Webhook
-
-    public const int VoiceRange = 10; // how far voice goes in world units
-    public const int WhisperClearRange = 2; // how far whisper goes while still being understandable, in world units
-    public const int WhisperMuffledRange = 5; // how far whisper goes at all, in world units
-     //imp. gutted default announcement sounds, announcersystem handles them now.
 
     private bool _loocEnabled = true;
     private bool _deadLoocEnabled;
@@ -186,6 +180,7 @@ public sealed partial class ChatSystem : SharedChatSystem
             return;
         }
 
+        // imp edit, collective mind
         if (TryComp<CollectiveMindComponent>(source, out var collective))
             _collectiveMind.UpdateCollectiveMind(source, collective);
 
@@ -256,6 +251,7 @@ public sealed partial class ChatSystem : SharedChatSystem
             }
         }
 
+        // imp edit start
         if (desiredType == InGameICChatType.CollectiveMind)
         {
             if (TryProccessCollectiveMindMessage(source, message, out var modMessage, out var channel))
@@ -264,6 +260,7 @@ public sealed partial class ChatSystem : SharedChatSystem
                 return;
             }
         }
+        // imp edit end
 
         // Otherwise, send whatever type.
         switch (desiredType)
@@ -396,6 +393,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         EntityUid source,
         string message,
         string? sender = null,
+        // bool playDefaultSound = true, // imp
         SoundSpecifier? announcementSound = null,
         Color? colorOverride = null)
     {
@@ -417,6 +415,10 @@ public sealed partial class ChatSystem : SharedChatSystem
         _chatManager.ChatMessageToManyFiltered(filter, ChatChannel.Radio, message, wrappedMessage, source, false, true, colorOverride);
 
         //imp. gutted default announcement sounds, announcersystem handles them now.
+        //if (playDefaultSound)
+        //{
+        //    _audio.PlayGlobal(announcementSound?.ToString() ?? DefaultAnnouncementSound, filter, true, AudioParams.Default.WithVolume(-2f));
+        //}
 
         _adminLogger.Add(LogType.Chat, LogImpact.Low, $"Station Announcement on {station} from {sender}: {message}");
     }
@@ -425,6 +427,7 @@ public sealed partial class ChatSystem : SharedChatSystem
 
     #region Private API
 
+    // imp edit, collective mind
     private void SendCollectiveMindChat(EntityUid source, string message, CollectiveMindPrototype? collectiveMind)
     {
         if (_mobStateSystem.IsDead(source) || collectiveMind == null || message == "" || !TryComp<CollectiveMindComponent>(source, out var sourseCollectiveMindComp) || !sourseCollectiveMindComp.Minds.ContainsKey(collectiveMind.ID))
@@ -517,7 +520,7 @@ public sealed partial class ChatSystem : SharedChatSystem
             RaiseLocalEvent(source, nameEv);
             name = nameEv.VoiceName;
             // Check for a speech verb override
-            if (nameEv.SpeechVerb != null && _prototypeManager.TryIndex(nameEv.SpeechVerb, out var proto))
+            if (nameEv.SpeechVerb != null && _prototypeManager.Resolve(nameEv.SpeechVerb, out var proto))
                 speech = proto;
         }
 
@@ -1087,7 +1090,7 @@ public enum InGameICChatType : byte
     Speak,
     Emote,
     Whisper,
-    CollectiveMind
+    CollectiveMind // imp
 }
 
 /// <summary>

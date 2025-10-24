@@ -19,9 +19,9 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Popups;
 using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
-using Content.Server.Announcements.Systems;
-using Robust.Shared.Player;
-using Content.Server.Station.Components;
+using Content.Server.Announcements.Systems; // ee announce
+using Robust.Shared.Player; // ee announce
+using Content.Shared.Station.Components; // imp
 
 namespace Content.Server.Communications
 {
@@ -38,7 +38,7 @@ namespace Content.Server.Communications
         [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
         [Dependency] private readonly IConfigurationManager _cfg = default!;
         [Dependency] private readonly IAdminLogManager _adminLogger = default!;
-        [Dependency] private readonly AnnouncerSystem _announcer = default!;
+        [Dependency] private readonly AnnouncerSystem _announcer = default!; // ee announce
 
         private const float UIUpdateInterval = 5.0f;
 
@@ -274,9 +274,11 @@ namespace Content.Server.Communications
                 return;
             }
 
+            // imp edit start, random station announcer system
             if (TryComp<StationDataComponent>(_stationSystem.GetOwningStation(uid), out var stationData))
                 _announcer.SendAnnouncement("announce", _stationSystem.GetInStation(stationData), msg, title,
-                    comp.Color, announcementSound: comp.Sound); //imp. added announcementSound back
+                    comp.Color, announcementSound: comp.Sound);
+            // imp edit end, random station announcer system
 
             _adminLogger.Add(LogType.Chat, LogImpact.Low, $"{ToPrettyString(message.Actor):player} has sent the following station announcement: {msg}");
 

@@ -97,7 +97,7 @@
   - type: ContainerAmmoProvider
     container: storagebase
   - type: Item
-    size: Normal
+    size: Large
   - type: Clothing
     sprite: Objects/Weapons/Guns/Cannons/pie_cannon.rsi
     quickEquip: false
@@ -107,6 +107,44 @@
     containers:
       storagebase: !type:Container
         ents: []
+  - type: PointingModifier # imp add
+    textSelf: pointing-system-verb-take-aim-self
+    textOther: pointing-system-verb-take-aim-other
+    pointingArrow: PointingCrosshair
+
+- type: entity
+  name: experimental pie cannon
+  parent: BaseWeaponBattery
+  id: BorgLauncherCreamPie
+  description: Deliver a generous portion of cream directly to the crew! Automatically bakes pies over time.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Cannons/pie_cannon.rsi
+    layers:
+    - state: piecannon
+  - type: Gun
+    fireRate: 2
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    - FullAuto
+    soundGunshot:
+      path: /Audio/Effects/thunk.ogg
+    soundEmpty:
+      path: /Audio/Items/hiss.ogg
+    clumsyProof: true
+  - type: ProjectileBatteryAmmoProvider
+    proto: FoodPieBananaCream
+    fireCost: 30
+  - type: Battery
+    maxCharge: 90
+    startingCharge: 90
+  - type: BatterySelfRecharger
+    autoRecharge: true
+    autoRechargeRate: 1
+  - type: AmmoCounter
+  - type: Item
+    size: Normal
   - type: PointingModifier # imp add
     textSelf: pointing-system-verb-take-aim-self
     textOther: pointing-system-verb-take-aim-other
@@ -143,7 +181,9 @@
   - type: ContainerAmmoProvider
     container: storagebase
   - type: Item
-    size: Normal
+    size: Large
+    shape:
+    - 0,0,2,1
   - type: ContainerContainer
     containers:
       storagebase: !type:Container

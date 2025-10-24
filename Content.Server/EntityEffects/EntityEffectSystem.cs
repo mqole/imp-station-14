@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
@@ -12,16 +11,15 @@ using Content.Server.Emp;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Ghost.Roles.Components;
-using Content.Server.Medical;
 using Content.Server.Polymorph.Components;
 using Content.Server.Polymorph.Systems;
 using Content.Server.Speech.Components;
 using Content.Server.Spreader;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
-using Content.Server.Traits.Assorted;
 using Content.Server.Zombies;
 using Content.Shared.Atmos;
+using Content.Shared.Atmos.Components;
 using Content.Shared.Body.Components;
 using Content.Shared.Coordinates.Helpers;
 using Content.Shared.EntityEffects.EffectConditions;
@@ -30,9 +28,11 @@ using Content.Shared.EntityEffects.Effects;
 using Content.Shared.EntityEffects;
 using Content.Shared.Flash;
 using Content.Shared.Maps;
+using Content.Shared.Medical;
 using Content.Shared.Mind.Components;
 using Content.Shared.Popups;
 using Content.Shared.Random;
+using Content.Shared.Traits.Assorted;
 using Content.Shared.Zombies;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
@@ -40,10 +40,8 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-using Content.Server.Forensics; // imp
 using Content.Shared._Impstation.EntityEffects.Effects; // imp
 using Content.Shared._Impstation.Ghost; // imp
-using Content.Shared.Chemistry.Reagent; // imp
 using Content.Shared.Humanoid; // imp
 
 using TemperatureCondition = Content.Shared.EntityEffects.EffectConditions.Temperature; // disambiguate the namespace
@@ -80,7 +78,6 @@ public sealed class EntityEffectSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _xform = default!;
     [Dependency] private readonly VomitSystem _vomit = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
-    [Dependency] private readonly ForensicsSystem _forensicsSystem = default!; // imp
 
     public override void Initialize()
     {
@@ -135,6 +132,7 @@ public sealed class EntityEffectSystem : EntitySystem
 
         SubscribeLocalEvent<ExecuteEntityEffectEvent<MakeSyndient>>(OnExecuteMakeSyndient); // imp
         SubscribeLocalEvent<ExecuteEntityEffectEvent<Medium>>(OnExecuteMedium); // Imp
+        SubscribeLocalEvent<ExecuteEntityEffectEvent<MakeTame>>(OnExecuteMakeTame); // imp
     }
 
     private void OnCheckTemperature(ref CheckEntityEffectConditionEvent<TemperatureCondition> args)
@@ -898,7 +896,7 @@ public sealed class EntityEffectSystem : EntitySystem
         if (plantholder.Seed == null)
             return;
 
-        var gasses = plantholder.Seed.ExudeGasses;
+        var gasses = plantholder.Seed.ConsumeGasses;
 
         // Add a random amount of a random gas to this gas dictionary
         float amount = _random.NextFloat(args.Effect.MinValue, args.Effect.MaxValue);
@@ -920,7 +918,7 @@ public sealed class EntityEffectSystem : EntitySystem
         if (plantholder.Seed == null)
             return;
 
-        var gasses = plantholder.Seed.ConsumeGasses;
+        var gasses = plantholder.Seed.ExudeGasses;
 
         // Add a random amount of a random gas to this gas dictionary
         float amount = _random.NextFloat(args.Effect.MinValue, args.Effect.MaxValue);
@@ -958,9 +956,7 @@ public sealed class EntityEffectSystem : EntitySystem
             return;
 
         var targetProto = _random.Pick(plantholder.Seed.MutationPrototypes);
-        _protoManager.TryIndex(targetProto, out SeedPrototype? protoSeed);
-
-        if (protoSeed == null)
+        if (!_protoManager.TryIndex(targetProto, out SeedPrototype? protoSeed))
         {
             Log.Error($"Seed prototype could not be found: {targetProto}!");
             return;
@@ -1024,6 +1020,30 @@ public sealed class EntityEffectSystem : EntitySystem
         // in memoriam jungle juice 2/10/2024-8/7/2025
     }
 
+    // copied from above
+    private void OnExecuteMakeTame(ref ExecuteEntityEffectEvent<MakeTame> args) ///imp
+    {
+        var entityManager = args.Args.EntityManager;
+        var uid = args.Args.TargetEntity;
+
+        // Stops from adding a ghost role to things like people who already have a mind
+        if (entityManager.TryGetComponent<MindContainerComponent>(uid, out var mindContainer) && mindContainer.HasMind ||
+        //slightly hacky way to make sure it doesn't work on humanoid ghost roles that haven't been claimed yet
+            HasComp<HumanoidAppearanceComponent>(uid))
+        {
+            return;
+        }
+
+        entityManager.EnsureComponent<GhostRoleComponent>(uid, out var ghostRole);
+        entityManager.EnsureComponent<GhostTakeoverAvailableComponent>(uid);
+        var entityData = entityManager.GetComponent<MetaDataComponent>(uid);
+
+        ghostRole.RoleName = entityData.EntityName;
+        ghostRole.RoleDescription = Loc.GetString("ghost-role-information-nonantagonist-freeagent-tame");
+        ghostRole.RoleRules = Loc.GetString("ghost-role-information-tame-rules");
+    }
+
+
     private void OnExecuteMedium(ref ExecuteEntityEffectEvent<Medium> args)
     {
         var entityManager = args.Args.EntityManager;
@@ -1031,5 +1051,4 @@ public sealed class EntityEffectSystem : EntitySystem
 
         entityManager.EnsureComponent<MediumComponent>(uid);
     }
-
 }
