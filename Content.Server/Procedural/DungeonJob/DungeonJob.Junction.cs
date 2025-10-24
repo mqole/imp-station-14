@@ -15,12 +15,12 @@ public sealed partial class DungeonJob
     private async Task PostGen(JunctionDunGen gen, Dungeon dungeon, HashSet<Vector2i> reservedTiles, Random random)
     {
         var tileDef = _tileDefManager[gen.Tile];
-        var contents = _prototype.Index(gen.Contents);
+        var contents = gen.Contents; // imp remove index
 
         // N-wide junctions
         foreach (var tile in dungeon.CorridorTiles)
         {
-            if (!_anchorable.TileFree(_grid, tile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+            if (!_anchorable.TileFree((_gridUid, _grid), tile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                 continue;
 
             // Check each direction:
@@ -57,7 +57,7 @@ public sealed partial class DungeonJob
                     }
 
                     // If we're not at the end tile then check it + perpendicular are free.
-                    if (!_anchorable.TileFree(_grid, neighbor, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                    if (!_anchorable.TileFree((_gridUid, _grid), neighbor, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                     {
                         isValid = false;
                         break;
@@ -66,13 +66,13 @@ public sealed partial class DungeonJob
                     var perp1 = tile + neighborVec * j + ((Direction) ((i * 2 + 2) % 8)).ToIntVec();
                     var perp2 = tile + neighborVec * j + ((Direction) ((i * 2 + 6) % 8)).ToIntVec();
 
-                    if (!_anchorable.TileFree(_grid, perp1, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                    if (!_anchorable.TileFree((_gridUid, _grid), perp1, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                     {
                         isValid = false;
                         break;
                     }
 
-                    if (!_anchorable.TileFree(_grid, perp2, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                    if (!_anchorable.TileFree((_gridUid, _grid), perp2, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                     {
                         isValid = false;
                         break;
@@ -94,7 +94,7 @@ public sealed partial class DungeonJob
                         var cornerVec = cornerDir.ToIntVec();
                         var cornerNeighbor = tile + neighborVec * j + cornerVec;
 
-                        if (_anchorable.TileFree(_grid, cornerNeighbor, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                        if (_anchorable.TileFree((_gridUid, _grid), cornerNeighbor, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                         {
                             freeCount++;
                         }
@@ -116,7 +116,7 @@ public sealed partial class DungeonJob
                         _maps.SetTile(_gridUid, _grid, weh, _tile.GetVariantTile((ContentTileDefinition) tileDef, random));
 
                         var coords = _maps.GridTileToLocal(_gridUid, _grid, weh);
-                        _entManager.SpawnEntitiesAttachedTo(coords, _entTable.GetSpawns(contents, random));
+                        _entManager.SpawnEntity(contents, coords); // imp (Replaced SpawnEntitiesAttachedTo with SpawnEntity as we are giving it a set entity to spawn)
                     }
 
                     break;

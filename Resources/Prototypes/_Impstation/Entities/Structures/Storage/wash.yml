@@ -2,6 +2,7 @@
   parent: [ CrateGeneric, BaseMachinePowered ]
   id: WashingMachineEmpty
   name: washing machine
+  description: You could use this to wash your clothes, but it looks like most of the wiring was gutted out...
   components:
   - type: Icon
     sprite: _Impstation/Structures/Storage/Wash.rsi
@@ -22,6 +23,11 @@
     - map: ["cycle"]
       state: washOff
       shader: unshaded
+    - state: paper
+      sprite: Structures/Storage/Crates/labels.rsi
+      map: [ "enum.PaperLabelVisuals.Layer" ]
+      offset: 0.0625, 0.0625
+      rotation: 180 #look this is about good as it's gonna get without new sprites
       visible: false
   - type: Appearance
   - type: GenericVisualizer

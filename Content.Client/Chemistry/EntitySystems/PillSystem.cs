@@ -15,6 +15,10 @@ public sealed class PillSystem : EntitySystem
 
     private void OnHandleState(EntityUid uid, PillComponent component, ref AfterAutoHandleStateEvent args)
     {
+        // imp add, random pill sprites
+        if (!component.SpriteUsesType)
+            return;
+
         if (!TryComp(uid, out SpriteComponent? sprite))
             return;
 

@@ -88,6 +88,7 @@ public sealed class TegSystem : EntitySystem
         SubscribeLocalEvent<TegGeneratorComponent, DeviceNetworkPacketEvent>(DeviceNetworkPacketReceived);
 
         SubscribeLocalEvent<TegGeneratorComponent, ExaminedEvent>(GeneratorExamined);
+        SubscribeLocalEvent<TegCirculatorComponent, ExaminedEvent>(CirculatorExamined); // imp add
 
         _nodeContainerQuery = GetEntityQuery<NodeContainerComponent>();
     }
@@ -101,8 +102,25 @@ public sealed class TegSystem : EntitySystem
         else
         {
             var supplier = Comp<PowerSupplierComponent>(uid);
-            args.PushMarkup(Loc.GetString("teg-generator-examine-power", ("power", supplier.CurrentSupply)));
+
+            using (args.PushGroup(nameof(TegGeneratorComponent)))
+            {
+                args.PushMarkup(Loc.GetString("teg-generator-examine-power", ("power", supplier.CurrentSupply)));
+                args.PushMarkup(Loc.GetString("teg-generator-examine-power-max-output", ("power", supplier.MaxSupply)));
+            }
         }
+    }
+
+    // imp add: circulator show flow rate on examine
+    private void CirculatorExamined(EntityUid uid, TegCirculatorComponent comp, ExaminedEvent args)
+    {
+        if (!Comp<TransformComponent>(uid).Anchored ||
+            !args.IsInDetailsRange) // only show info if anchored & in range
+            return;
+
+        var str = Loc.GetString("teg-circulator-examine-flow-rate",
+            ("flowRate", MathF.Round(comp.LastMolesTransferred, 2).ToString()));
+        args.PushMarkup(str);
     }
 
     private void GeneratorUpdate(EntityUid uid, TegGeneratorComponent component, ref AtmosDeviceUpdateEvent args)

@@ -325,7 +325,7 @@
   materials:
     Steel: 50
     Glass: 50
-    Plasma: 300
+    Plasma: 50
 
 - type: latheRecipe
   parent: BaseAmmoRecipe
@@ -334,4 +334,14 @@
   materials:
     Steel: 50
     Glass: 50
-    Plasma: 100
+    Plasma: 150
+
+- type: latheRecipe
+  parent: BaseWeaponRecipeLong
+  id: WeaponDisablerCarbine
+  result: WeaponDisablerCarbine
+  materials:
+    Steel: 750
+    Glass: 300
+    Plastic: 750
+    Gold: 200

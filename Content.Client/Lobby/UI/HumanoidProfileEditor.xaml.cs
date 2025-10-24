@@ -35,7 +35,6 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Direction = Robust.Shared.Maths.Direction;
 // Begin CD - Character Records
-using System.Globalization;
 using Content.Client._CD.Records.UI;
 using Content.Shared._CD.Records;
 // End CD - Character Records
@@ -108,12 +107,11 @@ namespace Content.Client.Lobby.UI
 
         private bool _isDirty;
 
+        private static readonly ProtoId<GuideEntryPrototype> DefaultSpeciesGuidebook = "Species";
+
         // Begin CD - Station Records
         private readonly RecordEditorGui _recordsTab;
         // End CD - Station Records
-
-        [ValidatePrototypeId<GuideEntryPrototype>]
-        private const string DefaultSpeciesGuidebook = "Species";
 
         public event Action<List<ProtoId<GuideEntryPrototype>>>? OnOpenGuidebook;
 
@@ -238,6 +236,7 @@ namespace Content.Client.Lobby.UI
             {
                 SpeciesButton.SelectId(args.Id);
                 SetSpecies(_species[args.Id].ID);
+                RefreshTraits(); // DeltaV - Allows for hiding traits
                 UpdateHairPickers();
                 OnSkinColorOnValueChanged();
             };
@@ -250,6 +249,7 @@ namespace Content.Client.Lobby.UI
             };
 
             RgbSkinColorContainer.AddChild(_rgbSkinColorSelector = new ColorSelectorSliders());
+            _rgbSkinColorSelector.SelectorType = ColorSelectorSliders.ColorSelectorType.Hsv; // defaults color selector to HSV
             _rgbSkinColorSelector.OnColorChanged += _ =>
             {
                 OnSkinColorOnValueChanged();
@@ -511,7 +511,7 @@ namespace Content.Client.Lobby.UI
         /// </summary>
         public void RefreshTraits()
         {
-            TraitsList.DisposeAllChildren();
+            TraitsList.RemoveAllChildren();
 
             var traits = _prototypeManager.EnumeratePrototypes<TraitPrototype>().OrderBy(t => Loc.GetString(t.Name)).ToList();
             TabContainer.SetTabTitle(3, Loc.GetString("humanoid-profile-editor-traits-tab"));
@@ -533,6 +533,14 @@ namespace Content.Client.Lobby.UI
 
             foreach (var trait in traits)
             {
+                // Begin DeltaV Additions - Species trait exlusion
+                if (Profile?.Species is { } selectedSpecies && trait.ExcludedSpecies.Contains(selectedSpecies))
+                {
+                    Profile = Profile?.WithoutTraitPreference(trait.ID, _prototypeManager);
+                    continue;
+                }
+                // End DeltaV Additions
+
                 if (trait.Category == null)
                 {
                     defaultTraits.Add(trait.ID);
@@ -652,7 +660,7 @@ namespace Content.Client.Lobby.UI
 
         public void RefreshAntags()
         {
-            AntagList.DisposeAllChildren();
+            AntagList.RemoveAllChildren();
             var items = new[]
             {
                 ("humanoid-profile-editor-antag-preference-yes-button", 0),
@@ -680,8 +688,10 @@ namespace Content.Client.Lobby.UI
                 selector.Setup(items, title, 250, description, guides: antag.Guides);
                 selector.Select(Profile?.AntagPreferences.Contains(antag.ID) == true ? 0 : 1);
 
-                var requirements = _entManager.System<SharedRoleSystem>().GetAntagRequirement(antag);
-                if (!_requirements.CheckRoleRequirements(requirements, (HumanoidCharacterProfile?)_preferencesManager.Preferences?.SelectedCharacter, out var reason))
+                if (!_requirements.IsAllowed(
+                        antag,
+                        (HumanoidCharacterProfile?)_preferencesManager.Preferences?.SelectedCharacter,
+                        out var reason))
                 {
                     selector.LockRequirements(reason);
                     Profile = Profile?.WithAntagPreference(antag.ID, false);
@@ -832,9 +842,9 @@ namespace Content.Client.Lobby.UI
             var species = Profile?.Species ?? SharedHumanoidAppearanceSystem.DefaultSpecies;
             var page = DefaultSpeciesGuidebook;
             if (_prototypeManager.HasIndex<GuideEntryPrototype>(species))
-                page = species;
+                page = new ProtoId<GuideEntryPrototype>(species.Id); // Gross. See above todo comment.
 
-            if (_prototypeManager.TryIndex<GuideEntryPrototype>(DefaultSpeciesGuidebook, out var guideRoot))
+            if (_prototypeManager.Resolve(DefaultSpeciesGuidebook, out var guideRoot))
             {
                 var dict = new Dictionary<ProtoId<GuideEntryPrototype>, GuideEntry>();
                 dict.Add(DefaultSpeciesGuidebook, guideRoot);
@@ -848,7 +858,7 @@ namespace Content.Client.Lobby.UI
         /// </summary>
         public void RefreshJobs()
         {
-            JobList.DisposeAllChildren();
+            JobList.RemoveAllChildren();
             _jobCategories.Clear();
             _jobPriorities.Clear();
             var firstCategory = true;
@@ -1044,7 +1054,7 @@ namespace Content.Client.Lobby.UI
 
             _loadoutWindow = new LoadoutWindow(Profile, roleLoadout, roleLoadoutProto, _playerManager.LocalSession, collection)
             {
-                Title = Loc.GetString(jobProto?.Name ?? "Job") + " Loadout",
+                Title = Loc.GetString("loadout-window-title-loadout", ("job", $"{jobProto?.LocalizedName}")),
             };
 
             // Refresh the buttons etc.
@@ -1122,10 +1132,11 @@ namespace Content.Client.Lobby.UI
             if (Profile is null) return;
 
             var skin = _prototypeManager.Index<SpeciesPrototype>(Profile.Species).SkinColoration;
+            var strategy = _prototypeManager.Index(skin).Strategy;
 
-            switch (skin)
+            switch (strategy.InputType)
             {
-                case HumanoidSkinColor.HumanToned:
+                case SkinColorationStrategyInput.Unary:
                 {
                     if (!Skin.Visible)
                     {
@@ -1133,13 +1144,14 @@ namespace Content.Client.Lobby.UI
                         RgbSkinColorContainer.Visible = false;
                     }
 
-                    var color = SkinColor.HumanSkinTone((int) Skin.Value);
+                    var color = strategy.FromUnary(Skin.Value);
 
                     Markings.CurrentSkinColor = color;
                     Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithSkinColor(color));
+
                     break;
                 }
-                case HumanoidSkinColor.Hues:
+                case SkinColorationStrategyInput.Color:
                 {
                     if (!RgbSkinColorContainer.Visible)
                     {
@@ -1147,54 +1159,13 @@ namespace Content.Client.Lobby.UI
                         RgbSkinColorContainer.Visible = true;
                     }
 
-                    Markings.CurrentSkinColor = _rgbSkinColorSelector.Color;
-                    Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithSkinColor(_rgbSkinColorSelector.Color));
-                    break;
-                }
-                case HumanoidSkinColor.TintedHues:
-                {
-                    if (!RgbSkinColorContainer.Visible)
-                    {
-                        Skin.Visible = false;
-                        RgbSkinColorContainer.Visible = true;
-                    }
-
-                    var color = SkinColor.TintedHues(_rgbSkinColorSelector.Color);
+                    var color = strategy.ClosestSkinColor(_rgbSkinColorSelector.Color);
 
                     Markings.CurrentSkinColor = color;
                     Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithSkinColor(color));
+
                     break;
                 }
-                case HumanoidSkinColor.VoxFeathers:
-                {
-                    if (!RgbSkinColorContainer.Visible)
-                    {
-                        Skin.Visible = false;
-                        RgbSkinColorContainer.Visible = true;
-                    }
-
-                    var color = SkinColor.ClosestVoxColor(_rgbSkinColorSelector.Color);
-
-                    Markings.CurrentSkinColor = color;
-                    Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithSkinColor(color));
-                    break;
-                }
-                // Imp edit start
-                case HumanoidSkinColor.GrayToned:
-                {
-                    if (!RgbSkinColorContainer.Visible)
-                    {
-                        Skin.Visible = false;
-                        RgbSkinColorContainer.Visible = true;
-                    }
-
-                    var color = SkinColor.GraySkinTone(_rgbSkinColorSelector.Color);
-
-                    Markings.CurrentSkinColor = color;
-                    Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithSkinColor(color));
-                    break;
-                }
-                // Imp edit end
             }
 
             ReloadProfilePreview();
@@ -1341,7 +1312,7 @@ namespace Content.Client.Lobby.UI
             var sexes = new List<Sex>();
 
             // add species sex options, default to just none if we are in bizzaro world and have no species
-            if (_prototypeManager.TryIndex<SpeciesPrototype>(Profile.Species, out var speciesProto))
+            if (_prototypeManager.Resolve<SpeciesPrototype>(Profile.Species, out var speciesProto))
             {
                 foreach (var sex in speciesProto.Sexes)
                 {
@@ -1371,10 +1342,11 @@ namespace Content.Client.Lobby.UI
                 return;
 
             var skin = _prototypeManager.Index<SpeciesPrototype>(Profile.Species).SkinColoration;
+            var strategy = _prototypeManager.Index(skin).Strategy;
 
-            switch (skin)
+            switch (strategy.InputType)
             {
-                case HumanoidSkinColor.HumanToned:
+                case SkinColorationStrategyInput.Unary:
                 {
                     if (!Skin.Visible)
                     {
@@ -1382,11 +1354,11 @@ namespace Content.Client.Lobby.UI
                         RgbSkinColorContainer.Visible = false;
                     }
 
-                    Skin.Value = SkinColor.HumanSkinToneFromColor(Profile.Appearance.SkinColor);
+                    Skin.Value = strategy.ToUnary(Profile.Appearance.SkinColor);
 
                     break;
                 }
-                case HumanoidSkinColor.Hues:
+                case SkinColorationStrategyInput.Color:
                 {
                     if (!RgbSkinColorContainer.Visible)
                     {
@@ -1394,36 +1366,11 @@ namespace Content.Client.Lobby.UI
                         RgbSkinColorContainer.Visible = true;
                     }
 
-                    // set the RGB values to the direct values otherwise
-                    _rgbSkinColorSelector.Color = Profile.Appearance.SkinColor;
-                    break;
-                }
-                case HumanoidSkinColor.TintedHues:
-                {
-                    if (!RgbSkinColorContainer.Visible)
-                    {
-                        Skin.Visible = false;
-                        RgbSkinColorContainer.Visible = true;
-                    }
-
-                    // set the RGB values to the direct values otherwise
-                    _rgbSkinColorSelector.Color = Profile.Appearance.SkinColor;
-                    break;
-                }
-                case HumanoidSkinColor.VoxFeathers:
-                {
-                    if (!RgbSkinColorContainer.Visible)
-                    {
-                        Skin.Visible = false;
-                        RgbSkinColorContainer.Visible = true;
-                    }
-
-                    _rgbSkinColorSelector.Color = SkinColor.ClosestVoxColor(Profile.Appearance.SkinColor);
+                    _rgbSkinColorSelector.Color = strategy.ClosestSkinColor(Profile.Appearance.SkinColor);
 
                     break;
                 }
             }
-
         }
 
         public void UpdateSpeciesGuidebookIcon()
@@ -1434,7 +1381,7 @@ namespace Content.Client.Lobby.UI
             if (species is null)
                 return;
 
-            if (!_prototypeManager.TryIndex<SpeciesPrototype>(species, out var speciesProto))
+            if (!_prototypeManager.Resolve<SpeciesPrototype>(species, out var speciesProto))
                 return;
 
             // Don't display the info button if no guide entry is found
@@ -1483,17 +1430,13 @@ namespace Content.Client.Lobby.UI
             {
                 return;
             }
-            var hairMarking = Profile.Appearance.HairStyleId switch
-            {
-                HairStyles.DefaultHairStyle => new List<Marking>(),
-                _ => new() { new(Profile.Appearance.HairStyleId, new List<Color>() { Profile.Appearance.HairColor }) },
-            };
+            var hairMarking = Profile.Appearance.HairStyleId == HairStyles.DefaultHairStyle
+                ? new List<Marking>()
+                : new() { new(Profile.Appearance.HairStyleId, new List<Color>() { Profile.Appearance.HairColor }) };
 
-            var facialHairMarking = Profile.Appearance.FacialHairStyleId switch
-            {
-                HairStyles.DefaultFacialHairStyle => new List<Marking>(),
-                _ => new() { new(Profile.Appearance.FacialHairStyleId, new List<Color>() { Profile.Appearance.FacialHairColor }) },
-            };
+            var facialHairMarking = Profile.Appearance.FacialHairStyleId == HairStyles.DefaultFacialHairStyle
+                ? new List<Marking>()
+                : new() { new(Profile.Appearance.FacialHairStyleId, new List<Color>() { Profile.Appearance.FacialHairColor }) };
 
             HairStylePicker.UpdateData(
                 hairMarking,
@@ -1653,7 +1596,7 @@ namespace Content.Client.Lobby.UI
                 return;
 
             StartExport();
-            await using var file = await _dialogManager.OpenFile(new FileDialogFilters(new FileDialogFilters.Group("yml")));
+            await using var file = await _dialogManager.OpenFile(new FileDialogFilters(new FileDialogFilters.Group("yml")), FileAccess.Read);
 
             if (file == null)
             {

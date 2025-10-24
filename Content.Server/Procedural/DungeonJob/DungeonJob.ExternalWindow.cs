@@ -49,7 +49,7 @@ public sealed partial class DungeonJob
                 break;
 
             // Room tile / already used.
-            if (!_anchorable.TileFree(_grid, tile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask) ||
+            if (!_anchorable.TileFree((_gridUid, _grid), tile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask) ||
                 takenTiles.Contains(tile))
             {
                 continue;
@@ -69,7 +69,7 @@ public sealed partial class DungeonJob
 
                     if (!allExterior.Contains(neighbor) ||
                         takenTiles.Contains(neighbor) ||
-                        !_anchorable.TileFree(_grid, neighbor, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                        !_anchorable.TileFree((_gridUid, _grid), neighbor, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                     {
                         isValid = false;
                         break;
@@ -84,7 +84,7 @@ public sealed partial class DungeonJob
 
                         if (allExterior.Contains(perpTile) ||
                             takenTiles.Contains(neighbor) ||
-                            !_anchorable.TileFree(_grid, perpTile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                            !_anchorable.TileFree((_gridUid, _grid), perpTile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
                         {
                             isValid = false;
                             break;
@@ -113,13 +113,18 @@ public sealed partial class DungeonJob
         }
 
         _maps.SetTiles(_gridUid, _grid, tiles);
-        var contents = _prototype.Index(gen.Contents);
+        var contents = gen.Contents; // imp remove index
 
         foreach (var tile in tiles)
         {
             var gridPos = _maps.GridTileToLocal(_gridUid, _grid, tile.Item1);
-
-            _entManager.SpawnEntitiesAttachedTo(gridPos, _entTable.GetSpawns(contents, random));
+            // Imp Edit Start
+            if (!gen.UseRandomEntity)
+                foreach (var entity in contents)
+                    _entManager.SpawnEntity(entity, gridPos);
+            else
+                _entManager.SpawnEntity(contents[random.Next(0, gen.Contents.Count)], gridPos);
+            // Imp Edit End
             await SuspendDungeon();
 
             if (!ValidateResume())

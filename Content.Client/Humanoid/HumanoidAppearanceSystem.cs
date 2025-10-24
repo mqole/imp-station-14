@@ -36,7 +36,7 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
 
     private void OnCvarChanged(bool value)
     {
-        var humanoidQuery = EntityManager.AllEntityQueryEnumerator<HumanoidAppearanceComponent, SpriteComponent>();
+        var humanoidQuery = AllEntityQuery<HumanoidAppearanceComponent, SpriteComponent>();
         while (humanoidQuery.MoveNext(out var uid, out var humanoidComp, out var spriteComp))
         {
             UpdateSprite((uid, humanoidComp, spriteComp));
@@ -289,25 +289,26 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
     private void RemoveMarking(Marking marking, Entity<SpriteComponent> spriteEnt)
     {
         if (!_markingManager.TryGetMarking(marking, out var prototype))
-        {
             return;
-        }
 
         foreach (var sprite in prototype.Sprites)
         {
             if (sprite is not SpriteSpecifier.Rsi rsi)
-            {
                 continue;
-            }
 
             var layerId = $"{marking.MarkingId}-{rsi.RsiState}";
             if (!_sprite.LayerMapTryGet(spriteEnt.AsNullable(), layerId, out var index, false))
-            {
                 continue;
-            }
 
             _sprite.LayerMapRemove(spriteEnt.AsNullable(), layerId);
             _sprite.RemoveLayer(spriteEnt.AsNullable(), index);
+
+            // If this marking is one that can be displaced, we need to remove the displacement as well; otherwise
+            // altering a marking at runtime can lead to the renderer falling over.
+            // The Vulps must be shaved.
+            // (https://github.com/space-wizards/space-station-14/issues/40135).
+            if (prototype.CanBeDisplaced)
+                _displacement.EnsureDisplacementIsNotOnSprite(spriteEnt, layerId);
         }
     }
 
@@ -388,13 +389,13 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
         // FLOOF ADD END
         for (var j = 0; j < markingPrototype.Sprites.Count; j++)
         {
-            // FLOOF CHANGE START
             var markingSprite = markingPrototype.Sprites[j];
             if (markingSprite is not SpriteSpecifier.Rsi rsi)
             {
                 continue;
             }
 
+            // FLOOF CHANGE START
             var layerSlot = markingPrototype.BodyPart;
             // first, try to see if there are any custom layers for this marking
             if (markingPrototype.Layering != null)
@@ -420,18 +421,17 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
             var humanoid = entity.Comp1;
             var sprite = entity.Comp2;
 
-            if (!_sprite.LayerMapTryGet((entity.Owner, sprite), markingPrototype.BodyPart, out var targetLayer, false))
+            if (!_sprite.LayerMapTryGet((entity.Owner, sprite), layerSlot, out var targetLayer, false))
             {
-                return;
+                continue;
             }
 
             visible &= !IsHidden(humanoid, markingPrototype.BodyPart);
             visible &= humanoid.BaseLayers.TryGetValue(markingPrototype.BodyPart, out var setting)
             && setting.AllowsMarkings;
-            // THE UPSTREAM STUFF HAS ENDED NOW!!!
+            // FLOOF CHANGE END
 
             var layerId = $"{markingPrototype.ID}-{rsi.RsiState}";
-            // FLOOF CHANGE END
 
             if (!_sprite.LayerMapTryGet((entity.Owner, sprite), layerId, out layerIndex, false)) // imp layerindex
             {
@@ -444,27 +444,27 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
                 _sprite.LayerMapSet((entity.Owner, sprite), layerId, layer);
                 _sprite.LayerSetSprite((entity.Owner, sprite), layerId, rsi);
             }
+
             // imp special via beck. check if there's a shader defined in the markingPrototype's shader datafield, and if there is...
-			if (markingPrototype.Shader != null)
-			{
-			// use spriteComponent's layersetshader function to set the layer's shader to that which is specified.
-				sprite.LayerSetShader(layerId, markingPrototype.Shader);
-			}
+            if (markingPrototype.Shader != null)
+            {
+                // use spriteComponent's layersetshader function to set the layer's shader to that which is specified.
+                sprite.LayerSetShader(layerId, markingPrototype.Shader);
+            }
             // end imp special
+
             _sprite.LayerSetVisible((entity.Owner, sprite), layerId, visible);
 
             if (!visible || setting == null) // this is kinda implied
-            {
                 continue;
-            }
 
             // Okay so if the marking prototype is modified but we load old marking data this may no longer be valid
             // and we need to check the index is correct.
             // So if that happens just default to white?
             // FLOOF ADD =3
-            sprite.LayerSetColor(layerId, colorDict.TryGetValue(rsi.RsiState, out var color) ? color : Color.White);
+            _sprite.LayerSetColor((entity.Owner, sprite), layerId, colorDict.TryGetValue(rsi.RsiState, out var color) ? color : Color.White);
 
-            // FLOOF CHANGE
+            // FLOOF REMOVE
             // if (colors != null && j < colors.Count)
             // {
             //     _sprite.LayerSetColor((entity.Owner, sprite), layerId, colors[j]);
@@ -475,9 +475,7 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
             // }
 
             if (humanoid.MarkingsDisplacement.TryGetValue(markingPrototype.BodyPart, out var displacementData) && markingPrototype.CanBeDisplaced)
-            {
                 _displacement.TryAddDisplacement(displacementData, (entity.Owner, sprite), targetLayer + j + 1, layerId, out _);
-            }
         }
     }
 
@@ -525,6 +523,7 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
         spriteLayer.Visible = visible;
 
         // I fucking hate this. I'll get around to refactoring sprite layers eventually I swear
+        // Just a week away...
 
         foreach (var markingList in ent.Comp.MarkingSet.Markings.Values)
         {
