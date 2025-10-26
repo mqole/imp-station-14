@@ -1,0 +1,71 @@
+# lots of this is taken from ClothingBaseNeck and BaseHardBomb.
+# we can't inherit due to butcherable and structure comps respectively.
+# enjoy this monstrosity.
+
+- type: entity
+  parent: [ Clothing, Tier3Contraband ]
+  id: BombCollar
+  name: bomb collar
+  description: A Syndicate bomb designed to neutralize a single target. Will explode if you try to remove it while it's activated.
+  components:
+  - type: Clothing
+    quickEquip: false # can you imagine
+    slots:
+    - neck
+    unequipDelay: 10
+    # todo: sound?
+  - type: Sprite # todo
+    sprite: _Impstation/Clothing/Neck/Misc/bombcollar.rsi
+    layers:
+      - state: bomb-collar
+      - state: bomb-collar-active
+        visible: false
+        map: [ "primed" ]
+      - state: bomb-collar-wires
+        visible: false
+        map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+  - type: GenericVisualizer # todo
+    visuals:
+      enum.DefusableVisuals.Active:
+        primed:
+          True: { visible: true }
+          False: { visible: false }
+      enum.WiresVisualLayers.MaintenancePanel:
+        enum.WiresVisualLayers.MaintenancePanel:
+          True: { visible: true }
+          False: { visible: false }
+  - type: Appearance
+  - type: WiresVisuals
+  - type: UserInterface
+    interfaces:
+      enum.WiresUiKey:
+        type: WiresBoundUserInterface
+  - type: Wires
+    layoutId: Defusable # todo: maybe unique ports.
+  - type: Explosive # todo
+  - type: ExplodeOnTrigger
+    keysIn:
+    - timer
+    - unequip-powered
+  - type: TimerTrigger
+    delay: 180
+    delayOptions: [180, 240, 300, 600, 900]
+    initialBeepDelay: 0
+    beepSound: /Audio/Machines/timer.ogg # maybe change this?
+    popup: # todo
+  - type: WiresPanel
+  - type: GuideHelp
+    guides:
+    - Defusal
+  - type: Engraveable
+  - type: PointLight # todo: the user should glow too
+    color: "#C7001B"
+    radius: 0.5
+    softness: 1
+  - type: ToggleComponentsOnTrigger
+    keysIn:
+    - timer-toggled
+    components:
+    - type: TriggerOnDidUnequip
+      keyOut: unequip-powered
+      slotFlags: NECK

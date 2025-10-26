@@ -39,6 +39,7 @@ public sealed partial class TriggerSystem
     private void OnTimerShutdown(Entity<TimerTriggerComponent> ent, ref ComponentShutdown args)
     {
         RemComp<ActiveTimerTriggerComponent>(ent);
+        Trigger(ent, null, ent.Comp.ToggleKeyOut); // imp add
     }
 
     private void OnTimerExamined(Entity<TimerTriggerComponent> ent, ref ExaminedEvent args)
@@ -53,6 +54,7 @@ public sealed partial class TriggerSystem
             return;
 
         args.Handled |= ActivateTimerTrigger(ent.AsNullable(), args.User);
+        Trigger(ent, null, ent.Comp.ToggleKeyOut); // imp add
     }
 
     /// <summary>
