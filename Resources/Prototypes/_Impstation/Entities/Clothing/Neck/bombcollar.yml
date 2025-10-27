@@ -9,27 +9,37 @@
   description: A Syndicate bomb designed to neutralize a single target. Will explode if you try to remove it while it's activated.
   components:
   - type: Clothing
+    sprite: _Impstation/Clothing/Neck/Misc/bombcollar.rsi
+    clothingVisuals:
+      neck:
+        - state: bombcollar
+        # - state: bombcollar-active
+        #   visible: false
+        #   map: [ "primed" ]
+        - state: bombcollar-wires
+          visible: false
+          map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
     quickEquip: false # can you imagine
     slots:
     - neck
-    unequipDelay: 10
+    unequipDelay: 20
     # todo: sound?
-  - type: Sprite # todo
+  - type: Sprite
     sprite: _Impstation/Clothing/Neck/Misc/bombcollar.rsi
     layers:
-      - state: bomb-collar
-      - state: bomb-collar-active
-        visible: false
-        map: [ "primed" ]
-      - state: bomb-collar-wires
-        visible: false
-        map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
-  - type: GenericVisualizer # todo
+      - state: icon
+      # - state: icon-active
+      #   visible: false
+      #   map: [ "primed" ]
+      # - state: icon-wires
+      #   visible: false
+      #   map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+  - type: GenericVisualizer
     visuals:
-      enum.DefusableVisuals.Active:
-        primed:
-          True: { visible: true }
-          False: { visible: false }
+      # enum.DefusableVisuals.Active:
+      #   primed:
+      #     True: { visible: true }
+      #     False: { visible: false }
       enum.WiresVisualLayers.MaintenancePanel:
         enum.WiresVisualLayers.MaintenancePanel:
           True: { visible: true }
@@ -38,11 +48,19 @@
   - type: WiresVisuals
   - type: UserInterface
     interfaces:
-      enum.WiresUiKey:
+      enum.WiresUiKey.Key:
         type: WiresBoundUserInterface
   - type: Wires
     layoutId: Defusable # todo: maybe unique ports.
+    alwaysRandomize: true
+  - type: Defusable
+    isEquippable: true
   - type: Explosive # todo
+    explosionType: Default
+    totalIntensity: 5.0
+    intensitySlope: 5
+    maxIntensity: 4
+    canCreateVacuum: false
   - type: ExplodeOnTrigger
     keysIn:
     - timer

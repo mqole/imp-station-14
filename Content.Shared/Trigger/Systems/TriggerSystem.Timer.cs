@@ -54,7 +54,6 @@ public sealed partial class TriggerSystem
             return;
 
         args.Handled |= ActivateTimerTrigger(ent.AsNullable(), args.User);
-        Trigger(ent, null, ent.Comp.ToggleKeyOut); // imp add
     }
 
     /// <summary>
