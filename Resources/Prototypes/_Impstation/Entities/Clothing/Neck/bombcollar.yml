@@ -84,6 +84,6 @@
     keysIn:
     - timer-toggled
     components:
-    - type: TriggerOnDidUnequip
+    - type: TriggerOnGotUnequipped
       keyOut: unequip-powered
       slotFlags: NECK
