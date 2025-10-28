@@ -1,5 +1,5 @@
 using Content.Client.Interactable.Components;
-//using Content.Client.StatusIcon; // imp unused using
+using Content.Client.StatusIcon;
 using Content.Shared.Stealth;
 using Content.Shared.Stealth.Components;
 using Robust.Client.GameObjects;
@@ -19,20 +19,21 @@ public sealed class StealthSystem : SharedStealthSystem
     [Dependency] private readonly SharedTransformSystem _transformSystem = default!;
     [Dependency] private readonly SpriteSystem _sprite = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!; // imp
-    [Dependency] private readonly IClientAdminManager _adminManager = default!; // imp
     [Dependency] private readonly ContainerSystem _containerSystem = default!; // imp
 
     private ShaderInstance _shader = default!;
     // imp edit start
     private ShaderInstance _altShader = default!;
+    private readonly string _stealth = "Stealth";
+    private readonly string _accessibleFullStealth = "AccessibleFullStealth";
     // imp edit end
 
     public override void Initialize()
     {
         base.Initialize();
 
-        _shader = _protoMan.Index<ShaderPrototype>("Stealth").InstanceUnique(); // imp
-        _altShader = _protoMan.Index<ShaderPrototype>("AccessibleFullStealth").InstanceUnique(); // imp
+        _shader = _protoMan.Index<ShaderPrototype>(_stealth).InstanceUnique(); // imp
+        _altShader = _protoMan.Index<ShaderPrototype>(_accessibleFullStealth).InstanceUnique(); // imp
 
         SubscribeLocalEvent<StealthComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<StealthComponent, ComponentStartup>(OnStartup);

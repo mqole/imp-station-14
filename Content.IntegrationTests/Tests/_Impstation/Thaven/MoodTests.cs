@@ -1,16 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Content.IntegrationTests;
 using Content.Server._Impstation.Thaven;
 using Content.Shared.Dataset;
 using Content.Shared._Impstation.Thaven;
-using NUnit.Framework;
-using Robust.Shared.ContentPack;
 using Robust.Shared.GameObjects;
-using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.Manager;
 
 namespace Content.IntegrationTests.Tests._Impstation.Thaven;
 
@@ -46,6 +39,9 @@ public sealed class ThavenMoodTests
     d: ThreeValueSet
     e: ThreeValueSet
 ";
+    const string ThreeValueSet = "ThreeValueSet";
+    const string DuplicateTest = "DuplicateTest";
+    const string DuplicateOverlapTest = "DuplicateOverlapTest";
 
     [Test]
     [Repeat(10)]
@@ -59,8 +55,8 @@ public sealed class ThavenMoodTests
         var thavenSystem = entMan.System<ThavenMoodsSystem>();
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
-        var dataset = protoMan.Index<DatasetPrototype>("ThreeValueSet");
-        var moodProto = protoMan.Index<ThavenMoodPrototype>("DuplicateTest");
+        var dataset = protoMan.Index<DatasetPrototype>(ThreeValueSet);
+        var moodProto = protoMan.Index<ThavenMoodPrototype>(DuplicateTest);
 
         var datasetSet = dataset.Values.ToHashSet();
         var mood = thavenSystem.RollMood(moodProto);
@@ -82,8 +78,8 @@ public sealed class ThavenMoodTests
         var thavenSystem = entMan.System<ThavenMoodsSystem>();
         var protoMan = server.ResolveDependency<IPrototypeManager>();
 
-        var dataset = protoMan.Index<DatasetPrototype>("ThreeValueSet");
-        var moodProto = protoMan.Index<ThavenMoodPrototype>("DuplicateOverlapTest");
+        var dataset = protoMan.Index<DatasetPrototype>(ThreeValueSet);
+        var moodProto = protoMan.Index<ThavenMoodPrototype>(DuplicateOverlapTest);
 
         var datasetSet = dataset.Values.ToHashSet();
         var mood = thavenSystem.RollMood(moodProto);

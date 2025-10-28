@@ -15,12 +15,13 @@ public sealed class SalvoHudScanOverlay : Overlay
     public float Alpha = 1f;
 
     private readonly ShaderInstance _shader;
+    private readonly string _salvoScan = "SalvoScan";
 
     public SalvoHudScanOverlay()
     {
         IoCManager.InjectDependencies(this);
 
-        _shader = _prototypeManager.Index<ShaderPrototype>("SalvoScan").Instance();
+        _shader = _prototypeManager.Index<ShaderPrototype>(_salvoScan).Instance();
     }
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowEntities;
