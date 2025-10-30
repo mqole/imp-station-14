@@ -4,7 +4,7 @@ using Content.Shared.DisplacementMap; // imp
 
 namespace Content.Shared.Humanoid.Markings
 {
-    [Prototype] // Floof
+    [Prototype]
     public sealed partial class MarkingPrototype : IPrototype
     {
         [IdDataField]
