@@ -71,7 +71,6 @@
     hideLayersOnEquip:
     - Hair
     - Snout
-    - Tail
     markingsDisplacement:
       Hair:
         sizeMaps:
