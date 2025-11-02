@@ -647,19 +647,20 @@ public abstract class SharedStrippableSystem : EntitySystem
     /// </summary>
     private void StripInteractInventory(
         Entity<HandsComponent?> user,
+        EntityUid userItem,
         EntityUid target,
-        EntityUid targetItem,
         string slot)
     {
         if (!Resolve(user, ref user.Comp))
             return;
 
-        if (!_handsSystem.TryGetActiveItem(user, out var userItem))
+        if (!_inventorySystem.TryGetSlotEntity(target, slot, out var maybeTargetItem) ||
+            maybeTargetItem is not { } targetItem)
             return;
 
-        if (_interactionSystem.InteractUsing(
+        if (!_interactionSystem.InteractUsing(
             user,
-            userItem.Value,
+            userItem,
             targetItem,
             Transform(target).Coordinates))
             return;
@@ -724,19 +725,21 @@ public abstract class SharedStrippableSystem : EntitySystem
     /// </summary>
     private void StripInteractHand(
         Entity<HandsComponent?> user,
+        EntityUid userItem,
         Entity<HandsComponent?> target,
-        EntityUid targetItem)
+        string handId)
     {
         if (!Resolve(user, ref user.Comp) ||
             !Resolve(target, ref target.Comp))
             return;
 
-        if (!_handsSystem.TryGetActiveItem(user, out var userItem))
+        if (!_handsSystem.TryGetHeldItem(target, handId, out var maybeTargetItem) ||
+            maybeTargetItem is not { } targetItem)
             return;
 
-        if (_interactionSystem.InteractUsing(
+        if (!_interactionSystem.InteractUsing(
             user,
-            userItem.Value,
+            userItem,
             targetItem,
             Transform(target).Coordinates))
             return;
@@ -757,16 +760,19 @@ public abstract class SharedStrippableSystem : EntitySystem
 
         if (ev.Event.InventoryOrHand)
         {
-            if ( ev.Event.InsertOrRemove && !CanStripInsertInventory((entity.Owner, entity.Comp), args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName) ||
-                !ev.Event.InsertOrRemove && !CanStripRemoveInventory(entity.Owner, args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName))
+            // IMP EDIT START: insert behaviour
+            if ((ev.Event.InsertOrRemove && !CanStripInsertInventory((entity.Owner, entity.Comp), args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName) ||
+                !ev.Event.InsertOrRemove && !CanStripRemoveInventory(entity.Owner, args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName)) &&
+                !ev.Event.UseItem)
             {
                 ev.Cancel();
             }
         }
         else
         {
-            if ( ev.Event.InsertOrRemove && !CanStripInsertHand((entity.Owner, entity.Comp), args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName) ||
-                !ev.Event.InsertOrRemove && !CanStripRemoveHand(entity.Owner, args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName))
+            if ((ev.Event.InsertOrRemove && !CanStripInsertHand((entity.Owner, entity.Comp), args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName) ||
+                !ev.Event.InsertOrRemove && !CanStripRemoveHand(entity.Owner, args.Target.Value, args.Used.Value, ev.Event.SlotOrHandName)) &&
+                !ev.Event.UseItem) // IMP EDIT END
             {
                 ev.Cancel();
             }
@@ -787,9 +793,9 @@ public abstract class SharedStrippableSystem : EntitySystem
         if (ev.UseItem)
         {
             if (ev.InventoryOrHand)
-                StripInteractInventory((entity.Owner, entity.Comp), ev.Target.Value, ev.Used.Value, ev.SlotOrHandName);
+                StripInteractInventory((entity.Owner, entity.Comp), ev.Used.Value, ev.Target.Value, ev.SlotOrHandName);
             else
-                StripInteractHand((entity.Owner, entity.Comp), ev.Target.Value, ev.Used.Value);
+                StripInteractHand((entity.Owner, entity.Comp), ev.Target.Value, ev.Used.Value, ev.SlotOrHandName);
         }
         else if (ev.InventoryOrHand) // IMP END (added else)
         {
