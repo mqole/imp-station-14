@@ -51,7 +51,7 @@
       enum.WiresUiKey.Key:
         type: WiresBoundUserInterface
   - type: Wires
-    layoutId: Defusable # todo: maybe unique ports.
+    layoutId: DefusableUnanchorable
     alwaysRandomize: true
   - type: Defusable
     isEquippable: true
