@@ -69,7 +69,7 @@
     delay: 180
     delayOptions: [180, 240, 300, 600, 900]
     initialBeepDelay: 0
-    beepSound: /Audio/Machines/timer.ogg # maybe change this?
+    beepSound: /Audio/Machines/timer.ogg
     popup: # todo
   - type: WiresPanel
   - type: GuideHelp

@@ -612,10 +612,9 @@ public abstract class SharedStrippableSystem : EntitySystem
                     PopupType.Large);
             else
             {
-                _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-interact-inventory",
+                _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-interact-item",
                     ("user", Identity.Entity(user, EntityManager)),
-                    ("userItem", userItem.Value),
-                    ("target", Identity.Entity(target, EntityManager)),
+                    ("userItem", userItem),
                     ("targetItem", targetItem)),
                     target,
                     target);
@@ -691,10 +690,9 @@ public abstract class SharedStrippableSystem : EntitySystem
 
         if (!stealth)
         {
-            _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-interact-hand",
+            _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-interact-item",
                 ("user", Identity.Entity(user, EntityManager)),
-                ("userItem", userItem.Value),
-                ("target", Identity.Entity(target, EntityManager)),
+                ("userItem", userItem),
                 ("targetItem", targetItem)),
                 target,
                 target);
@@ -795,7 +793,7 @@ public abstract class SharedStrippableSystem : EntitySystem
             if (ev.InventoryOrHand)
                 StripInteractInventory((entity.Owner, entity.Comp), ev.Used.Value, ev.Target.Value, ev.SlotOrHandName);
             else
-                StripInteractHand((entity.Owner, entity.Comp), ev.Target.Value, ev.Used.Value, ev.SlotOrHandName);
+                StripInteractHand((entity.Owner, entity.Comp), ev.Used.Value, ev.Target.Value, ev.SlotOrHandName);
         }
         else if (ev.InventoryOrHand) // IMP END (added else)
         {
