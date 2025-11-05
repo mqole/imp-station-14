@@ -37,8 +37,8 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Server.Revenant.Components; // imp
 using Content.Server.Revenant.EntitySystems; // imp
+using Content.Shared._Impstation.Revenant.Components; // imp
 using Content.Shared._Impstation.Thaven.Components; // imp
 using Content.Shared.Item; // imp
 
@@ -752,7 +752,7 @@ public sealed partial class AdminVerbSystem
                 },
                 Impact = LogImpact.High,
                 Message = Loc.GetString("admin-trick-make-animate-description"),
-                Priority = (int) TricksVerbPriorities.MakeAnimate,
+                Priority = (int)TricksVerbPriorities.MakeAnimate,
             };
             args.Verbs.Add(makeAnimate);
         }
@@ -770,7 +770,7 @@ public sealed partial class AdminVerbSystem
                 },
                 Impact = LogImpact.High,
                 Message = Loc.GetString("admin-trick-make-inanimate-description"),
-                Priority = (int) TricksVerbPriorities.MakeInanimate,
+                Priority = (int)TricksVerbPriorities.MakeInanimate,
             };
             args.Verbs.Add(makeInanimate);
         }
@@ -788,7 +788,7 @@ public sealed partial class AdminVerbSystem
                 },
                 Impact = LogImpact.High,
                 Message = Loc.GetString("admin-trick-add-random-mood-description"),
-                Priority = (int) TricksVerbPriorities.AddRandomMood,
+                Priority = (int)TricksVerbPriorities.AddRandomMood,
             };
             args.Verbs.Add(addRandomMood);
         }
@@ -811,7 +811,7 @@ public sealed partial class AdminVerbSystem
                 },
                 Impact = LogImpact.High,
                 Message = Loc.GetString("admin-trick-give-moods-description"),
-                Priority = (int) TricksVerbPriorities.AddRandomMood,
+                Priority = (int)TricksVerbPriorities.AddRandomMood,
             };
             args.Verbs.Add(giveMoods);
         }

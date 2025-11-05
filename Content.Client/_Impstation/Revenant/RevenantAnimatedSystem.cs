@@ -1,9 +1,11 @@
+using Content.Shared._Impstation.Revenant;
+using Content.Shared._Impstation.Revenant.Components;
 using Robust.Client.GameObjects;
 using Robust.Shared.Map;
 
-namespace Content.Client.Revenant;
+namespace Content.Client._Impstation.Revenant;
 
-public sealed class RevenantAnimatedSystem : EntitySystem
+public sealed class RevenantAnimatedSystem : SharedRevenantAnimatedSystem
 {
     [Dependency] private readonly SharedPointLightSystem _lights = default!;
 
@@ -21,25 +23,26 @@ public sealed class RevenantAnimatedSystem : EntitySystem
 
         var enumerator = EntityQueryEnumerator<RevenantAnimatedComponent>();
 
-        while (enumerator.MoveNext(out var uid, out var comp))
+        while (enumerator.MoveNext(out _, out var comp))
         {
-            if (comp.LightOverlay == null)
+            if (comp.LightOverlay == null ||
+                TryComp<PointLightComponent>(comp.LightOverlay, out var light))
                 continue;
             comp.Accumulator += frameTime;
-            _lights.SetEnergy(comp.LightOverlay.Value.Owner, 2f * Math.Abs((float)Math.Sin(0.25 * Math.PI * comp.Accumulator)), comp.LightOverlay.Value.Comp);
+            _lights.SetEnergy(comp.LightOverlay.Value, 2f * Math.Abs((float)Math.Sin(0.25 * Math.PI * comp.Accumulator)), light);
         }
     }
 
-    private void OnStartup(EntityUid uid, RevenantAnimatedComponent comp, ComponentStartup args)
+    private void OnStartup(Entity<RevenantAnimatedComponent> ent, ref ComponentStartup args)
     {
-        var lightEnt = Spawn(null, new EntityCoordinates(uid, 0, 0));
-        var light = AddComp<PointLightComponent>(lightEnt);
+        var lightEnt = Spawn(null, new EntityCoordinates(ent, 0, 0));
+        EnsureComp<PointLightComponent>(lightEnt, out var light);
 
-        comp.LightOverlay = (lightEnt, light);
+        ent.Comp.LightOverlay = lightEnt;
 
         _lights.SetEnabled(lightEnt, true, light);
-        _lights.SetColor(lightEnt, comp.LightColor, light);
-        _lights.SetRadius(lightEnt, comp.LightRadius, light);
+        _lights.SetColor(lightEnt, ent.Comp.LightColor, light);
+        _lights.SetRadius(lightEnt, ent.Comp.LightRadius, light);
     }
 
     private void OnShutdown(EntityUid uid, RevenantAnimatedComponent comp, ComponentShutdown args)

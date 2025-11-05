@@ -1,6 +1,5 @@
 using Content.Shared.Popups;
 using Content.Shared.Damage;
-using Content.Server.Revenant.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Revenant.Components;
 using Content.Server.NPC.HTN;
@@ -26,20 +25,23 @@ using Content.Shared.Mobs;
 using Robust.Shared.Timing;
 using Content.Shared.Construction.Components;
 using Content.Shared.Trigger.Components;
+using Content.Shared._Impstation.Revenant;
+using Content.Shared._Impstation.Revenant.Components;
 
 namespace Content.Server.Revenant.EntitySystems;
 
-public sealed partial class RevenantAnimatedSystem : EntitySystem
+public sealed partial class RevenantAnimatedSystem : SharedRevenantAnimatedSystem
 {
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly NpcFactionSystem _factionSystem = default!;
+    [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly ItemToggleSystem _itemToggleSystem = default!;
-    [Dependency] private readonly SharedGunSystem _gunSystem = default!;
-    [Dependency] private readonly MovementSpeedModifierSystem _moveSpeed = default!;
     [Dependency] private readonly MobThresholdSystem _thresholds = default!;
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
+    [Dependency] private readonly MovementSpeedModifierSystem _moveSpeed = default!;
+    [Dependency] private readonly NpcFactionSystem _factionSystem = default!;
+    [Dependency] private readonly SharedGunSystem _gunSystem = default!;
+    [Dependency] private readonly SharedPopupSystem _popup = default!;
 
+    private static readonly string AnimatedFaction = "SimpleHostile";
     public override void Initialize()
     {
         base.Initialize();
@@ -78,7 +80,7 @@ public sealed partial class RevenantAnimatedSystem : EntitySystem
 
         // Add melee damage if an item doesn't already have it
         if (EnsureHelper<MeleeWeaponComponent>(ent, out var melee))
-            melee.Damage = new DamageSpecifier(_prototypeManager.Index<DamageTypePrototype>("Blunt"), 5);
+            melee.Damage = ent.Comp.MeleeDamage;
 
         EnsureHelper<InputMoverComponent>(ent);
         EnsureHelper<MovementSpeedModifierComponent>(ent, out var moveSpeed);
@@ -99,11 +101,12 @@ public sealed partial class RevenantAnimatedSystem : EntitySystem
 
         EnsureHelper<NpcFactionMemberComponent>(ent, out var factions);
         _factionSystem.ClearFactions((ent, factions));
-        _factionSystem.AddFaction((ent, factions), "SimpleHostile");
+        _factionSystem.AddFaction((ent, factions), AnimatedFaction);
 
         // For things like handcuffs
         EnsureHelper<DoAfterComponent>(ent);
 
+        // TODO: this should be an enum or yaml or foreach dict or SOMETHING
         EnsureHelper<HTNComponent>(ent, out var htn);
         if (HasComp<GunComponent>(ent))
         {
