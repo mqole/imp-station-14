@@ -429,30 +429,27 @@ public sealed partial class RevenantSystem
         }
     }
 
-    private void OnBloodWritingAction(EntityUid uid, RevenantComponent component, RevenantBloodWritingEvent args)
+    private void OnBloodWritingAction(Entity<RevenantComponent> ent, ref RevenantBloodWritingEvent args)
     {
-        if (args.Handled)
+        if (args.Handled ||
+            !TryComp<HandsComponent>(ent, out var hands))
             return;
 
-        if (!TryComp<HandsComponent>(uid, out var hands))
-            return;
-
-        if (component.BloodCrayon != null)
+        if (ent.Comp.BloodCrayon != null)
         {
             // Disable blood writing
-            _handsSystem.RemoveHands(uid);
-            QueueDel(component.BloodCrayon);
-            component.BloodCrayon = null;
+            _handsSystem.RemoveHands((ent, hands));
+            QueueDel(ent.Comp.BloodCrayon);
+            ent.Comp.BloodCrayon = null;
+            return;
         }
-        else
-        {
-            var handId = "crayon";
-            _handsSystem.AddHand((uid, hands), handId, HandLocation.Middle);
-            var crayon = Spawn("CrayonBlood");
-            component.BloodCrayon = crayon;
-            _handsSystem.DoPickup(uid, handId, crayon);
-            EnsureComp<UnremoveableComponent>(crayon);
-        }
+
+        var handId = "crayon";
+        _handsSystem.AddHand((ent, hands), handId, HandLocation.Middle);
+        var crayon = Spawn("CrayonBlood");
+        ent.Comp.BloodCrayon = crayon;
+        _handsSystem.DoPickup(ent, handId, crayon);
+        EnsureComp<UnremoveableComponent>(crayon);
     }
 
     private void OnAnimateAction(EntityUid uid, RevenantComponent comp, RevenantAnimateEvent args)

@@ -254,9 +254,16 @@ public sealed partial class RevenantComponent : Component
 
     // IMP START
     #region Blood Writing
+
+    /// <summary>
+    ///     Amount of essence used on one blood crayon charge.
+    /// </summary>
     [DataField]
     public FixedPoint2 BloodWritingCost = 2;
 
+    /// <summary>
+    ///     The id of the active blood crayon, if any.
+    /// </summary>
     [DataField, ViewVariables(VVAccess.ReadOnly)]
     public EntityUid? BloodCrayon;
 

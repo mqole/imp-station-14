@@ -22,7 +22,7 @@
     allowed:
     - Corporeal
     - EssenceRegen
-  - type: Hands
+  - type: Hands # imp add
     showInHands: false
     disableExplosionRecursion: true
   - type: Damageable

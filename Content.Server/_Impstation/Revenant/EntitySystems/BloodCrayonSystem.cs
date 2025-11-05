@@ -1,8 +1,8 @@
-using Content.Shared.Interaction;
-using Content.Server.Revenant.Components;
 using Content.Server.Crayon;
-using Content.Shared.Revenant.Components;
 using Content.Server.Popups;
+using Content.Server.Revenant.Components;
+using Content.Shared.Interaction;
+using Content.Shared.Revenant.Components;
 
 namespace Content.Server.Revenant.EntitySystems;
 
@@ -18,7 +18,7 @@ public sealed class BloodCrayonSystem : EntitySystem
         SubscribeLocalEvent<BloodCrayonComponent, AfterInteractEvent>(OnCrayonUse, before: [typeof(CrayonSystem)]);
     }
 
-    private void OnCrayonUse(EntityUid uid, BloodCrayonComponent comp, AfterInteractEvent args)
+    private void OnCrayonUse(Entity<BloodCrayonComponent> ent, ref AfterInteractEvent args)
     {
         if (args.Handled)
             return;
@@ -28,7 +28,7 @@ public sealed class BloodCrayonSystem : EntitySystem
 
         if (!_revenant.ChangeEssenceAmount(args.User, -revenant.BloodWritingCost, allowDeath: false))
         {
-            _popup.PopupEntity(Loc.GetString("revenant-not-enough-essence"), uid, args.User);
+            _popup.PopupEntity(Loc.GetString("revenant-not-enough-essence"), ent, args.User);
             args.Handled = true;
             return;
         }
