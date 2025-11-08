@@ -1,0 +1,33 @@
+- type: entity
+  save: false
+  name: Urist McFae
+  parent: BaseMobSpeciesOrganic
+  id: BaseMobTamlin
+  abstract: true
+  components:
+  - type: GoobAbsorbable
+    biomassRestored: 0.5
+  - type: Hunger
+  - type: Thirst
+  - type: Icon
+    sprite:
+    state:
+  - type: Body
+    prototype: Tamlin
+    requiredLegs: 2
+
+# - apid movement
+# - two hands
+# - clumsy
+# - very small and weak
+# - telepathic messaging a la pleebs
+# - stamina damage on hit
+# - can only eat fruit and raw meat
+# - breathe oxygen
+# - when killed they perform a 'hex' on their killer that instantly makes them very hungry and thirsty
+# - when they rot they turn into SOMETHING
+# - have an ability to warp people's vision (long cooldown)
+# - immune to radiation? weak to everything else
+# - cannot wear hardsuits
+# - nightvision toggle
+# - cannot sleep

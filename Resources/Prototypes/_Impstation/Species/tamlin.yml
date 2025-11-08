@@ -1,0 +1,28 @@
+- type: species
+  id: Tamlin
+  name: species-name-tamlin
+  roundStart: true
+  randomViable: true
+  prototype: MobTamlin
+  sprites: MobTamlinSprites
+  markingLimits: MobTamlinMarkingLimits
+  dollPrototype: MobTamlinDummy
+  skinColoration:
+  maleFirstNames:
+  femaleFirstNames:
+  naming:
+  sexes:
+  - Unsexed
+  youngAge: 2
+  oldAge: 10
+  ancientAge: 20
+
+- type: speciesBaseSprites
+  id: MobTamlinSprites
+  sprites:
+
+- type: markingPoints
+  id: MobTamlinMarkingLimits
+  onlyWhitelisted: true
+
+# TODO humanoidbasesprites
