@@ -1,0 +1,43 @@
+- type: body
+  name: tamlin
+  id: Tamlin
+  root: torso
+  slots:
+    head:
+      part: HeadTamlin
+      connections:
+      - torso
+      organs:
+        brain: OrganTamlinBrain
+        eyes: OrganTamlinEyes
+    torso:
+      part: TorsoTamlin
+      connections:
+      - right_arm
+      - left_arm
+      - right_leg
+      - left_leg
+      organs:
+        heart: OrganTamlinHeart
+        lungs: OrganTamlinLungs
+        stomach: OrganTamlinStomach
+        liver: OrganTamlinLiver
+        kidneys: OrganTamlinKidneys
+    right_arm:
+      part: RightArmTamlin
+      connections:
+      - right_hand
+    right_hand:
+      part: RightHandTamlin
+    right_leg:
+      part: RightLegTamlin
+      connections:
+      - right_foot
+    left_leg:
+      part: LeftLegTamlin
+      connections:
+      - left_foot
+    right_foot:
+      part: RightFootTamlin
+    left_foot:
+      part: LeftFootTamlin

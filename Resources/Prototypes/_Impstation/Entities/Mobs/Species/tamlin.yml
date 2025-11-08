@@ -15,19 +15,25 @@
   - type: Body
     prototype: Tamlin
     requiredLegs: 2
+# - when killed they perform a 'hex' on their killer that instantly makes them very hungry and thirsty
+  - type: TriggerOnMobstateChange
+    mobState:
+    - Dead
+    preventSuicide: true
+    targetMobstateEntity: false
+  - type: ShockOnTrigger # PLACEHOLDER
+    targetUser: true
 
 # - apid movement
-# - two hands
-# - clumsy
+# - two hands, cannot wield
 # - very small and weak
 # - telepathic messaging a la pleebs
 # - stamina damage on hit
-# - can only eat fruit and raw meat
+# - can only eat junk food.
 # - breathe oxygen
-# - when killed they perform a 'hex' on their killer that instantly makes them very hungry and thirsty
 # - when they rot they turn into SOMETHING
 # - have an ability to warp people's vision (long cooldown)
 # - immune to radiation? weak to everything else
-# - cannot wear hardsuits
+# - no outer clothing
 # - nightvision toggle
 # - cannot sleep

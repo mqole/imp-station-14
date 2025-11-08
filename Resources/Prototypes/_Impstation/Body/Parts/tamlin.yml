@@ -1,0 +1,126 @@
+- type: entity
+  id: PartTamlin
+  parent: [BaseItem, BasePart]
+  name: tamlin body part
+  abstract: true
+  components:
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Fat
+        Quantity: 3
+      - ReagentId: Blood
+        Quantity: 10
+
+- type: entity
+  id: TorsoTamlin
+  name: tamlin torso
+  parent: [PartTamlin, BaseTorso]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Fat
+        Quantity: 10
+      - ReagentId: Blood
+        Quantity: 20
+
+
+- type: entity
+  id: HeadTamlin
+  name: tamlin head
+  parent: [PartTamlin, BaseTorso]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Fat
+        Quantity: 5
+      - ReagentId: Blood
+        Quantity: 10
+
+- type: entity
+  id: LeftArmTamlin
+  name: left tamlin arm
+  parent: [PartTamlin, BaseLeftArm]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+
+- type: entity
+  id: RightArmTamlin
+  name: right tamlin arm
+  parent: [PartTamlin, BaseRightArm]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+
+- type: entity
+  id: LeftHandTamlin
+  name: left tamlin hand
+  parent: [PartTamlin, BaseLeftHand]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+
+- type: entity
+  id: RightHandTamlin
+  name: right tamlin hand
+  parent: [PartTamlin, BaseRightHand]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+
+- type: entity
+  id: LeftLegTamlin
+  name: left tamlin leg
+  parent: [PartTamlin, BaseLeftLeg]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+  - type: MovementBodyPart
+    sprintSpeed: 5.5
+    walkSpeed: 3.5
+    acceleration: 1.2
+
+- type: entity
+  id: RightLegTamlin
+  name: right tamlin leg
+  parent: [PartTamlin, BaseRightLeg]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+  - type: MovementBodyPart
+    sprintSpeed: 5.5
+    walkSpeed: 3.5
+    acceleration: 1.2
+
+- type: entity
+  id: LeftFootTamlin
+  name: left tamlin foot
+  parent: [PartTamlin, BaseLeftFoot]
+  components:
+  - type: Sprite
+    sprite:
+    state:
+
+- type: entity
+  id: RightFootTamlin
+  name: right tamlin foot
+  parent: [PartTamlin, BaseRightFoot]
+  components:
+  - type: Sprite
+    sprite:
+    state:
