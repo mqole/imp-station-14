@@ -21,3 +21,7 @@
 - type: metabolizerType
   id: Kodepiia
   name: metabolizer-type-kodepiia
+
+- type: metabolizerType
+  id: Tamlin
+  name: metabolizer-type-tamlin

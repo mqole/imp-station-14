@@ -1,0 +1,158 @@
+- type: entity
+  id: BaseTamlinOrganUnGibbable
+  parent: BaseHumanOrganUnGibbable
+  abstract: true
+  components:
+  # TODO unique sprites
+  - type: SolutionContainerManager
+    solutions:
+      organ:
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 10
+      food:
+        maxVol: 5
+        reagents:
+        - ReagentId: Sugar
+          Quantity: 5
+  - type: FlavorProfile
+    flavors:
+      - people
+  - type: Tag
+    tags:
+    - Organ
+
+- type: entity
+  id: BaseTamlinOrgan
+  parent: BaseTamlinOrganUnGibbable
+  abstract: true
+  components:
+  - type: Gibbable
+
+- type: entity
+  id: OrganTamlinBrain
+  parent: [BaseTamlinOrganUnGibbable, OrganHumanBrain]
+  name: star core
+  description: It's still flickering, if you watch closely.
+  components:
+  - type: Tag
+    tags:
+    - Organ
+    - Brain
+  - type: SolutionContainerManager
+    solutions:
+      organ:
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 10
+      food:
+        maxVol: 5
+        reagents:
+        - ReagentId: GreyMatter
+          Quantity: 5
+
+- type: entity
+  id: OrganTamlinEyes
+  parent: [BaseTamlinOrgan, OrganHumanEyes]
+  name: crystal lenses
+  description: Looking through them, you can see your own reflection.
+  components:
+  - type: Tag
+    tags:
+    - Organ
+    - Eyes
+
+- type: entity
+  id: OrganTamlinLungs
+  parent: [BaseTamlinOrgan, OrganHumanLungs]
+  name: crystal coils
+  description: They look like lungs, but there's no indication that air has ever passed through them.
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      organ:
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 10
+      Lung:
+        maxVol: 100.0
+        canReact: false
+      food:
+        maxVol: 5
+        reagents:
+        - ReagentId: Sugar
+          Quantity: 5
+  - type: Tag
+    tags:
+    - Organ
+    - Lungs
+
+- type: entity
+  id: OrganTamlinStomach
+  parent: [BaseTamlinOrgan, OrganHumanStomach]
+  name: crystal stomach
+  description: A crystalline organ shaped like a flower. Smells of burnt sugar.
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 50
+      food:
+        maxVol: 5
+        reagents:
+        - ReagentId: Sugar
+          Quantity: 5
+  - type: Stomach
+    specialDigestible:
+      tags:
+      - FoodSnack
+  - type: Metabolizer
+    maxReagents: 3
+    metabolizerTypes: [ Tamlin ]
+    groups:
+    - id: Food
+    - id: Drink
+  - type: Tag
+    tags:
+    - Organ
+    - Stomach
+
+- type: entity
+  id: OrganTamlinHeart
+  parent: [BaseTamlinOrgan, OrganHumanHeart]
+  name: crystal heart
+  description: A crystalline imitation of a human heart.
+  components:
+  - type: Metabolizer
+    maxReagents: 2
+    metabolizerTypes: [ Tamlin ]
+    groups:
+    - id: Medicine
+    - id: Poison
+    - id: Narcotic
+  - type: Tag # goob edit
+    tags:
+    - Organ
+    - Heart
+
+- type: entity
+  id: OrganTamlinLiver
+  parent: [BaseTamlinOrgan, OrganHumanLiver]
+  name:
+  description:
+  components:
+  - type: Tag
+    tags:
+      - Organ
+      - Liver
+
+- type: entity
+  id: OrganTamlinKidneys
+  parent: [BaseTamlinOrgan, OrganHumanKidneys]
+  name:
+  description:
+  components:
+  - type: Tag
+    tags:
+    - Organ
+    - Kidneys

@@ -11,6 +11,8 @@
         Quantity: 3
       - ReagentId: Blood
         Quantity: 10
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
 
 - type: entity
   id: TorsoTamlin
@@ -18,8 +20,7 @@
   parent: [PartTamlin, BaseTorso]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: torso
   - type: Extractable
     juiceSolution:
       reagents:
@@ -28,15 +29,13 @@
       - ReagentId: Blood
         Quantity: 20
 
-
 - type: entity
   id: HeadTamlin
   name: tamlin head
   parent: [PartTamlin, BaseTorso]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: head
   - type: Extractable
     juiceSolution:
       reagents:
@@ -51,8 +50,7 @@
   parent: [PartTamlin, BaseLeftArm]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: l_arm
 
 - type: entity
   id: RightArmTamlin
@@ -60,8 +58,7 @@
   parent: [PartTamlin, BaseRightArm]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: r_arm
 
 - type: entity
   id: LeftHandTamlin
@@ -69,8 +66,7 @@
   parent: [PartTamlin, BaseLeftHand]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: l_hand
 
 - type: entity
   id: RightHandTamlin
@@ -78,8 +74,7 @@
   parent: [PartTamlin, BaseRightHand]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: r_hand
 
 - type: entity
   id: LeftLegTamlin
@@ -87,8 +82,7 @@
   parent: [PartTamlin, BaseLeftLeg]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: l_leg
   - type: MovementBodyPart
     sprintSpeed: 5.5
     walkSpeed: 3.5
@@ -100,8 +94,7 @@
   parent: [PartTamlin, BaseRightLeg]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: r_leg
   - type: MovementBodyPart
     sprintSpeed: 5.5
     walkSpeed: 3.5
@@ -113,8 +106,7 @@
   parent: [PartTamlin, BaseLeftFoot]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: l_foot
 
 - type: entity
   id: RightFootTamlin
@@ -122,5 +114,4 @@
   parent: [PartTamlin, BaseRightFoot]
   components:
   - type: Sprite
-    sprite:
-    state:
+    state: r_foot
