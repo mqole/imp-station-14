@@ -20,9 +20,91 @@
 - type: speciesBaseSprites
   id: MobTamlinSprites
   sprites:
+    TailBehind: MobHumanoidAnyMarking
+    TailOversuit: MobHumanoidAnyMarking
+    Eyes: MobTamlinEyes
+    Head: MobTamlinHead
+    HeadTop: MobHumanoidAnyMarking
+    Hair: MobHumanoidAnyMarking
+    Chest: MobTamlinTorso
+    LArm: MobTamlinLArm
+    RArm: MobTamlinRArm
+    LHand: MobTamlinLHand
+    RHand: MobTamlinRHand
+    LLeg: MobTamlinLLeg
+    RLeg: MobTamlinRLeg
+    LFoot: MobTamlinLFoot
+    RFoot: MobTamlinRFoot
+    Tail: MobHumanoidAnyMarking
+    Snout: MobHumanoidAnyMarking
 
 - type: markingPoints
   id: MobTamlinMarkingLimits
   onlyWhitelisted: true
+  # TODO
 
-# TODO humanoidbasesprites
+- type: humanoidBaseSprite
+  id: MobTamlinEyes
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: eyes
+
+- type: humanoidBaseSprite
+  id: MobTamlinHead
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobTamlinTorso
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: torso
+
+- type: humanoidBaseSprite
+  id: MobTamlinLLeg
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: l_leg
+
+- type: humanoidBaseSprite
+  id: MobTamlinLHand
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: l_hand
+
+- type: humanoidBaseSprite
+  id: MobTamlinLArm
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: l_arm
+
+- type: humanoidBaseSprite
+  id: MobTamlinLFoot
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: l_foot
+
+- type: humanoidBaseSprite
+  id: MobTamlinRLeg
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: r_leg
+
+- type: humanoidBaseSprite
+  id: MobTamlinRHand
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: r_hand
+
+- type: humanoidBaseSprite
+  id: MobTamlinRArm
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: r_arm
+
+- type: humanoidBaseSprite
+  id: MobTamlinRFoot
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Tamlin/parts.rsi
+    state: r_foot

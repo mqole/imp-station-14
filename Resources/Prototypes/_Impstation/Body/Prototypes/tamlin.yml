@@ -27,8 +27,14 @@
       part: RightArmTamlin
       connections:
       - right_hand
+    left_arm:
+      part: LeftArmTamlin
+      connections:
+      - left_hand
     right_hand:
       part: RightHandTamlin
+    left_hand:
+      part: LeftHandTamlin
     right_leg:
       part: RightLegTamlin
       connections:
