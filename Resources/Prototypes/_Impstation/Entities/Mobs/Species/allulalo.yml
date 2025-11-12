@@ -69,7 +69,7 @@
       melee:
         reagents:
         - ReagentId: Ethanotoxin
-          Quantity: 2 #you can bite someone twice
+          Quantity: 4 #you can bite someone four times. upped from two based on feedback
   - type: MeleeChemicalInjector
     solution: melee
   - type: SolutionRegeneration
@@ -94,6 +94,7 @@
     - DoorBumpOpener
     - AnomalyHost
     - CanPilot
+    - FootstepSound
   - type: TypingIndicator
     proto: allulalo
   - type: Vocal
