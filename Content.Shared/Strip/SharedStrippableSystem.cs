@@ -756,6 +756,53 @@ public abstract class SharedStrippableSystem : EntitySystem
 
         _adminLogger.Add(LogType.Stripping, LogImpact.Medium, $"{ToPrettyString(user):actor} has used the item {ToPrettyString(userItem):userItem} on {ToPrettyString(targetItem):targetItem} in {ToPrettyString(target):target}'s hands");
     }
+
+    public void DoStripVerbInteraction(
+        EntityUid user,
+        EntityUid target,
+        EntityUid targetItem,
+        ExecuteVerbEvent args)
+    {
+        if (!TryComp<StrippableComponent>(target, out var targetStrippable))
+            return;
+
+        // TODO: time modifiers should be affected by activeItem somehow, instead of needing strippablecomponent
+        var (time, stealth) = GetStripTimeModifiers(user, target, targetItem, targetStrippable.HandStripDelay);
+
+        if (!stealth)
+        {
+            _popupSystem.PopupEntity(Loc.GetString("strippable-component-alert-owner-interact",
+                ("user", Identity.Entity(user, EntityManager)),
+                ("item", targetItem)),
+                target,
+                target);
+        }
+
+        var prefix = stealth ? "stealthily " : "";
+        _adminLogger.Add(LogType.Stripping,
+            LogImpact.Low,
+            $"{ToPrettyString(user):actor} is trying to {prefix}perform verb {args.RequestedVerb.Text} on {ToPrettyString(targetItem):targetItem} in {ToPrettyString(target):target}'s inventory");
+
+        _interactionSystem.DoContactInteraction(user, targetItem);
+
+        // perform a doafter, then execute the verb.
+        var doAfterArgs = new DoAfterArgs(
+            EntityManager,
+            user,
+            time,
+            new StripVerbInteractionDoAfterEvent(args),
+            user,
+            target)
+        {
+            Hidden = stealth,
+            AttemptFrequency = AttemptFrequency.EveryTick,
+            BreakOnDamage = true,
+            BreakOnMove = true,
+            NeedHand = true,
+            DuplicateCondition = stealth ? DuplicateConditions.None : DuplicateConditions.SameTool // block duplicates if using the thieving gloves : don't if not
+        };
+        _doAfterSystem.TryStartDoAfter(doAfterArgs);
+    }
     #endregion
     // IMP ADD END
 

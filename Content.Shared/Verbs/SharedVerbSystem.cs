@@ -4,6 +4,8 @@ using Content.Shared.Interaction;
 using Content.Shared.Inventory.VirtualItem;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
+using Content.Shared.Strip; // imp
+using Content.Shared.Strip.Components; // imp
 
 namespace Content.Shared.Verbs
 {
@@ -12,12 +14,14 @@ namespace Content.Shared.Verbs
         [Dependency] private readonly SharedInteractionSystem _interactionSystem = default!;
         [Dependency] private readonly ActionBlockerSystem _actionBlockerSystem = default!;
         [Dependency] protected readonly SharedContainerSystem ContainerSystem = default!;
+        [Dependency] private readonly SharedStrippableSystem _strip = default!; // imp
 
         public override void Initialize()
         {
             base.Initialize();
 
             SubscribeAllEvent<ExecuteVerbEvent>(HandleExecuteVerb);
+            SubscribeAllEvent<StripVerbInteractionDoAfterEvent>(OnDoAfterExecuteVerb); // imp
         }
 
         private void HandleExecuteVerb(ExecuteVerbEvent args, EntitySessionEventArgs eventArgs)
@@ -44,7 +48,33 @@ namespace Content.Shared.Verbs
 
             // Find the requested verb.
             if (verbs.TryGetValue(args.RequestedVerb, out var verb))
+            {
+                // IMP ADD START: strippable interaction
+                if (ContainerSystem.TryGetContainingContainer(target.Value, out var container)
+                    && container.Owner != user.Value)
+                {
+                    _strip.DoStripVerbInteraction(user.Value, container.Owner, target.Value, args);
+                    return;
+                }
+                // END IMP ADD
                 ExecuteVerb(verb, user.Value, target.Value);
+            }
+        }
+
+        // IMP ADD
+        /// <summary>
+        ///     Executes event after doafter relayed by <see cref="SharedStrippableSystem"/>.
+        /// </summary>
+        private void OnDoAfterExecuteVerb(StripVerbInteractionDoAfterEvent args, EntitySessionEventArgs eventArgs)
+        {
+            var user = eventArgs.SenderSession.AttachedEntity;
+            if (user == null)
+                return;
+
+            if (!TryGetEntity(args.VerbArgs.Target, out var target))
+                return;
+
+            ExecuteVerb(args.VerbArgs.RequestedVerb, user.Value, target.Value);
         }
 
         /// <summary>

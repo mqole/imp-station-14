@@ -2,6 +2,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Inventory;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
+using Content.Shared.Verbs; // imp
 
 namespace Content.Shared.Strip.Components
 {
@@ -89,6 +90,23 @@ namespace Content.Shared.Strip.Components
             InventoryOrHand = inventoryOrHand;
             SlotOrHandName = slotOrHandName;
             UseItem = useItem; // imp add
+        }
+
+        public override DoAfterEvent Clone() => this;
+    }
+
+    // IMP ADD
+    /// <summary>
+    ///     Raised on entities in a strippable interface when interaction verbs are attempted on them.
+    /// </summary>
+    [Serializable, NetSerializable]
+    public sealed partial class StripVerbInteractionDoAfterEvent : DoAfterEvent
+    {
+        public readonly ExecuteVerbEvent VerbArgs;
+
+        public StripVerbInteractionDoAfterEvent(ExecuteVerbEvent verbArgs) // imp add
+        {
+            VerbArgs = verbArgs;
         }
 
         public override DoAfterEvent Clone() => this;

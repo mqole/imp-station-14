@@ -205,6 +205,7 @@ namespace Content.Client.Inventory
             // TODO: allow other interactions? Verbs? But they should then generate a pop-up and/or have a delay so the
             // user that is being stripped can prevent the verbs from being exectuted.
             // So for now: only stripping & examining
+            // IMP: Todo conquered
             if (ev.Function == EngineKeyFunctions.Use)
             {
                 SendPredictedMessage(new StrippingSlotButtonPressed(slot.SlotName, slot is HandButton));
