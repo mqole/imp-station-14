@@ -4,7 +4,7 @@
   roundStart: true
   randomViable: true # imp
   prototype: MobDwarf
-  sprites: MobHumanSprites
+  sprites: MobDwarfSprites #imp Human -> Dwarf
   markingLimits: MobHumanMarkingLimits
   dollPrototype: MobDwarfDummy
   skinColoration: HumanToned
@@ -20,3 +20,5 @@
   youngAge: 60 # imp
   oldAge: 100 # imp
   ancientAge: 200 # imp
+
+# IMP NOTE: we have our own dwarf sprites- these can be found in the corresponding file in our directory.

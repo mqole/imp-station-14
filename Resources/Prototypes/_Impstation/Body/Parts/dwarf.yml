@@ -1,0 +1,79 @@
+- type: entity
+  id: TorsoDwarf
+  name: dwarf torso
+  parent: TorsoHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: HeadDwarf
+  name: dwarf head
+  parent: HeadHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: LeftArmDwarf
+  name: left dwarf arm
+  parent: LeftArmHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: RightArmDwarf
+  name: right dwarf arm
+  parent: RightArmHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: LeftHandDwarf
+  name: left dwarf hand
+  parent: LeftHandHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: RightHandDwarf
+  name: right dwarf hand
+  parent: RightHandHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: LeftLegDwarf
+  name: left dwarf leg
+  parent: LeftLegHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: RightLegDwarf
+  name: right dwarf leg
+  parent: RightLegHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: LeftFootDwarf
+  name: left dwarf foot
+  parent: LeftFootHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+
+- type: entity
+  id: RightFootDwarf
+  name: right dwarf foot
+  parent: RightFootHuman
+  components:
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi

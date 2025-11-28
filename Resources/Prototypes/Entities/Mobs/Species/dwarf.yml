@@ -9,7 +9,7 @@
   - type: Hunger
   - type: Thirst
   - type: Icon
-    sprite: Mobs/Species/Human/parts.rsi
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi # imp
     state: full
   - type: Respirator
     damage:
@@ -18,8 +18,8 @@
     damageRecovery:
       types:
         Asphyxiation: -1.0
-  - type: ScaleVisuals
-    scale: 1, 0.8
+  # - type: ScaleVisuals # imp remove mixels lol
+  #   scale: 1, 0.8
   - type: Body
     prototype: Dwarf
     requiredLegs: 2
@@ -68,8 +68,8 @@
   id: MobDwarfDummy
   categories: [ HideSpawnMenu ]
   components:
-  - type: ScaleVisuals
-    scale: 1, 0.8
+  # - type: ScaleVisuals # imp remove mixels lol
+  #   scale: 1, 0.8
   - type: Inventory
     femaleDisplacements:
       jumpsuit:

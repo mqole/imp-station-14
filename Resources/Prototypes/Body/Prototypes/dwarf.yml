@@ -4,14 +4,14 @@
   root: torso
   slots:
     head:
-      part: HeadHuman
+      part: HeadDwarf #imp Human -> Dwarf
       connections:
       - torso
       organs:
         brain: OrganHumanBrain
         eyes: OrganHumanEyes
     torso:
-      part: TorsoHuman
+      part: TorsoDwarf #imp Human -> Dwarf
       connections:
       - right arm
       - left arm
@@ -24,26 +24,26 @@
         liver: OrganDwarfLiver
         kidneys: OrganHumanKidneys
     right arm:
-      part: RightArmHuman
+      part: RightArmDwarf #imp Human -> Dwarf
       connections:
       - right hand
     left arm:
-      part: LeftArmHuman
+      part: LeftArmDwarf #imp Human -> Dwarf
       connections:
       - left hand
     right hand:
-      part: RightHandHuman
+      part: RightHandDwarf #imp Human -> Dwarf
     left hand:
-      part: LeftHandHuman
+      part: LeftHandDwarf #imp Human -> Dwarf
     right leg:
-      part: RightLegHuman
+      part: RightLegDwarf #imp Human -> Dwarf
       connections:
       - right foot
     left leg:
-      part: LeftLegHuman
+      part: LeftLegDwarf #imp Human -> Dwarf
       connections:
       - left foot
     right foot:
-      part: RightFootHuman
+      part: RightFootDwarf #imp Human -> Dwarf
     left foot:
-      part: LeftFootHuman
+      part: LeftFootDwarf #imp Human -> Dwarf

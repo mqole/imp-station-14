@@ -1,0 +1,114 @@
+# The lack of a layer means that
+# this person cannot have round-start anything
+# applied to that layer. It has to instead
+# be defined as a 'custom base layer'
+# in either the mob's starting marking prototype,
+# or it has to be added in C#.
+- type: speciesBaseSprites
+  id: MobDwarfSprites
+  sprites:
+    TailBehind: MobHumanoidAnyMarking # floof
+    TailOversuit: MobHumanoidAnyMarking # floof
+    Special: MobHumanoidAnyMarking
+    Head: MobDwarfHead
+    Hair: MobHumanoidAnyMarking
+    FacialHair: MobHumanoidAnyMarking
+    Snout: MobHumanoidAnyMarking
+    UndergarmentTop: MobHumanoidAnyMarking
+    UndergarmentBottom: MobHumanoidAnyMarking
+    Chest: MobDwarfTorso
+    Eyes: MobHumanoidEyes
+    HeadTop: MobHumanoidAnyMarking
+    HeadSide: MobHumanoidAnyMarking #imp
+    LArm: MobDwarfLArm
+    RArm: MobDwarfRArm
+    LHand: MobDwarfLHand
+    RHand: MobDwarfRHand
+    LLeg: MobDwarfLLeg
+    RLeg: MobDwarfRLeg
+    LFoot: MobDwarfLFoot
+    RFoot: MobDwarfRFoot
+
+- type: humanoidBaseSprite
+  id: MobDwarfHead
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobDwarfHeadFemale # yes, we have to include gendered heads or the game bricks. functional system
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobDwarfHeadMale
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobDwarfTorso
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: MobDwarfTorsoMale
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: MobDwarfTorsoFemale
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: torso_f
+
+- type: humanoidBaseSprite
+  id: MobDwarfLLeg
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: l_leg
+
+- type: humanoidBaseSprite
+  id: MobDwarfLArm
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: l_arm
+
+- type: humanoidBaseSprite
+  id: MobDwarfLHand
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: l_hand
+
+- type: humanoidBaseSprite
+  id: MobDwarfLFoot
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: l_foot
+
+- type: humanoidBaseSprite
+  id: MobDwarfRLeg
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: r_leg
+
+- type: humanoidBaseSprite
+  id: MobDwarfRArm
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: r_arm
+
+- type: humanoidBaseSprite
+  id: MobDwarfRHand
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: r_hand
+
+- type: humanoidBaseSprite
+  id: MobDwarfRFoot
+  baseSprite:
+    sprite: _Impstation/Mobs/Species/Dwarf/parts.rsi
+    state: r_foot
