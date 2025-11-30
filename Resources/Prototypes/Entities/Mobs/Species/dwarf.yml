@@ -56,12 +56,68 @@
     - Snout
     - FacialHair #imp
   - type: Inventory
-    femaleDisplacements:
+    displacements: # imp addition
       jumpsuit:
         sizeMaps:
           32:
-            sprite: Mobs/Species/Human/displacement.rsi
-            state: jumpsuit-female
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: jumpsuit
+      head:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      eyes:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      ears:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      mask:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      neck:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: neck
+      outerClothing:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+      gloves:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: hands
+      belt:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+      back:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+      suitstorage:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+    # femaleDisplacements:
+    #   jumpsuit:
+    #     sizeMaps:
+    #       32:
+    #         sprite: Mobs/Species/Human/displacement.rsi
+    #         state: jumpsuit-female
 
 - type: entity
   parent: BaseSpeciesDummy
@@ -71,9 +127,65 @@
   # - type: ScaleVisuals # imp remove mixels lol
   #   scale: 1, 0.8
   - type: Inventory
-    femaleDisplacements:
+    displacements: # imp addition
       jumpsuit:
         sizeMaps:
           32:
-            sprite: Mobs/Species/Human/displacement.rsi
-            state: jumpsuit-female
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: jumpsuit
+      head:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      eyes:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      ears:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      mask:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: head
+      neck:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: neck
+      outerClothing:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+      gloves:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: hands
+      belt:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+      back:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+      suitstorage:
+        sizeMaps:
+          32:
+            sprite: _Impstation/Mobs/Species/Dwarf/displacement.rsi
+            state: outerClothing
+    # femaleDisplacements:
+    #   jumpsuit:
+    #     sizeMaps:
+    #       32:
+    #         sprite: Mobs/Species/Human/displacement.rsi
+    #         state: jumpsuit-female
