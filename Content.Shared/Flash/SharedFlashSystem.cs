@@ -23,7 +23,6 @@ using System.Linq;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Random.Helpers;
 using Content.Shared.Clothing.Components;
-using Content.Shared.Throwing; // imp
 
 namespace Content.Shared.Flash;
 
@@ -63,7 +62,6 @@ public abstract class SharedFlashSystem : EntitySystem
         SubscribeLocalEvent<TemporaryBlindnessComponent, FlashAttemptEvent>(OnTemporaryBlindnessFlashAttempt);
         Subs.SubscribeWithRelay<FlashImmunityComponent, FlashAttemptEvent>(OnFlashImmunityFlashAttempt, held: false);
         SubscribeLocalEvent<FlashImmunityComponent, ExaminedEvent>(OnExamine);
-        SubscribeLocalEvent<FlashComponent, ThrowDoHitEvent>(OnFlashThrowHitEvent); // imp
 
         _statusEffectsQuery = GetEntityQuery<StatusEffectsComponent>();
         _damagedByFlashingQuery = GetEntityQuery<DamagedByFlashingComponent>();
@@ -103,15 +101,6 @@ public abstract class SharedFlashSystem : EntitySystem
             return;
 
         FlashArea(ent.Owner, null, ent.Comp.Range, ent.Comp.AoeFlashDuration, ent.Comp.SlowTo, true, ent.Comp.Probability);
-    }
-
-
-    // imp, allows for flashing when thrown at someone
-    private void OnFlashThrowHitEvent(Entity<FlashComponent> ent, ref ThrowDoHitEvent args)
-    {
-        if (!UseFlash(ent, null))
-            return;
-        FlashArea(ent.Owner, null, ent.Comp.Range, ent.Comp.AoeFlashDuration, ent.Comp.SlowTo, false, ent.Comp.Probability);
     }
 
     /// <summary>

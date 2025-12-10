@@ -1,5 +1,3 @@
-/*
- IMP TODO: WE NEED TO KILL THE EE SharedDamageOtherOnHitSystem SO WE CAN ACTUALLY USE THE UPSTREAM VERSION
 using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Components;
@@ -23,4 +21,4 @@ public sealed partial class DamageOtherOnHitComponent : Component
     [DataField(required: true)]
     public DamageSpecifier Damage = default!;
 
-} */
+}

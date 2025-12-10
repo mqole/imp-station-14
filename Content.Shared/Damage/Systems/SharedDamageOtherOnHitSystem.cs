@@ -1,5 +1,3 @@
-/*
- IMP TODO: WE NEED TO KILL THE EE SharedDamageOtherOnHitSystem SO WE CAN ACTUALLY USE THE UPSTREAM VERSION
 using Content.Shared.CombatMode.Pacification;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Events;
@@ -31,4 +29,4 @@ public abstract class SharedDamageOtherOnHitSystem : EntitySystem
     {
         args.Cancel("pacified-cannot-throw");
     }
-} */
+}
