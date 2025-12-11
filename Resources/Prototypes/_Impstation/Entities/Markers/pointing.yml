@@ -7,3 +7,5 @@
   - type: Sprite
     sprite: _Impstation/Interface/Misc/pointing.rsi
     state: crosshair
+  - type: PointingArrow
+    offset: 0, 0.05
