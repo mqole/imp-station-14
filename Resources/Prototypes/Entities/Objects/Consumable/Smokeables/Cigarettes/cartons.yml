@@ -17,9 +17,10 @@
   - type: Storage
     grid:
     - 0,0,4,1
-  - type: StorageFill
-    contents:
-      - id: CigPackGreen
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: CigPackGreen
         amount: 5
   - type: Tag
     tags:
@@ -38,10 +39,11 @@
   - type: Sprite
     sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/red.rsi # imp
   - type: Item
-    sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/red.rsi # imp
-  - type: StorageFill
-    contents:
-      - id: CigPackRed
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/red.rsi
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: CigPackRed
         amount: 5
 
 - type: entity
@@ -53,10 +55,11 @@
   - type: Sprite
     sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/blue.rsi # imp
   - type: Item
-    sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/blue.rsi # imp
-  - type: StorageFill
-    contents:
-      - id: CigPackBlue
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/blue.rsi
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: CigPackBlue
         amount: 5
 
 - type: entity
@@ -68,10 +71,11 @@
   - type: Sprite
     sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/black.rsi # imp
   - type: Item
-    sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/black.rsi # imp
-  - type: StorageFill
-    contents:
-      - id: CigPackBlack
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/black.rsi
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: CigPackBlack
         amount: 5
 
 - type: entity
@@ -83,8 +87,9 @@
   - type: Sprite
     sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/mixed.rsi # imp
   - type: Item
-    sprite: _Impstation/Objects/Consumable/Smokeables/Cartons/mixed.rsi # imp
-  - type: StorageFill
-    contents:
-    - id: CigPackMixed
-      amount: 3
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/mixed.rsi
+  - type: EntityTableContainerFill
+    containers:
+      storagebase:
+        id: CigPackMixed
+        amount: 3

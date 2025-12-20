@@ -152,7 +152,10 @@
     - Trash
     - MultitoolDefibrillatorTarget #imp
   - type: Bloodstream
-    bloodReagent: InsectBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: InsectBlood
+        Quantity: 1
     bloodMaxVolume: 0.1
   - type: MobPrice
     price: 50
@@ -409,7 +412,10 @@
       Dead:
         Base: cockroach_dead
   - type: Bloodstream
-    bloodReagent: InsectBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: InsectBlood
+        Quantity: 1
     bloodMaxVolume: 20
   - type: Edible
   - type: FlavorProfile
@@ -585,7 +591,10 @@
     damageContainer: Biological
     damageModifierSet: Moth
   - type: Bloodstream
-    bloodReagent: InsectBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: InsectBlood
+        Quantity: 1
   - type: Respirator
     damage:
       types:
@@ -885,7 +894,10 @@
     - MultitoolDefibrillatorTarget #imp
     - Butterfly #imp, for butterfly orchid
   - type: Bloodstream
-    bloodReagent: InsectBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: InsectBlood
+        Quantity: 1
     bloodMaxVolume: 0.1
   - type: MobPrice
     price: 50
@@ -1053,7 +1065,10 @@
     accent: crab
   - type: Bloodstream
     bloodMaxVolume: 50
-    bloodReagent: CopperBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: CopperBlood
+        Quantity: 1
   - type: Tag
     tags:
     - VimPilot
@@ -1556,14 +1571,9 @@
       effects:
       - !type:WashCreamPie
   - type: Crawler
-  # imp edit start
-  - type: Blindable
-  - type: Carriable #DeltaV
-  - type: GoobAbsorbable
-    biomassRestored: 0.4
-  - type: VentCrawler
-    enterDelay: 3
-  # imp edit end
+  - type: StatusIcon
+
+
 
 - type: entity
   name: monkey
@@ -2202,7 +2212,10 @@
   - type: RadiationSource
     intensity: 0.3
   - type: Bloodstream
-    bloodReagent: UnstableMutagen
+    bloodReagents:
+      reagents:
+      - ReagentId: UnstableMutagen
+        Quantity: 1
   - type: SolutionContainerManager
     solutions:
       food:
@@ -2810,7 +2823,10 @@
   - type: IgnoreSpiderWeb
   - type: Bloodstream
     bloodMaxVolume: 150
-    bloodReagent: CopperBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: CopperBlood
+        Quantity: 1
   - type: Speech
     speechVerb: Arachnid
     speechSounds: Arachnid
@@ -2969,8 +2985,10 @@
       speechVerb: Cluwne
     - type: Bloodstream
       bloodMaxVolume: 150
-      bloodReagent: Laughter
-
+      bloodReagents:
+        reagents:
+        - ReagentId: Laughter
+          Quantity: 1
 - type: entity
   name: wizard spider
   parent: MobGiantSpider
@@ -3369,7 +3387,10 @@
     attributes:
       gender: epicene
   - type: Bloodstream
-    bloodReagent: DemonsBlood
+    bloodReagents:
+      reagents:
+      - ReagentId: DemonsBlood
+        Quantity: 1
   - type: Damageable
     damageContainer: BiologicalMetaphysical
     damageModifierSet: Infernal
@@ -4086,7 +4107,10 @@
     speciesId: cat
     templateId: pet
   - type: Bloodstream
-    bloodReagent: Sap
+    bloodReagents:
+      reagents:
+      - ReagentId: Sap
+        Quantity: 1
     bloodMaxVolume: 60
   - type: DamageStateVisuals
     states:

@@ -20,7 +20,7 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser.ogg
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 1000
     startingCharge: 1000
   - type: StaticPrice
@@ -72,11 +72,14 @@
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedLaser
     fireCost: 62.5
   - type: StaticPrice
     price: 420
+  - type: Tag
+    tags:
+    - LaserWeapon
   #imp edit begin; weapon melee
   - type: MeleeWeapon
     attackRate: 0.6
@@ -109,7 +112,7 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser.ogg
-  #- type: HitscanBatteryAmmoProvider #imp, replaced with MagazineAmmoProvider
+  #- type: BatteryAmmoProvider #imp, replaced with MagazineAmmoProvider
   #  proto: RedLightLaser
   #  fireCost: 50
   - type: ItemSlots
@@ -213,6 +216,10 @@
     magState: mag
     steps: 5
     zeroVisible: true
+  - type: Tag
+    tags:
+    - Sidearm
+    - LaserWeapon
   - type: MeleeWeapon #imp; for pistolwhip anim
     wideAnimationRotation: -80
 
@@ -232,7 +239,7 @@
       shader: unshaded
   - type: Item
     storedOffset: 0,-5
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedMediumLaser
     fireCost: 62.5
   - type: MagazineVisuals
@@ -240,6 +247,10 @@
     steps: 5
     zeroVisible: true
   - type: Appearance
+  - type: Tag
+    tags:
+    - Sidearm
+    - LaserWeapon
   - type: MeleeWeapon #imp; for pistolwhip anim
     wideAnimationRotation: -80
 
@@ -266,12 +277,16 @@
   - type: Appearance
   - type: Clothing
     sprite: _Impstation/Objects/Weapons/Guns/Lasers/makeshift.rsi #imp
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: EmergencyRedLaser #imp
     fireCost: 62.5
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 500
     startingCharge: 500
+  - type: Tag
+    tags:
+    - Sidearm
+    - LaserWeapon
   # imp edit start
   - type: Gun #to change the fire-rate
     fireRate: 1.75
@@ -312,7 +327,7 @@
       path: /Audio/Effects/Lightning/lightningshock.ogg
       params:
         variation: 0.2
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: TeslaGunBullet
     fireCost: 300
   - type: MagazineVisuals
@@ -335,7 +350,7 @@
   components:
   - type: StaticPrice
     price: 300
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedLaserPractice
     fireCost: 10 #imp
   - type: PacifismAllowedGun
@@ -378,12 +393,16 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser3.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: Pulse
     fireCost: 200
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 2000
     startingCharge: 2000
+  - type: Tag
+    tags:
+    - Sidearm
+    - LaserWeapon
   - type: MeleeWeapon #imp; for pistolwhip anim
     wideAnimationRotation: -80
 
@@ -418,10 +437,10 @@
       - FullAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser3.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: Pulse
     fireCost: 200
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 5000
     startingCharge: 5000
 #imp edit begin; weapon melee
@@ -469,10 +488,10 @@
     fireRate: 1.5
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser3.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: Pulse
     fireCost: 100
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 40000
     startingCharge: 40000
 #imp edit begin; weapon melee
@@ -527,7 +546,7 @@
     - Burst
     - FullAuto
     selectedMode: FullAuto #imp
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedRifleLaser #imp
     fireCost: 40 #imp
   - type: Battery #imp
@@ -579,10 +598,10 @@
         path: /Audio/Weapons/emitter.ogg
         params:
           pitch: 2
-    - type: ProjectileBatteryAmmoProvider
+    - type: BatteryAmmoProvider
       proto: AntiParticlesProjectile
       fireCost: 500
-    - type: Battery
+    - type: PredictedBattery
       maxCharge: 10000
       startingCharge: 10000
     #imp edit begin; weapon melee
@@ -627,7 +646,7 @@
   - type: Gun
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser3.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: XrayLaser
     fireCost: 100
   - type: MagazineVisuals
@@ -687,7 +706,7 @@
     #projectileSpeed: 35 # any higher and this causes issues in lag #imp edit, keep disabler projectile speed nerfed
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletDisablerPractice
     fireCost: 10
   - type: Tag
@@ -723,7 +742,7 @@
     slots:
       - suitStorage
       - Belt
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletDisabler
     fireCost: 100
   - type: GuideHelp
@@ -766,7 +785,7 @@
       - FullAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletDisablerSmg
     fireCost: 33 #imp edit
   - type: MagazineVisuals
@@ -806,7 +825,7 @@
     fireRate: 0.5
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/taser.ogg
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletTaser
     fireCost: 200
   - type: MagazineVisuals
@@ -831,7 +850,7 @@
       path: /Audio/Effects/tesla_collapse.ogg # The wrath of god...
       params:
         volume: -6
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletTaserSuper
     fireCost: 200
 
@@ -854,10 +873,10 @@
   - type: Gun
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser_cannon.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedMediumLaser
     fireCost: 100
-  - type: BatterySelfRecharger
+  - type: PredictedBatterySelfRecharger
     autoRechargeRate: 40
   - type: MagazineVisuals
     magState: mag
@@ -869,6 +888,7 @@
     - HighRiskItem
     - Sidearm
     - WeaponAntiqueLaser
+    - LaserWeapon
   - type: StaticPrice
     price: 750
   - type: StealTarget
@@ -903,10 +923,10 @@
   - type: Gun
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser_cannon.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedMediumLaser
     fireCost: 100
-  - type: BatterySelfRecharger
+  - type: PredictedBatterySelfRecharger
     autoRechargeRate: 30
   - type: MagazineVisuals
     magState: mag
@@ -917,6 +937,10 @@
     price: 63
   - type: MeleeWeapon #imp; for pistolwhip anim
     wideAnimationRotation: -80
+  - type: Tag
+    tags:
+    - Sidearm
+    - LaserWeapon
 
 - type: entity
   name: C.H.I.M.P. handcannon
@@ -947,7 +971,7 @@
     fireRate: 1.5
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: AnomalousParticleDeltaStrong
     fireCost: 100
   - type: BatteryWeaponFireModes
@@ -1002,13 +1026,17 @@
     fireRate: 1
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser_clown.ogg
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedMediumLaser
     fireCost: 100
-  - type: BatterySelfRecharger
+  - type: PredictedBatterySelfRecharger
     autoRechargeRate: 40
   - type: StaticPrice
     price: 750
+  - type: Tag
+    tags:
+    - Sidearm
+    - LaserWeapon
 
 - type: entity
   name: M-1 energy shotgun #imp
@@ -1035,7 +1063,7 @@
     fireRate: 2
     soundGunshot:
       path: /Audio/_Impstation/Weapons/Guns/Gunshots/eshotgun.ogg #imp
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletLaserSpreadNarrow
     fireCost: 72 #imp
   - type: BatteryWeaponFireModes
@@ -1054,7 +1082,7 @@
     sprite: _Impstation/Objects/Weapons/Guns/Blasters/eshotgun_inhands_64x.rsi #imp
     heldPrefix: energy
   - type: GunRequiresWield #remove when inaccuracy on spreads is fixed
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 504 #imp - was 480
     startingCharge: 504 #imp
 
@@ -1093,7 +1121,7 @@
   - type: Battery #imp
     maxCharge: 1050
     startingCharge: 1050
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BulletLaserMagnum
     fireCost: 175 #imp was 150
   - type: BatteryWeaponFireModes
@@ -1105,7 +1133,7 @@
     - proto: BulletMagnumDisabler #imp- was BulletDisabler
       fireCost: 175 #imp, was 62.5
       pacifismAllowedMode: true
-  - type: BatterySelfRecharger #imp reduced the recharge delay and the recharge rate
+  - type: PredictedBatterySelfRecharger #imp reduced the recharge delay and the recharge rate
     autoRechargeRate: 35 #imp - was 48
     autoRechargePauseTime: 1 #imp - was 10. One second means you don't get a bonus shot while magdumping.
 #imp edit begin; weapon melee
@@ -1153,7 +1181,7 @@
     fireRate: 1
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
-  - type: ProjectileBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: BoltTempgunCold
     fireCost: 100
   - type: BatteryWeaponFireModes
@@ -1162,7 +1190,7 @@
       fireCost: 100
     - proto: BoltTempgunHot
       fireCost: 100
-  - type: Battery
+  - type: PredictedBattery
     maxCharge: 1000
     startingCharge: 1000
   - type: StaticPrice
@@ -1178,5 +1206,5 @@
   parent: [WeaponAdvancedLaser, BaseXenoborgContraband]
   id: XenoborgHeavyLaserGun
   components:
-  - type: HitscanBatteryAmmoProvider
+  - type: BatteryAmmoProvider
     proto: RedHeavyLaser
