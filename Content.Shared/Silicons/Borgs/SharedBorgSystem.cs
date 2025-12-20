@@ -32,6 +32,8 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Robust.Shared.Enums; // imp; for Gender
+using Robust.Shared.GameObjects.Components.Localization; // imp; for Grammar
 
 namespace Content.Shared.Silicons.Borgs;
 
@@ -63,6 +65,7 @@ public abstract partial class SharedBorgSystem : EntitySystem
     [Dependency] private readonly SharedHandheldLightSystem _handheldLight = default!;
     [Dependency] private readonly SharedAccessSystem _access = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly GrammarSystem _grammar = default!; // imp
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -174,6 +177,14 @@ public abstract partial class SharedBorgSystem : EntitySystem
 
         if (HasComp<BorgBrainComponent>(args.Entity) && _mind.TryGetMind(args.Entity, out var mindId, out var mind))
         {
+            //IMP EDIT: body-hopping preserves your pronouns!
+            var grammar = EnsureComp<GrammarComponent>(chassis);
+            if (TryComp<GrammarComponent>(args.Entity, out var formerSelf))
+            {
+                _grammar.SetProperNoun((chassis, grammar), true); //it's a person now, it's not just a chassis labeled its name
+                _grammar.SetGender((chassis, grammar), formerSelf.Gender);
+            }
+            //END IMP EDIT
             _mind.TransferTo(mindId, chassis.Owner, mind: mind);
         }
     }
@@ -188,6 +199,13 @@ public abstract partial class SharedBorgSystem : EntitySystem
 
         if (HasComp<BorgBrainComponent>(args.Entity) && _mind.TryGetMind(chassis.Owner, out var mindId, out var mind))
         {
+            //IMP EDIT: an empty vessel is back to being an object
+            if (TryComp<GrammarComponent>(chassis.Owner, out var grammar))
+            {
+                _grammar.SetProperNoun((chassis.Owner, grammar), false);
+                _grammar.SetGender((chassis.Owner, grammar), Gender.Neuter);
+            }
+            //END IMP EDIT
             _mind.TransferTo(mindId, args.Entity, mind: mind);
         }
     }

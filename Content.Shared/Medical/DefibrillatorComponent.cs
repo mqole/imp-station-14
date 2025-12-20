@@ -32,7 +32,7 @@ public sealed partial class DefibrillatorComponent : Component
     /// How long the victim will be electrocuted after getting zapped.
     /// </summary>
     [DataField("writheDuration"), ViewVariables(VVAccess.ReadWrite)]
-    public float WritheDuration = 3f; // imp float
+    public TimeSpan WritheDuration = TimeSpan.FromSeconds(3);
 
     /// <summary>
     ///     ID of the cooldown use delay.
@@ -53,7 +53,7 @@ public sealed partial class DefibrillatorComponent : Component
     /// This is synced with the audio; do not change one but not the other.
     /// </remarks>
     [DataField("doAfterDuration"), ViewVariables(VVAccess.ReadWrite)]
-    public float DoAfterDuration = 3f; // imp, move timespan -> float
+    public TimeSpan DoAfterDuration = TimeSpan.FromSeconds(3);
 
     /// <summary>
     /// Defib only works on mobs with id in this list, or works for anything if this list is null #IMP

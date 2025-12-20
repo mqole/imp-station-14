@@ -153,7 +153,7 @@ public sealed class DefibrillatorSystem : EntitySystem
 
         if (component.PlayChargeSound) // imp if
             _audio.PlayPvs(component.ChargeSound, uid);
-        return _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, user, TimeSpan.FromSeconds(component.DoAfterDuration), new DefibrillatorZapDoAfterEvent(), // imp doafter -> fromseconds
+        return _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, user, component.DoAfterDuration, new DefibrillatorZapDoAfterEvent(),
             uid, target, uid)
         {
             NeedHand = true,
@@ -198,7 +198,7 @@ public sealed class DefibrillatorSystem : EntitySystem
 
         if (component.PlayZapSound) // imp if
             _audio.PlayPvs(component.ZapSound, uid);
-        _electrocution.TryDoElectrocution(target, null, component.ZapDamage, TimeSpan.FromSeconds(component.WritheDuration), true, ignoreInsulation: true); // imp doafter -> fromseconds
+        _electrocution.TryDoElectrocution(target, null, component.ZapDamage, component.WritheDuration, true, ignoreInsulation: true);
 
         var interacters = new HashSet<EntityUid>();
         _interactionSystem.GetEntitiesInteractingWithTarget(target, interacters);

@@ -13,8 +13,6 @@ using Robust.Shared.Containers;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
-using Robust.Shared.Enums; // imp; for Gender
-using Robust.Shared.GameObjects.Components.Localization; // imp; for Grammar
 
 namespace Content.Server.Silicons.Borgs;
 
@@ -33,7 +31,6 @@ public sealed partial class BorgSystem : SharedBorgSystem
     [Dependency] private readonly ItemSlotsSystem _itemSlotsSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly PowerCellSystem _powerCell = default!;
-    [Dependency] private readonly GrammarSystem _grammar = default!; // imp
 
     public static readonly ProtoId<JobPrototype> BorgJobId = "Borg";
 
