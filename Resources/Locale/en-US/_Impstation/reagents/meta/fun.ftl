@@ -37,3 +37,8 @@ reagent-desc-paprika = A spice like no other, can cause even the most hearty of 
 reagent-name-pulp = Pulp 
 reagent-desc-pulp = The mushed up remains of a wood-based product. Moths are able to derive sustenance from this.
 
+reagent-name-trash = trash
+reagent-desc-trash = A slurry of discarded food, drink and packaging.
+
+reagent-name-something = something
+reagent-desc-something = It's something.

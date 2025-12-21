@@ -44,6 +44,10 @@
         density: 30
         mask:
         - ItemMask
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Slash: 2
   - type: Tag
     tags:
     - Trash
@@ -68,7 +72,8 @@
     slipData:
       launchForwardsMultiplier: 0
   - type: TriggerOnStepTrigger
-  - type: DamageUserOnTrigger
+  - type: DamageOnTrigger
+    targetUser: true
     damage:
       types:
         Piercing: 5
@@ -76,8 +81,6 @@
   - type: StaticPrice
     price: 0
   # imp edits #
-  - type: DamageOtherOnHit
-    meleeDamageMultiplier: 2
   - type: EmbeddableProjectile
     sound: /Audio/Weapons/bladeslice.ogg
     removalTime: 2.5
@@ -96,7 +99,7 @@
   - type: ToolRefinable
     refineResult:
     - id: SheetGlass1
-  - type: DamageUserOnTrigger
+  - type: DamageOnTrigger
     damage:
       types:
         Piercing: 4.5
@@ -132,7 +135,7 @@
     refineResult:
     - id: SheetGlass1
     - id: PartRodMetal1
-  - type: DamageUserOnTrigger
+  - type: DamageOnTrigger
     damage:
       types:
         Piercing: 5.5
@@ -145,6 +148,7 @@
   - type: SolutionContainerManager
     solutions:
       shardrglass:
+        canReact: false # imp don't make kelotane on shard spawn please
         reagents:
         - ReagentId: Silicon
           Quantity: 5 #I don't care enough to divide all of the reinforced glass materials by 2 because reinforced glass shards are due for removal anyways.
@@ -172,7 +176,7 @@
     refineResult:
     - id: SheetGlass1
     - id: SheetPlasma1
-  - type: DamageUserOnTrigger
+  - type: DamageOnTrigger
     damage:
       types:
         Piercing: 6.5
@@ -211,7 +215,7 @@
     refineResult:
     - id: SheetGlass1
     - id: SheetUranium1
-  - type: DamageUserOnTrigger
+  - type: DamageOnTrigger
     damage:
       types:
         Piercing: 5
@@ -246,14 +250,10 @@
     refineResult:
     - id: SheetGlass1
     - id: SheetBrass1
-  - type: DamageUserOnTrigger
+  - type: DamageOnTrigger
     damage:
       types:
         Piercing: 5
-  - type: Tag
-    tags:
-      - ClockworkGlassShard
-      - Trash
   - type: Extractable
     grindableSolutionName: shardcglass
   - type: SolutionContainerManager

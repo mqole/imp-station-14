@@ -2,6 +2,7 @@
   id: Thaven
   name: species-name-thaven
   roundStart: true
+  randomViable: true
   prototype: MobThaven
   sprites: MobThavenSprites
   defaultSkinTone: "#ffffff"
@@ -15,6 +16,9 @@
   - Male
   - Female
   - Unsexed
+  youngAge: 40
+  oldAge: 60
+  ancientAge: 80
 
 - type: speciesBaseSprites
   id: MobThavenSprites

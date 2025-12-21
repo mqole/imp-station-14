@@ -2,6 +2,7 @@
   id: Decapoid
   name: species-name-decapoid
   roundStart: true
+  randomViable: true
   prototype: MobDecapoid
   sprites: MobDecapoidSprites
   defaultSkinTone: "#385878"
@@ -13,6 +14,9 @@
   lastNames: NamesDecapoidLast
   sexes:
   - Unsexed
+  youngAge: 40
+  oldAge: 80
+  ancientAge: 200
 
 - type: speciesBaseSprites
   id: MobDecapoidSprites

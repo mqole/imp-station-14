@@ -8,10 +8,11 @@
     useDelay: 15
     itemIconStyle: NoItem
     icon:
-      sprite: _Goobstation/Heretic/abilities_heretic.rsi
+      sprite: _Impstation/Heretic/abilities_heretic.rsi
       state: void_blast
   - type: TargetAction
     range: 0
+    checkCanAccess: false
   - type: WorldTargetAction
     event: !type:HereticVoidBlastEvent
   - type: HereticAction
@@ -28,10 +29,11 @@
     useDelay: 15
     itemIconStyle: NoItem
     icon:
-      sprite: _Goobstation/Heretic/abilities_heretic.rsi
+      sprite: _Impstation/Heretic/abilities_heretic.rsi
       state: void_phase
   - type: TargetAction
     range: 0
+    checkCanAccess: false
   - type: WorldTargetAction
     event: !type:HereticVoidBlinkEvent
   - type: HereticAction
@@ -48,7 +50,7 @@
     useDelay: 20
     itemIconStyle: NoItem
     icon:
-      sprite: _Goobstation/Heretic/abilities_heretic.rsi
+      sprite: _Impstation/Heretic/abilities_heretic.rsi
       state: void_pull
   - type: InstantAction
     event: !type:HereticVoidPullEvent

@@ -1,10 +1,9 @@
 using Content.Server.Body.Systems;
 using Content.Server.Destructible;
-using Content.Server.Examine;
 using Content.Server.Polymorph.Components;
 using Content.Server.Popups;
 using Content.Shared.Body.Components;
-using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.Popups;
 using Robust.Shared.Audio.Systems;
@@ -14,7 +13,7 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
-using Robust.Shared.Timing;
+using Robust.Shared.Timing; // imp
 
 namespace Content.Server.ImmovableRod;
 
@@ -30,14 +29,14 @@ public sealed class ImmovableRodSystem : EntitySystem
     [Dependency] private readonly DestructibleSystem _destructible = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedMapSystem _map = default!;
-    [Dependency] private readonly IGameTiming _gameTiming = default!;
+    [Dependency] private readonly IGameTiming _gameTiming = default!; // imp
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
         // we are deliberately including paused entities. rod hungers for all
-        foreach (var (rod, trans) in EntityManager.EntityQuery<ImmovableRodComponent, TransformComponent>(true))
+        foreach (var (rod, trans) in EntityQuery<ImmovableRodComponent, TransformComponent>(true))
         {
             if (!rod.DestroyTiles)
                 continue;
@@ -60,7 +59,7 @@ public sealed class ImmovableRodSystem : EntitySystem
 
     private void OnMapInit(EntityUid uid, ImmovableRodComponent component, MapInitEvent args)
     {
-        if (EntityManager.TryGetComponent(uid, out PhysicsComponent? phys))
+        if (TryComp(uid, out PhysicsComponent? phys))
         {
             _physics.SetLinearDamping(uid, phys, 0f);
             _physics.SetFriction(uid, phys, 0f);
@@ -117,11 +116,13 @@ public sealed class ImmovableRodSystem : EntitySystem
         if (TryComp<BodyComponent>(ent, out var body))
         {
             component.MobCount++;
+            // imp edit start
             if (_gameTiming.CurTime >= component.NextEviscerationPopup)
             {
                 _popup.PopupEntity(Loc.GetString(component.EviscerationPopup, ("rod", uid), ("mob", ent)), uid, PopupType.LargeCaution);
                 component.NextEviscerationPopup = _gameTiming.CurTime + component.EviscerationPopupDelay;
             }
+            // imp edit end
 
             if (!component.ShouldGib)
             {

@@ -11,8 +11,6 @@ namespace Content.Client.Clothing.Systems;
 // All valid items for chameleon are calculated on client startup and stored in dictionary.
 public sealed class ChameleonClothingSystem : SharedChameleonClothingSystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-
     public override void Initialize()
     {
         base.Initialize();
@@ -41,6 +39,7 @@ public sealed class ChameleonClothingSystem : SharedChameleonClothingSystem
         {
             sprite.CopyFrom(otherSprite);
         }
+
         // Edgecase for PDAs to include visuals when UI is open
         if (TryComp(uid, out PdaBorderColorComponent? borderColor)
             && proto.TryGetComponent(out PdaBorderColorComponent? otherBorderColor, Factory))

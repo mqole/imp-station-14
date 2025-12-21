@@ -11,6 +11,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using System.Linq;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Heretic.Abilities;
 
@@ -73,7 +74,7 @@ public sealed partial class HereticAbilitySystem : EntitySystem
 
     private void OnVoidBlink(Entity<HereticComponent> ent, ref HereticVoidBlinkEvent args)
     {
-        if (!TryUseAbility(ent, args))
+        if (!TryUseAbility(ent, args) || !_interaction.InRangeUnobstructed(args.Performer, args.Target, range:1000F, collisionMask:CollisionGroup.Opaque, popup: true))
             return;
 
         _aud.PlayPvs(new SoundPathSpecifier("/Audio/Effects/tesla_consume.ogg"), ent);
@@ -111,7 +112,7 @@ public sealed partial class HereticAbilitySystem : EntitySystem
             var damage = (dmgComp.TotalDamage + 20f) / _prot.EnumeratePrototypes<DamageTypePrototype>().Count();
 
             // apply gaming.
-            _dmg.SetAllDamage(pookie, dmgComp, damage);
+            _dmg.SetAllDamage((pookie, dmgComp), damage);
         }
 
         // stun close-mid range

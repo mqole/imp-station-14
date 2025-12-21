@@ -5,6 +5,7 @@ using Content.Server.Maps;
 using Content.Server.Power.Components;
 using Content.Server.Power.NodeGroups;
 using Content.Server.Power.Pow3r;
+using Content.Shared.Power.Components;
 using Content.Shared.NodeContainer;
 using Robust.Shared.EntitySerialization;
 
@@ -20,25 +21,61 @@ public sealed class StationPowerTests
 
     private static readonly string[] GameMaps =
     [
-        "Fland",
-        "Meta",
-        "Packed",
-        "Omega",
-        "Bagel",
-        "Box",
-        "Core",
-        "Marathon",
-        "Saltern",
-        "Reach",
-        "Train",
-        "Oasis",
-        "Gate",
-        "Amber",
-        "Loop",
-        "Plasma",
-        "Elkridge",
-        "Convex",
-        "Relic",
+        // WIZDEN PROTOTYPES, ONES COMMENTED OUT ARE IN ignoredPrototypes.yml:
+        //"Fland",
+        //"Meta",
+        //"Packed",
+        //"Omega",
+        //"Bagel",
+        //"Box",
+        //"Core",
+        //"Marathon",
+        //"Saltern",
+        //"Reach",
+        //"Train",
+        //"Oasis",
+        //"Gate",
+        //"Amber",
+        //"Loop",
+        //"Plasma",
+        //"Elkridge",
+        //"Convex",
+        //"Relic",
+
+        // IMP PROTOTYPES:
+        "AmberImp",
+        "BagelImp",
+        "Banana",
+        "Barratry",
+        "Bedlam",
+        "Boat",
+        "BoxImp",
+        "CentCommImp",
+        "CogImp",
+        "CoreImp",
+        "E1M1",
+        "ElkridgeImp",
+        "GateImp",
+        "Hash",
+        "Hummingbird",
+        "Lilboat",
+        "Luna",
+        "MarathonImp",
+        "OasisImp",
+        "PackedImp",
+        "PlasmaImp",
+        "ReachImp",
+        "RelicImp",
+        "SalternImp",
+        "Submarine",
+        "TrainImp",
+        "Xeno",
+
+        // NOT IN ROTATION BUT WE STILL NEED THEM TESTED SINCE THEY STILL HAVE A PROTOTYPE:
+        "Eclipse",
+        "Refsdal",
+        "Skimmer",
+        "Union",
     ];
 
     [Test, TestCaseSource(nameof(GameMaps))]

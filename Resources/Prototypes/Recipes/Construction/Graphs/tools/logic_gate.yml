@@ -46,13 +46,8 @@
         doAfter: 1
     - to: memory_cell
       steps:
-      - tag: MicroManipulatorStockPart
-        icon:
-          sprite: Objects/Misc/stock_parts.rsi
-          state: micro_mani
-        name: construction-graph-tag-manipulator
-      - material: Manipulator
-        amount: 1
+      - material: Capacitor # imp Manipulator>Capacitor
+        amount: 2
       - material: Cable
         amount: 2
         doAfter: 1
@@ -103,7 +98,7 @@
         doAfter: 2
       completed:
       - !type:SpawnPrototype
-        prototype: MicroManipulatorStockPart
+        prototype: CapacitorStockPart # imp MicroManipulatorStockPart>CapacitorStockPart
       - !type:SpawnPrototype
         prototype: CableApcStack1
         amount: 2

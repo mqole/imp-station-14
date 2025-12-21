@@ -28,6 +28,9 @@ using Robust.Shared.Map.Components;
 using Content.Shared.Maps;
 using Robust.Shared.Map;
 using Robust.Shared.Random;
+using Robust.Shared.Containers;
+using Content.Shared.Storage.Components;
+using Content.Shared.Storage.EntitySystems;
 
 namespace Content.Shared._Impstation.Replicator;
 
@@ -46,7 +49,6 @@ public abstract class SharedReplicatorNestSystem : EntitySystem
     [Dependency] private readonly SharedMindSystem _mind = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedStunSystem _stun = default!;
-    [Dependency] private readonly StepTriggerSystem _stepTrigger = default!;
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
     [Dependency] private readonly ThrowingSystem _throwing = default!;
@@ -55,12 +57,11 @@ public abstract class SharedReplicatorNestSystem : EntitySystem
     [Dependency] private readonly TileSystem _tile = default!;
     [Dependency] private readonly SharedAmbientSoundSystem _ambientSound = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
+    [Dependency] private readonly SharedEntityStorageSystem _entStorage = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        SubscribeLocalEvent<ReplicatorNestComponent, StepTriggeredOffEvent>(OnStepTriggered);
 
         SubscribeLocalEvent<ReplicatorComponent, ReplicatorUpgradeActionEvent>(OnUpgrade);
     }
@@ -84,44 +85,7 @@ public abstract class SharedReplicatorNestSystem : EntitySystem
         }
     }
 
-    private void OnStepTriggered(Entity<ReplicatorNestComponent> ent, ref StepTriggeredOffEvent args)
-    {
-        // dont accept if they are already falling
-        if (HasComp<ReplicatorNestFallingComponent>(args.Tripper))
-            return;
-
-        // *reject* if blacklisted
-        if (_whitelist.IsBlacklistPass(ent.Comp.Blacklist, args.Tripper))
-        {
-            if (TryComp<PullableComponent>(args.Tripper, out var pullable) && pullable.BeingPulled)
-                _pulling.TryStopPull(args.Tripper, pullable);
-
-            var xform = Transform(ent);
-            var xformQuery = GetEntityQuery<TransformComponent>();
-            var worldPos = _xform.GetWorldPosition(xform, xformQuery);
-
-            var direction = _xform.GetWorldPosition(args.Tripper, xformQuery) - worldPos;
-            _throwing.TryThrow(args.Tripper, direction * 10, 7, ent, 0);
-            return;
-        }
-
-        var isReplicator = HasComp<ReplicatorComponent>(args.Tripper);
-
-        // Allow dead replicators regardless of current level.
-        if (TryComp<MobStateComponent>(args.Tripper, out var mobState) && isReplicator && _mobState.IsDead(args.Tripper))
-        {
-            StartFalling(ent, args.Tripper);
-            return;
-        }
-
-        // Don't allow living beings. If you want those sweet bonus points, you have to kill.
-        if (mobState != null && _mobState.IsAlive(args.Tripper))
-            return;
-
-        StartFalling(ent, args.Tripper);
-    }
-
-    private void StartFalling(Entity<ReplicatorNestComponent> ent, EntityUid tripper, bool playSound = true)
+    public void StartFalling(Entity<ReplicatorNestComponent> ent, EntityUid tripper, bool playSound = true)
     {
         HandlePoints(ent, tripper);
 
@@ -281,25 +245,22 @@ public abstract class SharedReplicatorNestSystem : EntitySystem
         if (_net.IsClient || !_timing.IsFirstTimePredicted)
             return;
 
-        foreach (var replicator in ent.Comp.SpawnedMinions)
+        // this upgrades *all living replicators.* all nests are one hive
+        var query = EntityQueryEnumerator<ReplicatorComponent, MindContainerComponent>();
+        while (query.MoveNext(out var uid, out var replicatorComp, out var mindContainerComp))
         {
-            if (!TryComp<ReplicatorComponent>(replicator, out var comp) || comp.UpgradeActions.Count == 0)
+            if (replicatorComp.UpgradeActions.Count == 0 || replicatorComp.HasBeenGivenUpgradeActions == true || mindContainerComp.Mind == null)
                 continue;
 
-            if (comp.HasBeenGivenUpgradeActions == true)
-                continue;
-
-            if (!TryComp<MindContainerComponent>(replicator, out var mindContainer) || mindContainer.Mind == null)
-                continue;
-
-            foreach (var action in comp.UpgradeActions)
+            foreach (var action in replicatorComp.UpgradeActions)
             {
-                if (!mindContainer.HasMind)
-                    comp.Actions.Add(_actions.AddAction(replicator, action));
-                else if (mindContainer.Mind != null)
-                    comp.Actions.Add(_actionContainer.AddAction((EntityUid)mindContainer.Mind, action));
+                if (!mindContainerComp.HasMind)
+                    replicatorComp.Actions.Add(_actions.AddAction(uid, action));
+                else
+                    replicatorComp.Actions.Add(_actionContainer.AddAction((EntityUid)mindContainerComp.Mind, action));
             }
-            comp.HasBeenGivenUpgradeActions = true;
+
+            replicatorComp.HasBeenGivenUpgradeActions = true;
         }
     }
 
