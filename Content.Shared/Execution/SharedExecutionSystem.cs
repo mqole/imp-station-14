@@ -14,6 +14,11 @@ using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Interaction.Events;
 using Robust.Shared.Player;
 using Robust.Shared.Audio.Systems;
+using Content.Shared.Weapons.Ranged.Components;
+using Robust.Shared.Containers;
+using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Weapons.Ranged.Events;
+using Content.Shared.Weapons.Ranged.Systems;
 
 namespace Content.Shared.Execution;
 
@@ -31,6 +36,10 @@ public sealed class SharedExecutionSystem : EntitySystem
     [Dependency] private readonly SharedCombatModeSystem _combat = default!;
     [Dependency] private readonly SharedExecutionSystem _execution = default!;
     [Dependency] private readonly SharedMeleeWeaponSystem _melee = default!;
+    [Dependency] private readonly ItemSlotsSystem _itemSlots = default!; // IMP
+    [Dependency] private readonly SharedGunSystem _gun = default!; // IMP
+
+    private const string ChamberSlot = "gun_chamber"; // IMP, WHY IS THIS NOT A DATAFIELD IN GUNCOMPONENT?????????
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -71,15 +80,22 @@ public sealed class SharedExecutionSystem : EntitySystem
         if (!CanBeExecuted(victim, attacker))
             return;
 
+        // IMP: determine which execution verbs to use
+        var internalSelfPopup = comp.GunExecute ? comp.InternalSelfRangedExecutionMessage : comp.InternalSelfExecutionMessage;
+        var externalSelfPopup = comp.GunExecute ? comp.ExternalSelfRangedExecutionMessage : comp.ExternalSelfExecutionMessage;
+        var internalPopup = comp.GunExecute ? comp.InternalRangedExecutionMessage : comp.InternalMeleeExecutionMessage;
+        var externalPopup = comp.GunExecute ? comp.ExternalRangedExecutionMessage : comp.ExternalMeleeExecutionMessage;
+        // END IMP
+
         if (attacker == victim)
         {
-            ShowExecutionInternalPopup(comp.InternalSelfExecutionMessage, attacker, victim, weapon);
-            ShowExecutionExternalPopup(comp.ExternalSelfExecutionMessage, attacker, victim, weapon);
+            ShowExecutionInternalPopup(internalSelfPopup, attacker, victim, weapon); // imp variable popup
+            ShowExecutionExternalPopup(externalSelfPopup, attacker, victim, weapon); // imp variable popup
         }
         else
         {
-            ShowExecutionInternalPopup(comp.InternalMeleeExecutionMessage, attacker, victim, weapon);
-            ShowExecutionExternalPopup(comp.ExternalMeleeExecutionMessage, attacker, victim, weapon);
+            ShowExecutionInternalPopup(internalPopup, attacker, victim, weapon); // imp variable popup
+            ShowExecutionExternalPopup(externalPopup, attacker, victim, weapon); // imp variable popup
         }
 
         var doAfter =
@@ -188,8 +204,17 @@ public sealed class SharedExecutionSystem : EntitySystem
         if (args.Handled || args.Cancelled || args.Used == null || args.Target == null)
             return;
 
-        if (!TryComp<MeleeWeaponComponent>(entity, out var meleeWeaponComp))
-            return;
+        // IMP START, gun execute
+        if (entity.Comp.GunExecute)
+        {
+            if (!TryComp<GunComponent>(entity, out var gun) ||
+                !_gun.CanShoot(gun) ||
+                _gun.GetAmmoCount(entity) > 0)
+                return;
+        }
+        else // END IMP
+            if (!TryComp<MeleeWeaponComponent>(entity, out /* IMP REPLACE 'var meleeWeaponComp' with discard*/_))
+                return;
 
         var attacker = args.User;
         var victim = args.Target.Value;
@@ -203,8 +228,17 @@ public sealed class SharedExecutionSystem : EntitySystem
         _combat.SetInCombatMode(attacker, true);
         entity.Comp.Executing = true;
 
-        var internalMsg = entity.Comp.CompleteInternalMeleeExecutionMessage;
-        var externalMsg = entity.Comp.CompleteExternalMeleeExecutionMessage;
+        // IMP EDIT: ternary assignments
+        var internalMsg = entity.Comp.GunExecute ?
+            entity.Comp.CompleteInternalRangedExecutionMessage :
+            entity.Comp.CompleteInternalMeleeExecutionMessage;
+        var externalMsg = entity.Comp.GunExecute ?
+            entity.Comp.CompleteExternalRangedExecutionMessage :
+            entity.Comp.CompleteExternalMeleeExecutionMessage;
+        // END IMP
+
+        // IMP ADD: bool check to see if the execution goes through
+        bool attackSuccess = false;
 
         if (attacker == victim)
         {
@@ -216,17 +250,78 @@ public sealed class SharedExecutionSystem : EntitySystem
         }
         else
         {
-            _melee.AttemptLightAttack(attacker, weapon, meleeWeaponComp, victim);
+            // IMP EDIT START: adding gun execute logic, adding attackSuccess to melee check
+            if (entity.Comp.GunExecute &&
+                TryComp<GunComponent>(entity, out var gun))
+                attackSuccess = TryGunExecution(attacker, (entity, gun));
+            else if (TryComp<MeleeWeaponComponent>(entity, out var meleeWeaponComp))
+                attackSuccess = _melee.AttemptLightAttack(attacker, weapon, meleeWeaponComp, victim);
+            // IMP END
         }
 
         _combat.SetInCombatMode(attacker, prev);
         entity.Comp.Executing = false;
         args.Handled = true;
 
-        if (attacker != victim)
+        if (attacker != victim
+            && attackSuccess) // IMP ADD
         {
             _execution.ShowExecutionInternalPopup(internalMsg, attacker, victim, entity);
             _execution.ShowExecutionExternalPopup(externalMsg, attacker, victim, entity);
         }
+    }
+
+    // IMP ADDITION
+    private bool TryGunExecution(EntityUid user, Entity<GunComponent> gun)
+    {
+        // jesus christ ok we cannot just use AttemptShoot because someone might get in the way of the execution bullet,
+        // so we have to SIMULATE the shot. in a stupid hacky way.
+        var prevention = new ShotAttemptedEvent
+        {
+            User = user,
+            Used = gun
+        };
+        RaiseLocalEvent(gun, ref prevention);
+        if (prevention.Cancelled)
+            return false;
+        RaiseLocalEvent(user, ref prevention);
+        if (prevention.Cancelled)
+            return false;
+
+        var attemptEv = new AttemptShootEvent(user, null);
+        RaiseLocalEvent(gun, ref attemptEv);
+        if (attemptEv.Cancelled)
+        {
+            if (attemptEv.Message != null)
+                _popup.PopupClient(attemptEv.Message, gun, user);
+            return false;
+        }
+
+        // Remove ammo
+        var fromCoordinates = Transform(user).Coordinates;
+        var ev = new TakeAmmoEvent(1/*SORRY.*/, [], fromCoordinates, user);
+        RaiseLocalEvent(gun, ev);
+        var updateClientAmmoEvent = new UpdateClientAmmoEvent();
+        RaiseLocalEvent(gun, ref updateClientAmmoEvent);
+
+        // GOD I WISH SHAREDGUNSYSTEM WAS MORE MODULAR!!!!!!!!
+        if (ev.Ammo.Count <= 0)
+        {
+            // triggers effects on the gun if it's empty
+            var emptyGunShotEvent = new OnEmptyGunShotEvent(user);
+            RaiseLocalEvent(gun, ref emptyGunShotEvent);
+
+            // Play empty gun sounds if relevant
+            _popup.PopupClient(ev.Reason ?? Loc.GetString("gun-magazine-fired-empty"), gun, user);
+
+            _audio.PlayPredicted(gun.Comp.SoundEmpty, gun, user);
+
+            return false;
+        }
+
+        // Shot confirmed. here we fucking go
+        // MQ NOTE: this is the point where i had to get out of my chair and stand outside and look at the sky recontemplating my life decisions for 30 minutes
+
+        return true;
     }
 }

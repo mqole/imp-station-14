@@ -74,4 +74,60 @@ public sealed partial class ExecutionComponent : Component
     /// </summary>
     [DataField]
     public bool Executing = false;
+
+    // IMP START
+
+    /// <summary>
+    ///     Should this weapon try and use its stored ammunition to execute?
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool GunExecute;
+
+    /// <summary>
+    /// Shown to the person performing the ranged execution (attacker) upon starting a ranged execution.
+    /// </summary>
+    [DataField]
+    public LocId InternalRangedExecutionMessage = "execution-popup-ranged-initial-internal";
+
+    /// <summary>
+    /// Shown to bystanders and the victim of a ranged execution when a ranged execution is started.
+    /// </summary>
+    [DataField]
+    public LocId ExternalRangedExecutionMessage = "execution-popup-ranged-initial-external";
+
+    /// <summary>
+    /// Shown to the attacker upon completion of a ranged execution.
+    /// </summary>
+    [DataField]
+    public LocId CompleteInternalRangedExecutionMessage = "execution-popup-ranged-complete-internal";
+
+    /// <summary>
+    /// Shown to bystanders and the victim of a ranged execution when a ranged execution is completed.
+    /// </summary>
+    [DataField]
+    public LocId CompleteExternalRangedExecutionMessage = "execution-popup-ranged-complete-external";
+
+    /// <summary>
+    /// Shown to the person performing the ranged self execution when starting one.
+    /// </summary>
+    [DataField]
+    public LocId InternalSelfRangedExecutionMessage = "execution-popup-self-ranged-initial-internal";
+
+    /// <summary>
+    /// Shown to bystanders near a ranged self execution when one is started.
+    /// </summary>
+    [DataField]
+    public LocId ExternalSelfRangedExecutionMessage = "execution-popup-self-ranged-initial-external";
+
+    /// <summary>
+    /// Shown to the person performing a ranged self execution upon completion of a do-after or on use of /suicide with a weapon that has the Execution component.
+    /// </summary>
+    [DataField]
+    public LocId CompleteInternalRangedSelfExecutionMessage = "execution-popup-self-ranged-complete-internal";
+
+    /// <summary>
+    /// Shown to bystanders when a ranged self execution is completed or a suicide via execution weapon happens nearby.
+    /// </summary>
+    [DataField]
+    public LocId CompleteExternalRangedSelfExecutionMessage = "execution-popup-self-ranged-complete-external";
 }
