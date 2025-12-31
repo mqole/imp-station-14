@@ -110,6 +110,11 @@ public sealed class TegSystem : EntitySystem
             {
                 args.PushMarkup(Loc.GetString("teg-generator-examine-power", ("power", supplier.CurrentSupply)));
                 args.PushMarkup(Loc.GetString("teg-generator-examine-power-max-output", ("power", supplier.MaxSupply)));
+
+                // IMP ADD: TEG AMBIENT HEAT
+                // locales in divisors of 7 minutes- maxes out at 35 minutes (5 diff strings).
+                var uptime = MathF.Min(MathF.Round(component.Uptime / 7), 35);
+                args.PushMarkup(Loc.GetString("teg-generator-examine-uptime", ("uptime", uptime)));
             }
         }
     }
@@ -208,6 +213,14 @@ public sealed class TegSystem : EntitySystem
         // Turn energy (at atmos tick rate) into wattage.
         var power = electricalEnergy / args.dt;
 
+        // IMP ADD- TEG AMBIENT HEAT
+        if (power > 0f)
+            component.Uptime += args.dt;
+        else
+            component.Uptime = MathF.Max(component.Uptime - args.dt * component.BaseAmbientHeatFactor, 0f);
+        AmbientHeat((uid, component), power);
+        // END IMP
+
         // Add ramp factor. This magics slight power into existence, but allows us to ramp up.
         // Also apply an exponential moving average to smooth out fluttering, as it was causing
         // seizures.
@@ -226,6 +239,25 @@ public sealed class TegSystem : EntitySystem
         _atmosphere.Merge(outletB.Air, airB);
 
         UpdateAppearance(uid, component, powerReceiver, tegGroup);
+    }
+
+    // IMP ADD
+    /// <summary>
+    ///     Adds temperature to the atmosphere of the TEG generator entity, scaling based on the amount of power produced.
+    /// </summary>
+    /// <remarks>
+    ///     All the math here is really arbitrary. sorry im not a numbers pervert -mq
+    /// </remarks>
+    private void AmbientHeat(Entity<TegGeneratorComponent> ent, float power)
+    {
+        // if this method is running, then we have already fully built and powered the TEG. no need to check that.
+        ent.Comp.AmbientHeatFactor = MathF.Pow(ent.Comp.BaseAmbientHeatFactor, ent.Comp.Uptime / 100f);
+
+        var temp = power / 100f * ent.Comp.AmbientHeatFactor;
+        var mix = _atmosphere.GetContainingMixture(ent.Owner, true, true);
+
+        if (mix is not null)
+            _atmosphere.AddHeat(mix, temp);
     }
 
     private void UpdateAppearance(

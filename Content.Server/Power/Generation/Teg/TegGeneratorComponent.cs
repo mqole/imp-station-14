@@ -81,4 +81,23 @@ public sealed partial class TegGeneratorComponent : Component
     /// </summary>
     [DataField]
     public float PowerSmoothingFactor = 0.2f;
+
+    // IMP ADD START HERE!
+    /// <summary>
+    ///     Base factor used to calculate temperature of ambient heat output.
+    /// </summary>
+    [DataField]
+    public float BaseAmbientHeatFactor = 5f;
+
+    /// <summary>
+    ///     Factor used to calculate temperature of ambient heat output. Modulates according to time the TEG has been producing power.
+    /// </summary>
+    [DataField]
+    public float AmbientHeatFactor = 5f;
+
+    /// <summary>
+    ///     Time the TEG has spent producing power. Will exponentially affect the temperature of ambient heat output.
+    /// </summary>
+    [DataField]
+    public float Uptime = 0f;
 }
