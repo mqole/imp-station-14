@@ -370,6 +370,11 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
         // IMP ADD: send message to admin channel, exclude content so we dont clog chat
         _chatMan.SendAdminAnnouncement($"{ToPrettyString(card):user} sent NanoChat message to {recipientsText} {(deliveryFailed ? " [DELIVERY FAILED]" : "")}");
 
+        // and send info to our logging
+        AddMessageToAdminLog(card, recipients, message, msg);
+
+        // END IMP
+
         _adminLogger.Add(LogType.Chat,
             LogImpact.Low,
             $"{ToPrettyString(card):user} sent NanoChat message to {recipientsText}: {content}{(deliveryFailed ? " [DELIVERY FAILED]" : "")}");
@@ -718,4 +723,18 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
             listNumber);
         _cartridge.UpdateCartridgeUiState(loader, state);
     }
+
+    #region imp add
+    // all below is imp addition
+
+    /// <summary>
+    ///     Adds this message to the in-game NanoChat log viewer.
+    /// </summary>
+    private void AddMessageToAdminLog(Entity<NanoChatCardComponent> card, List<Entity<NanoChatCardComponent>> recipients, NanoChatMessage message, NanoChatUiMessageEvent msg)
+    {
+        var sender = msg.User;
+
+    }
+
+    #endregion
 }
