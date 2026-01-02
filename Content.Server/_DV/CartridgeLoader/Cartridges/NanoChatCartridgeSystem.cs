@@ -15,6 +15,7 @@ using Content.Shared.Radio.Components;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Server.Chat.Managers; // imp
 using Content.Shared.Silicons.Borgs.Components; // Impstation
 using Content.Shared.Silicons.StationAi; // Impstation
 
@@ -30,6 +31,7 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     [Dependency] private readonly SharedNanoChatSystem _nanoChat = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly StationSystem _station = default!;
+    [Dependency] private readonly IChatManager _chatMan = default!;
 
     // Messages in notifications get cut off after this point
     // no point in storing it on the comp
@@ -364,6 +366,9 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
         var recipientsText = recipients.Count > 0
             ? string.Join(", ", recipients.Select(r => ToPrettyString(r)))
             : $"#{msg.RecipientNumber:D4}";
+
+        // IMP ADD: send message to admin channel, exclude content so we dont clog chat
+        _chatMan.SendAdminAnnouncement($"{ToPrettyString(card):user} sent NanoChat message to {recipientsText} {(deliveryFailed ? " [DELIVERY FAILED]" : "")}");
 
         _adminLogger.Add(LogType.Chat,
             LogImpact.Low,
