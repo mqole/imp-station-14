@@ -10,7 +10,8 @@ using Content.Shared.Popups;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
 using System.Text;
-using Content.Shared._DV.NanoChat; // dv
+using Content.Shared._DV.NanoChat;
+using Content.Shared.PDA; // dv
 
 namespace Content.Server.CartridgeLoader.Cartridges;
 
@@ -54,6 +55,16 @@ public sealed partial class LogProbeCartridgeSystem : EntitySystem // DeltaV - M
             return;
         }
         // DeltaV end
+        // IMP ADD- more nanochat card scanning
+        else if (TryComp<PdaComponent>(target, out var pda)
+            && pda.ContainedId is { } pdaId
+            && TryComp<NanoChatCardComponent>(pdaId, out var pdaNanoChatCard))
+        {
+            ScanNanoChatCard(ent, args, pdaId, pdaNanoChatCard);
+            args.InteractEvent.Handled = true;
+            return;
+        }
+        // imp end
 
         if (!TryComp(target, out AccessReaderComponent? accessReaderComponent))
             return;
