@@ -35,6 +35,7 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly StationSystem _station = default!;
     [Dependency] private readonly IChatManager _chatMan = default!;
+    [Dependency] private readonly IEntityManager _entMan = default!; // imp add
     [Dependency] private readonly MindSystem _mind = default!; // imp add
 
     // Messages in notifications get cut off after this point
@@ -749,8 +750,12 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
             return false;
         }
 
+        List<NetEntity> netRecipients = [];
+        foreach (var ent in recipients)
+            netRecipients.Add(_entMan.GetNetEntity(ent));
+
         stationLogs.Logs.Add(new AdminNanoChatLogEntry(
-            user, sender, card, recipients, message));
+            user, _entMan.GetNetEntity(sender), _entMan.GetNetEntity(card), netRecipients, message));
         return true;
     }
 

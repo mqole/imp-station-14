@@ -21,16 +21,16 @@ public sealed class AdminNanoChatLogsEuiState : EuiStateBase
 public sealed class AdminNanoChatLogEntry
 {
     public NetUserId SenderUser { get; }
-    public EntityUid SenderEntity { get; }
-    public Entity<NanoChatCardComponent> Card { get; }
-    public List<Entity<NanoChatCardComponent>>? Recipients { get; }
+    public NetEntity SenderEntity { get; }
+    public NetEntity Card { get; }
+    public List<NetEntity> Recipients { get; }
     public NanoChatMessage Message { get; }
 
     public AdminNanoChatLogEntry(
         NetUserId senderUser,
-        EntityUid senderEntity,
-        Entity<NanoChatCardComponent> card,
-        List<Entity<NanoChatCardComponent>> recipients,
+        NetEntity senderEntity,
+        NetEntity card,
+        List<NetEntity> recipients,
         NanoChatMessage message)
     {
         SenderUser = senderUser;
