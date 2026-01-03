@@ -1,4 +1,6 @@
 - type: soundCollection
-  id: Wilhelm
+  id: ImpWilhelms
   files:
   - "/Audio/Voice/Human/wilhelm_scream.ogg"
+  - "/Audio/_Impstation/Misc/tomscream.ogg"
+  - "/Audio/_Impstation/Misc/worldsloudestorgasm.ogg"
