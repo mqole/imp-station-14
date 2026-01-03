@@ -27,7 +27,6 @@ public sealed partial class VocalComponent : Component
     [AutoNetworkedField]
     public string ScreamId = "Scream";
 
-    /// </summary>
     [DataField("wilhelm")]
     [AutoNetworkedField]
     public SoundSpecifier Wilhelm = new SoundCollectionSpecifier("ImpWilhelms"); // imp :)
