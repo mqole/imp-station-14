@@ -27,9 +27,12 @@ public sealed partial class VocalComponent : Component
     [AutoNetworkedField]
     public string ScreamId = "Scream";
 
+    /// <summary>
+    ///     IMP REWORK: this was a hardcoded SoundPathSpecifier, now it's a SoundCollection
+    /// </summary>
     [DataField("wilhelm")]
     [AutoNetworkedField]
-    public SoundSpecifier Wilhelm = new SoundPathSpecifier("/Audio/Voice/Human/wilhelm_scream.ogg");
+    public SoundCollectionSpecifier Wilhelm = new("Wilhelm");
 
     [DataField("wilhelmProbability")]
     [AutoNetworkedField]
