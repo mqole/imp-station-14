@@ -1,4 +1,4 @@
-using Content.Server._Impstation.Administration.UI;
+using Content.Server._Impstation.NanoChat;
 using Content.Server.Administration;
 using Content.Server.EUI;
 using Content.Shared.Administration;

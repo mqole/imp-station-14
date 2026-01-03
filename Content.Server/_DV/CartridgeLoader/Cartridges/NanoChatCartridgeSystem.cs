@@ -18,6 +18,9 @@ using Robust.Shared.Timing;
 using Content.Server.Chat.Managers; // imp
 using Content.Shared.Silicons.Borgs.Components; // Impstation
 using Content.Shared.Silicons.StationAi; // Impstation
+using Content.Shared._Impstation.Station.Components; // imp
+using Content.Shared._Impstation.NanoChat; // imp
+using Content.Server.Mind; // Impstation
 
 namespace Content.Server._DV.CartridgeLoader.Cartridges;
 
@@ -32,6 +35,7 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly StationSystem _station = default!;
     [Dependency] private readonly IChatManager _chatMan = default!;
+    [Dependency] private readonly MindSystem _mind = default!; // imp add
 
     // Messages in notifications get cut off after this point
     // no point in storing it on the comp
@@ -367,12 +371,12 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
             ? string.Join(", ", recipients.Select(r => ToPrettyString(r)))
             : $"#{msg.RecipientNumber:D4}";
 
-        // IMP ADD: send message to admin channel, exclude content so we dont clog chat
-        _chatMan.SendAdminAnnouncement($"{ToPrettyString(card):user} sent NanoChat message to {recipientsText} {(deliveryFailed ? " [DELIVERY FAILED]" : "")}");
-
-        // and send info to our logging
-        AddMessageToAdminLog(card, recipients, message, msg);
-
+        // IMP ADD: send info to our logging
+        var station = _station.GetOwningStation(msg.User);
+        if (!LogMessageToStation(card, recipients, message, msg.User, station))
+        {
+            Log.Error($"Failed to log NanoChat message: {ToPrettyString(card):user} sent NanoChat message to {recipientsText}: {content}{(deliveryFailed ? " [DELIVERY FAILED]" : "")}");
+        }
         // END IMP
 
         _adminLogger.Add(LogType.Chat,
@@ -729,11 +733,25 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
 
     /// <summary>
     ///     Adds this message to the in-game NanoChat log viewer.
+    ///     We do this by saving the message to the station for a later query.
     /// </summary>
-    private void AddMessageToAdminLog(Entity<NanoChatCardComponent> card, List<Entity<NanoChatCardComponent>> recipients, NanoChatMessage message, NanoChatUiMessageEvent msg)
+    private bool LogMessageToStation(Entity<NanoChatCardComponent> card, List<Entity<NanoChatCardComponent>> recipients, NanoChatMessage message, EntityUid sender, EntityUid? station)
     {
-        var sender = msg.User;
+        if (station is null ||
+            !TryComp<StationNanoChatLogsComponent>(station, out var stationLogs))
+        {
+            return false;
+        }
 
+        if (!_mind.TryGetMind(sender, out _, out var mind) ||
+            mind.UserId is not { } user)
+        {
+            return false;
+        }
+
+        stationLogs.Logs.Add(new AdminNanoChatLogEntry(
+            user, sender, card, recipients, message));
+        return true;
     }
 
     #endregion
