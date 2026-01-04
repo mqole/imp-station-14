@@ -3,8 +3,8 @@
                SetSize="900 500"
                HeaderClass="windowHeaderAlert"
                TitleClass="windowTitleAlert"
-               Title="{Loc 'nanochat-logs-user-title'}" >
-    <PanelContainer StyleClasses="BackgroudDark">
+               Title="{Loc 'nanochat-logs-title'}" >
+    <PanelContainer StyleClasses="BackgroundDark">
         <SplitContainer Orientation="Horizontal"
                         VerticalExpand="True">
             <cc:PlayerListControl Access="Public"
@@ -14,9 +14,15 @@
             <BoxContainer Orientation="Vertical"
                           HorizontalExpand="True"
                           SizeFlagsStretchRatio="2">
-                <BoxContainer Access="Public"
+                <BoxContainer Orientation="Vertical"
+                              Access="Public"
                               Name="MessageArea"
-                              VerticalExpand="True"/>
+                              HorizontalExpand="True"/>
+                <Button Access="Public"
+                        Name="Refresh"
+                        Text="{Loc 'nanochat-logs-refresh'}"
+                        StyleClasses="OpenBoth"
+                        HorizontalAlignment="Right"/>
             </BoxContainer>
         </SplitContainer>
     </PanelContainer>

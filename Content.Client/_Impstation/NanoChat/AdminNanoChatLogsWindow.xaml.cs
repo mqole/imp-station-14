@@ -13,6 +13,7 @@ namespace Content.Client._Impstation.NanoChat;
 [GenerateTypedNameReferences]
 public sealed partial class AdminNanoChatLogsWindow : DefaultWindow
 {
+    public Action? OnRefresh;
     private PlayerInfo? _currentPlayer;
 
     public AdminNanoChatLogsWindow()
@@ -25,6 +26,12 @@ public sealed partial class AdminNanoChatLogsWindow : DefaultWindow
         {
             _currentPlayer = sel;
             PlayerSelector.PlayerListContainer.DirtyList();
+            OnRefresh?.Invoke();
+        };
+
+        Refresh.OnPressed += _ =>
+        {
+            OnRefresh?.Invoke();
         };
     }
 
@@ -65,6 +72,6 @@ public sealed class AdminNanoChatLogLabel : RichTextLabel
 {
     public AdminNanoChatLogLabel(AdminNanoChatLogEntry log)
     {
-        SetMessage($"{log.Message.Timestamp}: {log.SenderEntity} sent to {log.Recipients} '{log.Message}' from {log.Card}");
+        SetMessage($"{log.Message.Timestamp}: {log.SenderEntity} sent to {log.Recipients} '{log.Message.Content}' from {log.Card}");
     }
 }

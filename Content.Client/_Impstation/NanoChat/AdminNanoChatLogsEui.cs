@@ -13,6 +13,10 @@ public sealed class AdminNanoChatLogsEui : BaseEui
     public AdminNanoChatLogsEui()
     {
         _window = new AdminNanoChatLogsWindow();
+        _window.OnClose += () => SendMessage(
+            new AdminNanoChatLogsEuiMsg.Close());
+        _window.OnRefresh += () => SendMessage(
+            new AdminNanoChatLogsEuiMsg.RefreshLogs());
     }
 
     public override void Opened()

@@ -1,5 +1,4 @@
 using Content.Shared._DV.CartridgeLoader.Cartridges;
-using Content.Shared._DV.NanoChat;
 using Content.Shared.Eui;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization;
@@ -39,4 +38,13 @@ public sealed class AdminNanoChatLogEntry
         Recipients = recipients;
         Message = message;
     }
+}
+
+public static class AdminNanoChatLogsEuiMsg
+{
+    [Serializable, NetSerializable]
+    public sealed class Close : EuiMessageBase { }
+
+    [Serializable, NetSerializable]
+    public sealed class RefreshLogs : EuiMessageBase { }
 }

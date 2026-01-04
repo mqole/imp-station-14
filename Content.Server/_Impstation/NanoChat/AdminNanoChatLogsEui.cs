@@ -1,6 +1,7 @@
 using Content.Server.EUI;
 using Content.Shared._Impstation.NanoChat;
 using Content.Shared._Impstation.Station.Components;
+using Content.Shared.Eui;
 
 namespace Content.Server._Impstation.NanoChat;
 
@@ -30,5 +31,19 @@ public sealed class AdminNanoChatLogsEui : BaseEui
         }
 
         return new AdminNanoChatLogsEuiState(logs);
+    }
+
+    public override void HandleMessage(EuiMessageBase msg)
+    {
+        base.HandleMessage(msg);
+
+        switch (msg)
+        {
+            case AdminNanoChatLogsEuiMsg.RefreshLogs:
+                {
+                    StateDirty();
+                    break;
+                }
+        }
     }
 }
