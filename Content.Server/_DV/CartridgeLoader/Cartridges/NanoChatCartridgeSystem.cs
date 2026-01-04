@@ -15,7 +15,6 @@ using Content.Shared.Radio.Components;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
-using Content.Server.Chat.Managers; // imp
 using Content.Shared.Silicons.Borgs.Components; // Impstation
 using Content.Shared.Silicons.StationAi; // Impstation
 using Content.Shared._Impstation.Station.Components; // imp
@@ -34,8 +33,6 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     [Dependency] private readonly SharedNanoChatSystem _nanoChat = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly StationSystem _station = default!;
-    [Dependency] private readonly IChatManager _chatMan = default!;
-    [Dependency] private readonly IEntityManager _entMan = default!; // imp add
     [Dependency] private readonly MindSystem _mind = default!; // imp add
 
     // Messages in notifications get cut off after this point
@@ -738,24 +735,23 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     /// </summary>
     private bool LogMessageToStation(Entity<NanoChatCardComponent> card, List<Entity<NanoChatCardComponent>> recipients, NanoChatMessage message, EntityUid sender, EntityUid? station)
     {
-        if (station is null ||
-            !TryComp<StationNanoChatLogsComponent>(station, out var stationLogs))
-        {
+        if (station is null || !TryComp<StationNanoChatLogsComponent>(station, out var stationLogs))
             return false;
+
+        if (!_mind.TryGetMind(sender, out _, out var mind) || mind.UserId is not { } user)
+            return false;
+
+        string logRecipients = "";
+        for (var i = 0; i < recipients.Count; i++)
+        {
+            var recipient = recipients[i];
+            if (i > 0)
+                logRecipients += ", ";
+            logRecipients += ToPrettyString(recipient);
         }
 
-        if (!_mind.TryGetMind(sender, out _, out var mind) ||
-            mind.UserId is not { } user)
-        {
-            return false;
-        }
-
-        List<NetEntity> netRecipients = [];
-        foreach (var ent in recipients)
-            netRecipients.Add(_entMan.GetNetEntity(ent));
-
-        stationLogs.Logs.Add(new AdminNanoChatLogEntry(
-            user, _entMan.GetNetEntity(sender), _entMan.GetNetEntity(card), netRecipients, message));
+        var logMessage = $"{message.Timestamp}: {ToPrettyString(sender)} using {ToPrettyString(card)} sent to {logRecipients}: '{message.Content}'";
+        stationLogs.Logs.Add(new AdminNanoChatLogEntry(user, logMessage));
         return true;
     }
 

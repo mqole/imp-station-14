@@ -1,4 +1,3 @@
-using Content.Shared._DV.CartridgeLoader.Cartridges;
 using Content.Shared.Eui;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization;
@@ -20,22 +19,13 @@ public sealed class AdminNanoChatLogsEuiState : EuiStateBase
 public sealed class AdminNanoChatLogEntry
 {
     public NetUserId SenderUser { get; }
-    public NetEntity SenderEntity { get; }
-    public NetEntity Card { get; }
-    public List<NetEntity> Recipients { get; }
-    public NanoChatMessage Message { get; }
+    public string Message { get; }
 
     public AdminNanoChatLogEntry(
         NetUserId senderUser,
-        NetEntity senderEntity,
-        NetEntity card,
-        List<NetEntity> recipients,
-        NanoChatMessage message)
+        string message)
     {
         SenderUser = senderUser;
-        SenderEntity = senderEntity;
-        Card = card;
-        Recipients = recipients;
         Message = message;
     }
 }

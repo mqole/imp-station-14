@@ -72,6 +72,6 @@ public sealed class AdminNanoChatLogLabel : RichTextLabel
 {
     public AdminNanoChatLogLabel(AdminNanoChatLogEntry log)
     {
-        SetMessage($"{log.Message.Timestamp}: {log.SenderEntity} sent to {log.Recipients} '{log.Message.Content}' from {log.Card}");
+        SetMessage(log.Message);
     }
 }
