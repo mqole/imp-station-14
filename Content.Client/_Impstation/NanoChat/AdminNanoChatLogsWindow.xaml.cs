@@ -61,7 +61,7 @@ public sealed partial class AdminNanoChatLogsWindow : DefaultWindow
 
         foreach (var log in logs)
         {
-            if (_currentPlayer.SessionId != log.SenderUser)
+            if (_currentPlayer.SessionId != log.Sender)
                 continue;
             MessageArea.AddChild(new AdminNanoChatLogLabel(log));
         }

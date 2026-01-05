@@ -4,6 +4,9 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._Impstation.NanoChat;
 
+/// <summary>
+///     A new EUI state for the Admin NanoChat Logs ui.
+/// </summary>
 [Serializable, NetSerializable]
 public sealed class AdminNanoChatLogsEuiState : EuiStateBase
 {
@@ -15,17 +18,20 @@ public sealed class AdminNanoChatLogsEuiState : EuiStateBase
     }
 }
 
+/// <summary>
+///     A new nanochatlogs entry that will be converted into a rich text label.
+/// </summary>
 [Serializable, NetSerializable]
 public sealed class AdminNanoChatLogEntry
 {
-    public NetUserId SenderUser { get; }
+    public NetUserId Sender { get; }
     public string Message { get; }
 
     public AdminNanoChatLogEntry(
         NetUserId senderUser,
         string message)
     {
-        SenderUser = senderUser;
+        Sender = senderUser;
         Message = message;
     }
 }
