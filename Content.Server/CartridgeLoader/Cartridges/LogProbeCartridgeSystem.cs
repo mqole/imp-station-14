@@ -56,11 +56,18 @@ public sealed partial class LogProbeCartridgeSystem : EntitySystem // DeltaV - M
         }
         // DeltaV end
         // IMP ADD- more nanochat card scanning
-        else if (TryComp<PdaComponent>(target, out var pda)
-            && pda.ContainedId is { } pdaId
-            && TryComp<NanoChatCardComponent>(pdaId, out var pdaNanoChatCard))
+        else if (TryComp<PdaComponent>(target, out var pda))
         {
-            ScanNanoChatCard(ent, args, pdaId, pdaNanoChatCard);
+            if (pda.ContainedId is { } pdaId
+                && TryComp<NanoChatCardComponent>(pdaId, out var pdaNanoChatCard))
+            {
+                ScanNanoChatCard(ent, args, pdaId, pdaNanoChatCard);
+            }
+            else
+            {
+                _popup.PopupCursor(Loc.GetString("log-probe-scan-nanochat-empty-pda", ("pda", target)), args.InteractEvent.User);
+            }
+
             args.InteractEvent.Handled = true;
             return;
         }
