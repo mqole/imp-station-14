@@ -51,6 +51,7 @@
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/flaregun.ogg
 
+
 - type: entity
   name: security shell gun
   parent: [WeaponFlareGun, BaseSecurityContraband]
