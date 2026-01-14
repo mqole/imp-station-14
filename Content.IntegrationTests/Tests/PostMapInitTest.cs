@@ -148,6 +148,7 @@ namespace Content.IntegrationTests.Tests
             "SalternImp",
             "Submarine",
             "TrainImp",
+            "Union",
             "Xeno",
             "Pathway",
             "Whisper",
