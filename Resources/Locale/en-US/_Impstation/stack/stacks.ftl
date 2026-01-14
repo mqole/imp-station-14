@@ -31,6 +31,7 @@ stack-utility-token = utility token
 
 # misc
 stack-tcka-beacon = tck'aat RFID chip
+stack-gasket = gasket
 
 # extra tile color variants
 stack-squiggly = steel squiggly tile
