@@ -1,6 +1,8 @@
 using Content.Shared.Actions;
+using Content.Shared.Store;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
@@ -16,6 +18,19 @@ namespace Content.Shared.VendingMachines
         // Okay so not using ProtoId here is load-bearing because the ProtoId serializer will log errors if the prototype doesn't exist.
         [DataField("pack", customTypeSerializer: typeof(PrototypeIdSerializer<VendingMachineInventoryPrototype>), required: true)]
         public string PackPrototypeId = string.Empty;
+
+        /// <summary>
+        ///     IMP ADD- List of categories that this vending machine can access as an optional store.
+        ///     If this is null, the store will not populate.
+        /// </summary>
+        [DataField]
+        public HashSet<ProtoId<StoreCategoryPrototype>>? StoreCategories;
+
+        /// <summary>
+        /// IMP ADD- The list of currencies that can be inserted into this vending machine.
+        /// </summary>
+        [DataField]
+        public HashSet<ProtoId<CurrencyPrototype>>? CurrencyWhitelist;
 
         /// <summary>
         /// Used by the server to determine how long the vending machine stays in the "Deny" state.

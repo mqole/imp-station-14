@@ -12,6 +12,7 @@ using Content.Client.UserInterface.Controls;
 using Content.Shared.IdentityManagement;
 using Robust.Client.Graphics;
 using Robust.Shared.Utility;
+using Content.Client._Impstation.VendingMachines; // imp
 
 namespace Content.Client.VendingMachines.UI
 {
@@ -24,6 +25,8 @@ namespace Content.Client.VendingMachines.UI
         private readonly Dictionary<EntProtoId, EntityUid> _dummies = [];
         private readonly Dictionary<EntProtoId, (ListContainerButton Button, VendingMachineItem Item)> _listItems = new();
         private readonly Dictionary<EntProtoId, uint> _amounts = new();
+
+        private VendingStoreGui? _storeTab; // imp add
 
         /// <summary>
         /// Whether the vending machine is able to be interacted with or not.
@@ -42,6 +45,14 @@ namespace Content.Client.VendingMachines.UI
             VendingContents.DataFilterCondition += DataFilterCondition;
             VendingContents.GenerateItem += GenerateButton;
             VendingContents.ItemKeyBindDown += (args, data) => OnItemSelected?.Invoke(args, data);
+
+            // IMP ADD START
+            TabContainer.SetTabTitle(0, Loc.GetString("vending-main-tab"));
+
+            _storeTab = new VendingStoreGui();
+            TabContainer.AddChild(_storeTab);
+            TabContainer.SetTabTitle(TabContainer.ChildCount - 1, Loc.GetString("vending-store-tab"));
+            // IMP ADD END
         }
 
         protected override void Dispose(bool disposing)

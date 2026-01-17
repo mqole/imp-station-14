@@ -1645,6 +1645,14 @@
     brokenState: broken
     normalState: normal-unshaded
     soundVend: /Audio/_Impstation/Machines/vending_drop.ogg #imp
+    storeCategories: # IMP ADD
+    - SeclinkBaton
+    - SeclinkDisabler
+    - SeclinkUtility
+    currencyWhitelist: # IMP ADD
+    - BatonToken
+    - DisablerToken
+    - UtilityToken
   - type: DatasetVocalizer
     dataset: SecDrobeAds
   - type: SpeakOnUIClosed
