@@ -20,17 +20,10 @@ namespace Content.Shared.VendingMachines
         public string PackPrototypeId = string.Empty;
 
         /// <summary>
-        ///     IMP ADD- List of categories that this vending machine can access as an optional store.
-        ///     If this is null, the store will not populate.
+        ///     IMP ADD: True if this entity should search for an attached store component to populate UI.
         /// </summary>
         [DataField]
-        public HashSet<ProtoId<StoreCategoryPrototype>>? StoreCategories;
-
-        /// <summary>
-        /// IMP ADD- The list of currencies that can be inserted into this vending machine.
-        /// </summary>
-        [DataField]
-        public HashSet<ProtoId<CurrencyPrototype>>? CurrencyWhitelist;
+        public bool LinkedStore;
 
         /// <summary>
         /// Used by the server to determine how long the vending machine stays in the "Deny" state.

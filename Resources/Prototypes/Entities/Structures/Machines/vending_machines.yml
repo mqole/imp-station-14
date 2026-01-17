@@ -1041,6 +1041,7 @@
     normalState: normal-unshaded
     ejectState: eject-unshaded
     denyState: deny-unshaded
+    linkedStore: true
   - type: DatasetVocalizer
     dataset: SecTechAds
   - type: SpeakOnUIClosed
@@ -1067,6 +1068,15 @@
     - Antagonists
   - type: StealTarget #imp
     stealGroup: SecTech
+  - type: Store # imp
+    categories:
+    - SeclinkBaton
+    - SeclinkDisabler
+    - SeclinkUtility
+    currencyWhitelist:
+    - BatonToken
+    - DisablerToken
+    - UtilityToken
 
 - type: entity
   parent: VendingMachine
@@ -1645,14 +1655,6 @@
     brokenState: broken
     normalState: normal-unshaded
     soundVend: /Audio/_Impstation/Machines/vending_drop.ogg #imp
-    storeCategories: # IMP ADD
-    - SeclinkBaton
-    - SeclinkDisabler
-    - SeclinkUtility
-    currencyWhitelist: # IMP ADD
-    - BatonToken
-    - DisablerToken
-    - UtilityToken
   - type: DatasetVocalizer
     dataset: SecDrobeAds
   - type: SpeakOnUIClosed
