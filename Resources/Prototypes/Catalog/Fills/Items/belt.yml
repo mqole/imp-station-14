@@ -45,7 +45,7 @@
   id: BeltSecurityEntityTable
   table: !type:AllSelector
     children:
-    #- id: Stunbaton  impcluded in SecLink
+    - id: Stunbaton
     - id: Handcuffs
     - id: Handcuffs
     - id: HoloprojectorSecurity

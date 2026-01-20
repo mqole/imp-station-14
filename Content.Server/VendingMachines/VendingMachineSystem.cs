@@ -9,12 +9,14 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Destructible;
 using Content.Shared.Emp;
 using Content.Shared.Power;
+using Content.Shared.Store.Components;
 using Content.Shared.Throwing;
 using Content.Shared.UserInterface;
 using Content.Shared.VendingMachines;
 using Content.Shared.Wall;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Server.Store.Systems; // IMP ADD
 
 namespace Content.Server.VendingMachines
 {
@@ -23,6 +25,8 @@ namespace Content.Server.VendingMachines
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly PricingSystem _pricing = default!;
         [Dependency] private readonly ThrowingSystem _throwingSystem = default!;
+        [Dependency] private readonly StoreSystem _store = default!; // IMP ADD
+
 
         private const float WallVendEjectDistanceFromWall = 1f;
 
@@ -40,6 +44,8 @@ namespace Content.Server.VendingMachines
             SubscribeLocalEvent<VendingMachineComponent, VendingMachineSelfDispenseEvent>(OnSelfDispense);
 
             SubscribeLocalEvent<VendingMachineRestockComponent, PriceCalculationEvent>(OnPriceCalculation);
+
+            SubscribeLocalEvent<VendingMachineComponent, VendingStoreOpenMessage>(OnUiMessage); // IMP ADD
         }
 
         private void OnVendingPrice(EntityUid uid, VendingMachineComponent component, ref PriceCalculationEvent args)
@@ -260,6 +266,12 @@ namespace Content.Server.VendingMachines
         private void OnTryVocalize(Entity<VendingMachineComponent> ent, ref TryVocalizeEvent args)
         {
             args.Cancelled |= ent.Comp.Broken;
+        }
+
+        private void OnUiMessage(Entity<VendingMachineComponent> ent, ref VendingStoreOpenMessage msg)
+        {
+            if (HasComp<StoreComponent>(ent))
+                _store.ToggleUi(msg.Actor, ent);
         }
     }
 }

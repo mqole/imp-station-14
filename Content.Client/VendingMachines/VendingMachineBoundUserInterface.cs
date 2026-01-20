@@ -1,5 +1,6 @@
 using Content.Client.UserInterface.Controls;
 using Content.Client.VendingMachines.UI;
+using Content.Shared.Store.Components;
 using Content.Shared.VendingMachines;
 using Robust.Client.UserInterface;
 using Robust.Shared.Input;
@@ -26,6 +27,11 @@ namespace Content.Client.VendingMachines
             _menu = this.CreateWindowCenteredLeft<VendingMachineMenu>();
             _menu.Title = EntMan.GetComponent<MetaDataComponent>(Owner).EntityName;
             _menu.OnItemSelected += OnItemSelected;
+            // IMP ADD START
+            _menu.StoreButton.OnPressed += _ =>
+            {
+                SendMessage(new VendingStoreOpenMessage());
+            };
             Refresh();
         }
 
@@ -36,7 +42,9 @@ namespace Content.Client.VendingMachines
             var system = EntMan.System<VendingMachineSystem>();
             _cachedInventory = system.GetAllInventory(Owner);
 
-            _menu?.Populate(_cachedInventory, enabled);
+            var hasStore = EntMan.HasComponent<StoreComponent>(Owner); // imp add
+
+            _menu?.Populate(_cachedInventory, enabled, hasStore); // imp add hasStore
         }
 
         public void UpdateAmounts()
