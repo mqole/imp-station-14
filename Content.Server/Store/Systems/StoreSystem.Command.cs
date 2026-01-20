@@ -5,10 +5,11 @@ using Content.Server.Administration;
 using Content.Shared.Administration;
 using Content.Shared.Store.Components;
 using Robust.Shared.Console;
+using Content.Shared.Store; // imp
 
 namespace Content.Server.Store.Systems;
 
-public sealed partial class StoreSystem
+public sealed partial class StoreSystem : SharedStoreSystem // imp shared
 {
     [Dependency] private readonly IConsoleHost _consoleHost = default!;
 

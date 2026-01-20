@@ -11,6 +11,7 @@ using Content.Shared.UserInterface;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Shared.Store; // imp
 
 namespace Content.Server.Store.Systems;
 
@@ -18,7 +19,7 @@ namespace Content.Server.Store.Systems;
 /// Manages general interactions with a store and different entities,
 /// getting listings for stores, and interfacing with the store UI.
 /// </summary>
-public sealed partial class StoreSystem : EntitySystem
+public sealed partial class StoreSystem : SharedStoreSystem // imp shared
 {
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;

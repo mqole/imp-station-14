@@ -1041,6 +1041,14 @@
     normalState: normal-unshaded
     ejectState: eject-unshaded
     denyState: deny-unshaded
+    storeCategories: # imp
+    - SeclinkBaton
+    - SeclinkDisabler
+    - SeclinkUtility
+    currencyWhitelist: # imp
+    - BatonToken
+    - DisablerToken
+    - UtilityToken
     linkedStore: true
   - type: DatasetVocalizer
     dataset: SecTechAds
@@ -1068,15 +1076,6 @@
     - Antagonists
   - type: StealTarget #imp
     stealGroup: SecTech
-  - type: Store # imp
-    categories:
-    - SeclinkBaton
-    - SeclinkDisabler
-    - SeclinkUtility
-    currencyWhitelist:
-    - BatonToken
-    - DisablerToken
-    - UtilityToken
 
 - type: entity
   parent: VendingMachine

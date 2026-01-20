@@ -4,10 +4,11 @@ using Content.Shared.Interaction.Events;
 using Content.Shared.Store.Components;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Containers;
+using Content.Shared.Store; // imp
 
 namespace Content.Server.Store.Systems;
 
-public sealed partial class StoreSystem
+public sealed partial class StoreSystem : SharedStoreSystem // imp shared
 {
     private void InitializeRefund()
     {

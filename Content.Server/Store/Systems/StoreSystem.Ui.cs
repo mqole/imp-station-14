@@ -23,7 +23,7 @@ using Content.Shared.Roles.Components; // imp
 
 namespace Content.Server.Store.Systems;
 
-public sealed partial class StoreSystem
+public sealed partial class StoreSystem : SharedStoreSystem // imp shared
 {
     [Dependency] private readonly IAdminLogManager _admin = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;

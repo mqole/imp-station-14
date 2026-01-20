@@ -10,13 +10,13 @@ using Content.Shared.Emp;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Power.EntitySystems;
-using Content.Shared.Store.Components;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared.Store; // imp
 
 namespace Content.Shared.VendingMachines;
 
@@ -35,6 +35,7 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
     [Dependency] protected readonly SharedUserInterfaceSystem UISystem = default!;
     [Dependency] protected readonly IRobustRandom Randomizer = default!;
     [Dependency] private readonly EmagSystem _emag = default!;
+    [Dependency] private readonly SharedStoreSystem _store = default!;
 
     public override void Initialize()
     {
@@ -75,6 +76,29 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
         {
             contrabandInventory[weh.Key] = new(weh.Value);
         }
+
+        // IMP ADD START. PLEASE DONT ASK
+        if (component.StoreCategories is { } categories &&
+            args.Player is not null &&
+            args.Player.AttachedEntity is { } playerUid)
+        {
+            var store = _store.GetAvailableListings(playerUid, null, categories, entity);
+
+            args.State = new VendingMachineComponentState()
+            {
+                Inventory = inventory,
+                EmaggedInventory = emaggedInventory,
+                ContrabandInventory = contrabandInventory,
+                Contraband = component.Contraband,
+                EjectEnd = component.EjectEnd,
+                DenyEnd = component.DenyEnd,
+                DispenseOnHitEnd = component.DispenseOnHitEnd,
+                Broken = component.Broken,
+                Store = store,
+            };
+            return;
+        }
+        // END IMP
 
         args.State = new VendingMachineComponentState()
         {

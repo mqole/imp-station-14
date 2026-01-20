@@ -20,12 +20,6 @@ namespace Content.Shared.VendingMachines
         public string PackPrototypeId = string.Empty;
 
         /// <summary>
-        ///     IMP ADD: True if this entity should search for an attached store component to populate UI.
-        /// </summary>
-        [DataField]
-        public bool LinkedStore;
-
-        /// <summary>
         /// Used by the server to determine how long the vending machine stays in the "Deny" state.
         /// Used by the client to determine how long the deny animation should be played.
         /// </summary>
@@ -48,6 +42,35 @@ namespace Content.Shared.VendingMachines
 
         [DataField]
         public Dictionary<string, VendingMachineInventoryEntry> ContrabandInventory = new();
+
+        // IMP ADDS: VENDING MACHINE STORE
+
+        /// <summary>
+        ///     IMP ADD- List of categories that this vending machine can access as an optional store.
+        ///     If this is null, the store will not populate.
+        /// </summary>
+        [DataField]
+        public HashSet<ProtoId<StoreCategoryPrototype>>? StoreCategories;
+
+        /// <summary>
+        /// IMP ADD- The list of currencies that can be inserted into this vending machine.
+        /// </summary>
+        [DataField]
+        public HashSet<ProtoId<CurrencyPrototype>>? CurrencyWhitelist;
+
+        /// <summary>
+        /// IMP ADD- Cached list of store items with modifiers.
+        /// </summary>
+        [DataField]
+        public HashSet<ListingDataWithCostModifiers>? FullListingsCatalog;
+
+        /// <summary>
+        /// IMP ADD- All available store items from the last time that it was checked.
+        /// </summary>
+        [ViewVariables]
+        public HashSet<ListingDataWithCostModifiers>? LastAvailableListings;
+
+        // END IMP ADDS
 
         /// <summary>
         /// If true then unlocks the <see cref="ContrabandInventory"/>
@@ -311,5 +334,10 @@ namespace Content.Shared.VendingMachines
         public TimeSpan? DispenseOnHitEnd;
 
         public bool Broken;
+
+        /// <summary>
+        ///     IMP ADD- optional store attached to a vending machine
+        /// </summary>
+        public IEnumerable<ListingDataWithCostModifiers>? Store;
     }
 }

@@ -6,7 +6,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.Store.Systems;
 
-public sealed partial class StoreSystem
+public sealed partial class StoreSystem : SharedStoreSystem // imp shared
 {
     /// <summary>
     /// Refreshes all listings on a store.
@@ -102,7 +102,7 @@ public sealed partial class StoreSystem
     /// <param name="categories">What categories to filter by.</param>
     /// <param name="storeEntity">The physial entity of the store. Can be null.</param>
     /// <returns>The available listings.</returns>
-    public IEnumerable<ListingDataWithCostModifiers> GetAvailableListings(
+    public override IEnumerable<ListingDataWithCostModifiers> GetAvailableListings( // imp override
         EntityUid buyer,
         IReadOnlyCollection<ListingDataWithCostModifiers>? listings,
         HashSet<ProtoId<StoreCategoryPrototype>> categories,
