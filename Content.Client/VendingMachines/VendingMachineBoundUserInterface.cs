@@ -1,10 +1,10 @@
 using Content.Client.UserInterface.Controls;
 using Content.Client.VendingMachines.UI;
-using Content.Shared.Store.Components;
 using Content.Shared.VendingMachines;
 using Robust.Client.UserInterface;
 using Robust.Shared.Input;
 using System.Linq;
+using Content.Shared.Store.Components; // IMP ADD
 
 namespace Content.Client.VendingMachines
 {

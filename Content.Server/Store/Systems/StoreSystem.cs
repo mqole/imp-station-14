@@ -4,7 +4,6 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Implants.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
-using Content.Shared.Power.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Store.Components;
 using Content.Shared.Store.Events;
@@ -12,6 +11,7 @@ using Content.Shared.UserInterface;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Shared.Power.Components; // imp add
 
 namespace Content.Server.Store.Systems;
 
@@ -25,7 +25,7 @@ public sealed partial class StoreSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
-    private readonly static string UnpoweredPopup = "store-currency-not-charged";
+    private readonly static string UnpoweredPopup = "store-currency-not-charged"; // imp add
 
     public override void Initialize()
     {
