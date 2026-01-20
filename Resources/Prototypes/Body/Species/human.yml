@@ -135,11 +135,11 @@
       group: Human
 
 - type: entity
-  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganHumanExternal ] #imp edit, sexed organ part of partial merge of fix for sexed organs
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganHumanExternal ]
   id: OrganHumanTorso
 
 - type: entity
-  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganHumanExternal ] #imp edit, sexed organ part of partial merge of fix for sexed organs
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganHumanExternal ]
   id: OrganHumanHead
 
 - type: entity

@@ -253,7 +253,7 @@
     sprite: Mobs/Species/Moth/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganMothExternal ] #imp edit, sexed organ part of partial merge of fix for sexed organs
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganMothExternal ]
   id: OrganMothTorso
 
 - type: entity

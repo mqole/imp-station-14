@@ -203,11 +203,11 @@
       group: Reptilian
 
 - type: entity
-  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganReptilianExternal ] #imp edit, sexed organ part of partial merge of fix for sexed organs
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganReptilianExternal ]
   id: OrganReptilianTorso
 
 - type: entity
-  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganReptilianExternal ] #imp edit, sexed organ part of partial merge of fix for sexed organs
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganReptilianExternal ]
   id: OrganReptilianHead
 
 - type: entity

@@ -204,7 +204,7 @@
       group: Skeleton
 
 - type: entity
-  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganSkeletonPersonExternal ] #imp edit, sexed organ part of partial merge of fix for sexed organs
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganSkeletonPersonExternal ]
   id: OrganSkeletonPersonTorso
 
 - type: entity
