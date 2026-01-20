@@ -4,14 +4,16 @@
   limits:
     enum.HumanoidVisualLayers.Hair:
       limit: 1
+      onlyGroupWhitelisted: true
       required: false
       #weight: 1
     enum.HumanoidVisualLayers.FacialHair:
       limit: 1
+      onlyGroupWhitelisted: true
       required: false
     enum.HumanoidVisualLayers.Head:
       limit: 4
-      required: false # imp
+      required: false
     enum.HumanoidVisualLayers.Snout:
       limit: 1
       required: false # imp
@@ -20,13 +22,13 @@
       limit: 1
       required: false
     enum.HumanoidVisualLayers.LArm:
-      limit: 1
-      required: false # imp
-      #default: [ VoxLArmScales ] # imp
+      limit: 2
+      required: false
+      #default: [ VoxLArmScales ] #imp
     enum.HumanoidVisualLayers.RArm:
-      limit: 1
-      required: false # imp
-      #default: [ VoxRArmScales ] # imp
+      limit: 2
+      required: false
+      #default: [ VoxRArmScales ] #imp
     enum.HumanoidVisualLayers.LHand:
       limit: 1
       required: false # imp
@@ -37,11 +39,11 @@
       #default: [ VoxRHandScales ] #imp
     enum.HumanoidVisualLayers.LLeg:
       limit: 1
-      required: false # imp
+      required: false
       #default: [ VoxLLegScales ] #imp
     enum.HumanoidVisualLayers.RLeg:
       limit: 1
-      required: false # imp
+      required: false
       #default: [ VoxRLegScales ] #imp
     enum.HumanoidVisualLayers.LFoot:
       limit: 1
@@ -299,23 +301,22 @@
 - type: entity
   parent: [ OrganBaseTorso, OrganVoxExternal ]
   id: OrganVoxTorso
-  components:
+  components: # imp
   - type: Sprite
-    sprite: _Impstation/Mobs/Species/Vox/parts.rsi #imp
-    state: torso
-  - type: VisualOrgan
-    data:
-      state: torso
+    sprite: _Impstation/Mobs/Species/Vox/parts.rsi
 
 - type: entity
   parent: [ OrganBaseHead, OrganVoxExternal ]
   id: OrganVoxHead
   components:
-  - type: Sprite
-    state: head
-  - type: VisualOrgan
-    data:
-      state: head
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Snout
+    - enum.HumanoidVisualLayers.Hair
+    - enum.HumanoidVisualLayers.FacialHair
+    dependentHidingLayers:
+      enum.HumanoidVisualLayers.Snout:
+      - enum.HumanoidVisualLayers.SnoutCover
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganVoxExternal ]
