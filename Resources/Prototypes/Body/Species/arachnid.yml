@@ -281,7 +281,7 @@
   description: "A persistent little biological pump made for spiders."  #imp edit to remove 'disgustingly'
 
 - type: entity
-  parent: [ OrganArachnidInternal, OrganBaseStomach, OrganAnimalMetabolizer ]
+  parent: [ OrganBaseStomach, OrganArachnidInternal, OrganAnimalMetabolizer ]
   id: OrganArachnidStomach
   name: arachnid stomach #imp edit
   components: #imp edit, spider food
@@ -292,11 +292,11 @@
     isSpecialDigestibleExclusive: false
 
 - type: entity
-  parent: [ OrganArachnidInternal, OrganBaseLiver, OrganSpriteHumanInternal, OrganAnimalMetabolizer ]
+  parent: [ OrganBaseLiver, OrganSpriteHumanInternal, OrganArachnidInternal, OrganAnimalMetabolizer ]
   id: OrganArachnidLiver
   name: hepatic caecum  #imp edit
 
 - type: entity
-  parent: [ OrganArachnidInternal, OrganBaseKidneys, OrganSpriteHumanInternal, OrganAnimalMetabolizer ]
+  parent: [ OrganBaseKidneys, OrganSpriteHumanInternal, OrganArachnidInternal, OrganAnimalMetabolizer ]
   id: OrganArachnidKidneys
   name: malpighian tubules  #imp edit
