@@ -71,6 +71,7 @@
       - Overlay
       - UndergarmentTop
       - UndergarmentBottom
+      - Special
       - Tenta # imp
 
 - type: entity
