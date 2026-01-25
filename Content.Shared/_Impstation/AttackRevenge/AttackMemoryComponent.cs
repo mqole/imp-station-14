@@ -14,5 +14,5 @@ public sealed partial class AttackMemoryComponent : Component
     ///     List of keys obtained from having attacked entities.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public List<string> Keys = [];
+    public HashSet<string> Keys = [];
 }
