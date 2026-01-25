@@ -270,7 +270,7 @@ namespace Content.Server.Pointing.EntitySystems
                         // Urist McPointer points at Urist McWearer's item
                         viewerMessage = Loc.GetString("imp-pointing-system-point-in-other-inventory-others", ("item", itemName), ("pointer", playerName), ("wearer", pointedName), ("verb", verbOther)); // imp locale & verb
                         // Urist McPointer points at your item
-                        viewerPointedAtMessage = Loc.GetString("pointing-system-point-in-other-inventory-target", ("item", itemName), ("pointer", playerName), ("verb", verbOther)); // imp locale & verb
+                        viewerPointedAtMessage = Loc.GetString("imp-pointing-system-point-in-other-inventory-target", ("item", itemName), ("pointer", playerName), ("verb", verbOther)); // imp locale & verb
                     }
                 }
                 else
