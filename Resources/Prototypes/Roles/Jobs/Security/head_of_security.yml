@@ -36,6 +36,8 @@
   - External
   - Detective
   - Cryogenics
+  - GenpopEnter
+  - GenpopLeave
   - Vault #imp
   special:
   - !type:AddImplantSpecial
