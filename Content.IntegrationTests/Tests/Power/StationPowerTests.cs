@@ -76,7 +76,7 @@ public sealed class StationPowerTests
     };
 
     [Explicit]
-    [Test, TestCaseSource(nameof(GameMaps))]
+    [Test, TestCaseSource(nameof(GameMaps)), NonParallelizable] // imp nonparallelize for OOM
     public async Task TestStationStartingPowerWindow(string mapProtoId)
     {
         await using var pair = await PoolManager.GetServerClient(new PoolSettings
@@ -139,7 +139,7 @@ public sealed class StationPowerTests
         await pair.CleanReturnAsync();
     }
 
-    [Test, TestCaseSource(nameof(GameMaps))]
+    [Test, TestCaseSource(nameof(GameMaps)), NonParallelizable] // imp nonparallelize for OOM
     [Ignore("Use ImpTestApcLoad")] // imp, our version of the test checks for this anyway so its faster only to load maps once
     public async Task TestApcLoad(string mapProtoId)
     {
@@ -190,7 +190,7 @@ public sealed class StationPowerTests
     }
 
     // IMP ADD- 2nd test to catch variable power loads
-    [Test, TestCaseSource(nameof(GameMaps))]
+    [Test, TestCaseSource(nameof(GameMaps)), NonParallelizable]
     public async Task ImpTestApcLoad(string mapProtoId)
     {
         await using var pair = await PoolManager.GetServerClient(new PoolSettings
