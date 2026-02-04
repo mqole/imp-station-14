@@ -24,15 +24,27 @@ public sealed class AdminNanoChatLogsEuiState : EuiStateBase
 [Serializable, NetSerializable]
 public sealed class AdminNanoChatLogEntry
 {
-    public NetUserId Sender { get; }
+    public NetUserId SenderUser { get; }
+    public string Sender { get; }
     public string Message { get; }
+    public TimeSpan Timestamp { get; }
+    public string Card { get; }
+    public string Recipients { get; }
 
     public AdminNanoChatLogEntry(
         NetUserId senderUser,
-        string message)
+        string sender,
+        string message,
+        TimeSpan timestamp,
+        string card,
+        string recipients)
     {
-        Sender = senderUser;
+        SenderUser = senderUser;
+        Sender = sender;
         Message = message;
+        Timestamp = timestamp;
+        Card = card;
+        Recipients = recipients;
     }
 }
 

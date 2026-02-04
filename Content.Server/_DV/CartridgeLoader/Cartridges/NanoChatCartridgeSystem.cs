@@ -757,8 +757,13 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
             logRecipients += ToPrettyString(recipient);
         }
 
-        var logMessage = $"{message.Timestamp}: {ToPrettyString(sender)} using {ToPrettyString(card)} sent to {logRecipients}: '{message.Content}'";
-        stationLogs.Logs.Add(new AdminNanoChatLogEntry(user, logMessage));
+        stationLogs.Logs.Add(new AdminNanoChatLogEntry(
+            user,
+            ToPrettyString(sender),
+            message.Content,
+            message.Timestamp,
+            ToPrettyString(card),
+            logRecipients));
         return true;
     }
 
