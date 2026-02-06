@@ -63,6 +63,4 @@ markings-layer-LLeg = Left Leg
 markings-layer-RFoot = Right Foot
 markings-layer-LFoot = Left Foot
 markings-layer-Overlay = Overlay
-
-# Imp
-markings-layer-Tenta = Tentacles
+markings-layer-TailOverlay = Overlay
