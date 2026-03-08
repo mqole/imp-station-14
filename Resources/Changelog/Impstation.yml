@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: TheGrimbeeper
-  changes:
-  - message: changelings once again are resistant to artifact crushers
-    type: Tweak
-  id: 2182
-  time: '2025-08-20T02:52:40.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3277
 - author: Kandiyaki
   changes:
   - message: Changed the description of the Flesh Surgery spell to properly reflect
@@ -4151,3 +4144,12 @@
   id: 2681
   time: '2026-03-08T20:30:29.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4128
+- author: youtubevideo3
+  changes:
+  - message: Added a few new markings for ungu.
+    type: Add
+  - message: Ungu have been changed. Ungu are different now.
+    type: Tweak
+  id: 2682
+  time: '2026-03-08T20:35:50.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4161
