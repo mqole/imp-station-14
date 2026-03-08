@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: DVDPlayerOfDiscordFame
-  changes:
-  - message: You can use the minigun again
-    type: Fix
-  id: 2174
-  time: '2025-08-17T02:29:16.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3303
 - author: VeeNomine
   changes:
   - message: Reposition the head slot for drones so their hats are more properly offset.
@@ -4144,3 +4137,14 @@
   id: 2673
   time: '2026-03-07T23:51:07.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4198
+- author: DVDPlayerOfDiscordFame
+  changes:
+  - message: The Echion Synthesizer's fill level sprites are a bit easier to read
+      at a glance, and the Echion Cell juices for more in the grinder.
+    type: Tweak
+  - message: How much reagent is in Synthesizers, Canisters, and weapons has been
+      scaled down, but how much they use with it. Everything should feel the same.
+    type: Tweak
+  id: 2674
+  time: '2026-03-08T20:08:35.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/3782
