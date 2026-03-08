@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: VeeNomine
-  changes:
-  - message: Reposition the head slot for drones so their hats are more properly offset.
-    type: Tweak
-  id: 2175
-  time: '2025-08-18T14:35:39.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3317
 - author: honeyed-lemons
   changes:
   - message: Slightly adjusted wording relating to the heretic shop.
@@ -4148,3 +4141,12 @@
   id: 2674
   time: '2026-03-08T20:08:35.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/3782
+- author: starlighthowls
+  changes:
+  - message: Added a mapable vending machine for AI laws! Try using an EMAG on it!
+    type: Add
+  - message: Added four new AI lawsets.
+    type: Add
+  id: 2675
+  time: '2026-03-08T20:15:54.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4008
