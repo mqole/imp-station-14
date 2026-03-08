@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: honeyed-lemons
-  changes:
-  - message: Slightly adjusted wording relating to the heretic shop.
-    type: Tweak
-  id: 2176
-  time: '2025-08-19T02:51:23.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3313
 - author: DinnerCalzone
   changes:
   - message: Fixed not being able to examine the damage on the portable cutter machine.
@@ -4150,3 +4143,14 @@
   id: 2675
   time: '2026-03-08T20:15:54.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4008
+- author: DinnerCalzone
+  changes:
+  - message: Decapoid slash and pierce resistance reduced from 30% to 15%. Reduced
+      their heat weakness from 50% to 35%
+    type: Tweak
+  - message: Decapoid claw's shield action now reduces brute damage by 50% up from
+      40%, but no longer reduce heat damage.
+    type: Tweak
+  id: 2676
+  time: '2026-03-08T20:21:07.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4074
