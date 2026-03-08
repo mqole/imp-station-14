@@ -1,12 +1,4 @@
 ﻿Entries:
-- author: formlessnameless
-  changes:
-  - message: A document printer with a bunch of templates has hit the station. The
-      wonders of bureaucracy never cease. Check your head's locker today!
-    type: Add
-  id: 2181
-  time: '2025-08-20T02:53:20.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3310
 - author: TheGrimbeeper
   changes:
   - message: changelings once again are resistant to artifact crushers
@@ -4152,3 +4144,10 @@
   id: 2680
   time: '2026-03-08T20:29:21.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4121
+- author: msTheowo
+  changes:
+  - message: Stamps have a new coat of paint.
+    type: Tweak
+  id: 2681
+  time: '2026-03-08T20:30:29.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4128
