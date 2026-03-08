@@ -1,22 +1,4 @@
 ﻿Entries:
-- author: hivehum
-  changes:
-  - message: The recipes for heart carpaccio, moproach, and draco have been altered.
-    type: Tweak
-  - message: Cooked eggs no longer poison Kodepiiae.
-    type: Fix
-  id: 2178
-  time: '2025-08-19T08:11:09.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3319
-- author: yesteryuri
-  changes:
-  - message: You can juice wood and cardboard for cellulose
-    type: Add
-  - message: Everyone can eat wood and cardboard with a little persistence
-    type: Add
-  id: 2179
-  time: '2025-08-19T08:39:40.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3282
 - author: Oberonics
   changes:
   - message: Ported the shuffle and repeat jukebox feature from frontier! Courtesy
@@ -4154,3 +4136,20 @@
   id: 2677
   time: '2026-03-08T20:24:05.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4103
+- author: FlapWrap
+  changes:
+  - message: Empty N2 medkits are now printable in the Medical Techfab
+    type: Tweak
+  - message: Filled N2 medkits can now appear in the relevant emergency lockers
+    type: Tweak
+  id: 2678
+  time: '2026-03-08T20:26:34.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4109
+- author: FancyPlanks
+  changes:
+  - message: Light Posts, Dressers, AME jars and the Psychologists chair have a new
+      look!
+    type: Tweak
+  id: 2679
+  time: '2026-03-08T20:27:27.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4111
