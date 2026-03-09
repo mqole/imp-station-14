@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: ATDoop
-  changes:
-  - message: Handcuffs will no longer stop diona from rooting.
-    type: Tweak
-  id: 2196
-  time: '2025-08-23T10:39:37.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3342
 - author: astral_amy
   changes:
   - message: Regularly scheduled Bedlam/Whisper updates. Check PR for changelog.
@@ -4150,3 +4143,10 @@
   id: 2695
   time: '2026-03-09T10:26:25.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4200
+- author: mousesweater
+  changes:
+  - message: nanotrasen repainted our god damn tiles again. can you spot the difference?
+    type: Tweak
+  id: 2696
+  time: '2026-03-09T10:28:05.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4205
