@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: astral_amy
-  changes:
-  - message: Regularly scheduled Bedlam/Whisper updates. Check PR for changelog.
-    type: Tweak
-  id: 2197
-  time: '2025-08-23T10:41:50.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3339
 - author: ATDoop
   changes:
   - message: Brigmedic and Paramedic have returned from their vacations.
@@ -4150,3 +4143,10 @@
   id: 2696
   time: '2026-03-09T10:28:05.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4205
+- author: lobsterpaw
+  changes:
+  - message: Medium sized Oasis update!
+    type: Tweak
+  id: 2697
+  time: '2026-03-09T10:29:10.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4204
