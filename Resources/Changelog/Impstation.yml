@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: Stonylogray
-  changes:
-  - message: A lost farming shuttle seems to have drifted into IMP sector.
-    type: Tweak
-  id: 2195
-  time: '2025-08-22T14:39:57.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/2912
 - author: ATDoop
   changes:
   - message: Handcuffs will no longer stop diona from rooting.
@@ -4150,3 +4143,10 @@
   id: 2694
   time: '2026-03-09T09:29:36.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4213
+- author: CombustibleToast
+  changes:
+  - message: You can now tell when a thaven is thinking about saying something.
+    type: Add
+  id: 2695
+  time: '2026-03-09T10:26:25.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4200
