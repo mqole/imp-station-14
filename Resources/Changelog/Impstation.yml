@@ -1,18 +1,4 @@
 ﻿Entries:
-- author: msTheowo
-  changes:
-  - message: The HoP has a bureaucracy medal in their locker!
-    type: Add
-  id: 2187
-  time: '2025-08-22T00:44:36.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3213
-- author: ATDoop
-  changes:
-  - message: Dionae now have 1 new marking, a sunflower face!
-    type: Add
-  id: 2188
-  time: '2025-08-22T00:46:37.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3320
 - author: Mousetrinity
   changes:
   - message: v-rex should be a little less ear-piercing
@@ -4147,3 +4133,20 @@
   id: 2686
   time: '2026-03-09T00:51:50.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4113
+- author: eviltori
+  changes:
+  - message: the default postmortem instructions for characters are now "none given"
+      instead of "return home." chop up your dead coworkers to make sandwiches if
+      you want!
+    type: Tweak
+  id: 2687
+  time: '2026-03-09T00:53:39.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4158
+- author: lobsterpaw
+  changes:
+  - message: The wizard shuttle wreck is now in the salvage magnet pool as a large
+      wreck.
+    type: Tweak
+  id: 2688
+  time: '2026-03-09T00:53:10.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4135
