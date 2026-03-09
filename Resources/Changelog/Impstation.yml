@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: TheGrimbeeper
-  changes:
-  - message: Emergency lasers once again have 10 shots (fix from 3)
-    type: Fix
-  id: 2185
-  time: '2025-08-22T00:41:38.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3336
 - author: msTheowo
   changes:
   - message: You now correctly start with lenses if you roll shortsighed with a random
@@ -4148,3 +4141,10 @@
   id: 2684
   time: '2026-03-08T20:48:47.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4206
+- author: eviltori
+  changes:
+  - message: the lawyer no longer has smuggled service headsets in the lawdrobe.
+    type: Fix
+  id: 2685
+  time: '2026-03-09T00:31:02.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4105
