@@ -1,14 +1,4 @@
 ﻿Entries:
-- author: Kandiyaki
-  changes:
-  - message: Added some extra text to the heretic's character menu to inform the player
-      of their basic functions.
-    type: Tweak
-  - message: Updated the heretic's guidebook entries.
-    type: Tweak
-  id: 2194
-  time: '2025-08-22T01:41:57.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3338
 - author: Stonylogray
   changes:
   - message: A lost farming shuttle seems to have drifted into IMP sector.
@@ -4153,3 +4143,10 @@
   id: 2693
   time: '2026-03-09T02:34:39.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4185
+- author: hivehum
+  changes:
+  - message: Oops! We're outlawing Valentine's again.
+    type: Remove
+  id: 2694
+  time: '2026-03-09T09:29:36.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4213
