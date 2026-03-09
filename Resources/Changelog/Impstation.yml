@@ -1,16 +1,6 @@
 ﻿Entries:
 - author: Kandiyaki
   changes:
-  - message: Heretic book spawns are no longer limited to Heretic rounds!
-    type: Tweak
-  - message: Hundreds of heretic books should no longer be spawning on heretic rounds.
-      hopefully.
-    type: Fix
-  id: 2193
-  time: '2025-08-22T01:12:25.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3328
-- author: Kandiyaki
-  changes:
   - message: Added some extra text to the heretic's character menu to inform the player
       of their basic functions.
     type: Tweak
@@ -4152,3 +4142,14 @@
   id: 2692
   time: '2026-03-09T02:13:46.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4156
+- author: Squamatic
+  changes:
+  - message: Boar have forsaken humanoid language and begun grunting and snuffling
+      more.
+    type: Fix
+  - message: Banana deer have had their PhDs revoked and can no longer speak in full
+      sentences.
+    type: Fix
+  id: 2693
+  time: '2026-03-09T02:34:39.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4185
