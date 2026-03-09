@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: Squamatic, Entings
-  changes:
-  - message: Paper labels can now be attached to gas canisters!
-    type: Add
-  id: 2190
-  time: '2025-08-22T01:03:02.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3329
 - author: britno
   changes:
   - message: Irwizine'd animals now have a ghost role to go with it. Ever wanted to
@@ -4150,3 +4143,10 @@
   id: 2689
   time: '2026-03-09T00:55:31.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4178
+- author: ATDoop
+  changes:
+  - message: Sentient artifact ghost roles have a shorter raffle timer now.
+    type: Tweak
+  id: 2690
+  time: '2026-03-09T00:56:31.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4181
