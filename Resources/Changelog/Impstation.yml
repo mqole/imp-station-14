@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: ATDoop
-  changes:
-  - message: Brigmedic and Paramedic have returned from their vacations.
-    type: Add
-  id: 2198
-  time: '2025-08-23T10:47:11.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3343
 - author: DVDPlayerOfDiscordFame
   changes:
   - message: Blaster Cells working as power cells is intended now. Max charge very
@@ -4150,3 +4143,11 @@
   id: 2697
   time: '2026-03-09T10:29:10.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4204
+- author: Squamatic
+  changes:
+  - message: Lizardfolk rejoice! Reptile tails are no longer cut off when wearing
+      certain hardsuits.
+    type: Fix
+  id: 2698
+  time: '2026-03-09T10:40:24.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4209
