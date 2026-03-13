@@ -1,0 +1,36 @@
+name: Apply to Macrocosm
+about: "Apply to become a Microcosm"
+title: '[APPLICATION]'
+labels: 'Application'
+assignees: ''
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: email, github comments, discord, whatever
+    validations:
+      required: false
+  - type: textarea
+    id: server
+    attributes:
+      label: What server community do you represent?
+      description: If you are not easily identifiable as a member of the leadership team of that server, your application will be rejected.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe your community a little.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does your server want to become a Microcosm?
+      description: Remember that you do not have to be a Microcosm to fork off of or contribute to Macrocosm.
+    validations:
+      required: true
+
+
