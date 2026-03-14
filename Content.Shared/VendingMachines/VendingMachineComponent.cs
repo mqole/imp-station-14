@@ -102,6 +102,23 @@ namespace Content.Shared.VendingMachines
         public TimeSpan? DispenseOnHitCooldown = TimeSpan.FromSeconds(1.0);
 
         /// <summary>
+        ///     Imp add- chance that a dispensed item will get stuck in a vending machine.
+        ///     Either a punch or dispensing another item will dislodge it.
+        ///     Chance is 0 if null.
+        /// </summary>
+        [DataField]
+        public float? DispenserJamChance;
+
+        /// <summary>
+        ///     Imp add- id of item (if any) currently stuck in vending machine, ready to be dislodged.
+        /// </summary>
+        [DataField]
+        public string? StuckItem;
+
+        [DataField]
+        public LocId JammedExamineText = "vending-machine-jammed";
+
+        /// <summary>
         ///     Sound that plays when ejecting an item
         /// </summary>
         [DataField]

@@ -19,6 +19,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Serialization; // IMP ADD
+using Content.Shared.Examine; // IMP ADD
 
 namespace Content.Shared.VendingMachines;
 
@@ -55,6 +56,8 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
         {
             subs.Event<VendingMachineEjectMessage>(OnInventoryEjectMessage);
         });
+
+        SubscribeLocalEvent<VendingMachineComponent, ExaminedEvent>(OnExamine); // IMP ADD
     }
 
     private void OnVendingGetState(Entity<VendingMachineComponent> entity, ref ComponentGetState args)
@@ -444,6 +447,17 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
         TryUpdateVisualState((uid, vendComponent));
 
         UISystem.CloseUi(uid, VendingMachineUiKey.Key);
+    }
+
+    /// <summary>
+    ///     IMP ADD
+    /// </summary>
+    private void OnExamine(Entity<VendingMachineComponent> ent, ref ExaminedEvent args)
+    {
+        if (ent.Comp.StuckItem is null)
+            return;
+
+        args.PushMarkup(Loc.GetString(ent.Comp.JammedExamineText));
     }
 }
 

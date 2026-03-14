@@ -91,6 +91,14 @@ namespace Content.Server.VendingMachines
                 component.DispenseOnHitChance == null || args.DamageDelta == null)
                 return;
 
+            // IMP ADD- stuck items
+            if (args.DamageIncreased && // no need to hit a damage threshold, any little jostle will do unless youre a thaven
+                component.StuckItem is not null)
+            {
+                EjectItem(uid, component, true);
+            }
+
+
             if (args.DamageIncreased && args.DamageDelta.GetTotal() >= component.DispenseOnHitThreshold &&
                 _random.Prob(component.DispenseOnHitChance.Value))
             {
@@ -183,6 +191,18 @@ namespace Content.Server.VendingMachines
                 return;
             }
 
+            // IMP ADD START- items getting stuck in vending machines.
+            if (vendComponent.StuckItem is null && // no more than one item can get stuck!
+                vendComponent.DispenserJamChance > _random.NextFloat(0, 1))
+            {
+                vendComponent.StuckItem = vendComponent.NextItemToEject;
+                vendComponent.ThrowNextItem = true;
+
+                Dirty(uid, vendComponent); // TODO make this a field delta for stuckitem
+                return;
+            }
+            // IMP END
+
             // Default spawn coordinates
             var xform = Transform(uid);
             var spawnCoordinates = xform.Coordinates;
@@ -193,6 +213,18 @@ namespace Content.Server.VendingMachines
                 var offset = (wallMountComponent.Direction + xform.LocalRotation - Math.PI / 2).ToVec() * WallVendEjectDistanceFromWall;
                 spawnCoordinates = spawnCoordinates.Offset(offset);
             }
+
+            // IMP ADD- eject 2 items if necessary!
+            if (vendComponent.StuckItem is { } stuck)
+            {
+                var stuckEnt = Spawn(stuck, spawnCoordinates);
+
+                // we're always throwing stuck items
+                var range = vendComponent.NonLimitedEjectRange;
+                var direction = new Vector2(_random.NextFloat(-range, range), _random.NextFloat(-range, range));
+                _throwingSystem.TryThrow(stuckEnt, direction, vendComponent.NonLimitedEjectForce);
+            }
+            // IMP END
 
             var ent = Spawn(vendComponent.NextItemToEject, spawnCoordinates);
 
@@ -205,6 +237,11 @@ namespace Content.Server.VendingMachines
 
             vendComponent.NextItemToEject = null;
             vendComponent.ThrowNextItem = false;
+
+            // IMP ADD prediction bullshit to clean this up. this is messy but until vending is predicted its what we gotta do so examine text works.
+            vendComponent.StuckItem = null;
+            Dirty(uid, vendComponent);
+            // END IMP
         }
 
         public override void Update(float frameTime)
