@@ -1,12 +1,4 @@
 ﻿Entries:
-- author: AirFryerBuyOneGetOneFree
-  changes:
-  - message: Changed traitor flavor text to include optional RP info such as your
-      companies allies and notes from your employer.
-    type: Tweak
-  id: 2208
-  time: '2025-08-26T22:12:38.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3005
 - author: wendyribstonpippin
   changes:
   - message: milbrats will now stop screaming ADMIN ACTUAL
@@ -4138,3 +4130,16 @@
   id: 2707
   time: '2026-03-15T17:43:24.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4232
+- author: TheGrimbeeper
+  changes:
+  - message: You could extract points from artifacts if the research server was unpowered.
+      This has been fixed.
+    type: Fix
+  - message: Sentient artifacts that are melee weapons are now able to attack. Biting
+      you is enrichment.
+    type: Tweak
+  - message: tweaked chances & depth of the two 'explosion' effects to make more sense
+    type: Tweak
+  id: 2708
+  time: '2026-03-15T20:57:36.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4099
