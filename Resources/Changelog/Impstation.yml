@@ -1,16 +1,4 @@
 ﻿Entries:
-- author: DinnerCalzone
-  changes:
-  - message: Amber has been updated pulling the latest version from Wizden, which
-      includes genpop! The main station engine has also been restored to the TEG.
-      Station engineers without experience with it may want to utilize the station's
-      extra solar assembly crates.
-    type: Add
-  - message: Marathon has been updated to feature genpop!
-    type: Add
-  id: 2206
-  time: '2025-08-26T22:09:52.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3322
 - author: BubbaBean
   changes:
   - message: contracts will now be terminated if you run during delta alert
@@ -4142,3 +4130,10 @@
   id: 2705
   time: '2026-03-15T17:16:31.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4171
+- author: eviltori
+  changes:
+  - message: changed fugitive's ghost role rule text. do some crimes!
+    type: Tweak
+  id: 2706
+  time: '2026-03-15T17:22:48.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4207
