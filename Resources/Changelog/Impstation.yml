@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: BubbaBean
-  changes:
-  - message: contracts will now be terminated if you run during delta alert
-    type: Tweak
-  id: 2207
-  time: '2025-08-26T22:11:11.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3344
 - author: AirFryerBuyOneGetOneFree
   changes:
   - message: Changed traitor flavor text to include optional RP info such as your
@@ -4137,3 +4130,11 @@
   id: 2706
   time: '2026-03-15T17:22:48.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4207
+- author: yesteryuri
+  changes:
+  - message: The Station AI is listed as crew borg's job supervisor instead of the
+      Research Director
+    type: Tweak
+  id: 2707
+  time: '2026-03-15T17:43:24.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4232
