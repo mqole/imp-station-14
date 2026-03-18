@@ -1,15 +1,4 @@
 ﻿Entries:
-- author: jtfg-dev
-  changes:
-  - message: Items whose quantities were not clear when in someone's hands (i.e. "a
-      grapes", "a gloves", "a gold bar", "a steel") now should be grammatically correct
-      (i.e. "some grapes", "a pair of gloves", "some gold bars" "a sheet / some sheets
-      of steel"). Please report any applicable (but unaffected) items to the "make
-      text less bad" thread on the discord!
-    type: Add
-  id: 2215
-  time: '2025-08-28T12:27:18.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3136
 - author: TheGrimbeeper
   changes:
   - message: Natural artifacts now count for the artifact bounty.
@@ -4153,3 +4142,11 @@
   id: 2714
   time: '2026-03-18T16:36:36.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4188
+- author: lichpassing, Pinkbat5, msTheowo
+  changes:
+  - message: Batter up! You can now rep the NT Dogs with a cap or full uniform. Craft
+      them at the uniform printer. Use an EMAG on the printer for a special surprise...
+    type: Add
+  id: 2715
+  time: '2026-03-18T16:45:06.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4227
