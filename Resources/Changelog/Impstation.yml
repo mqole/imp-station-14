@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: TheGrimbeeper
-  changes:
-  - message: Natural artifacts now count for the artifact bounty.
-    type: Fix
-  id: 2216
-  time: '2025-08-29T11:51:58.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3372
 - author: youtubevideo3
   changes:
   - message: New bomber jacket for the HOS!
@@ -4150,3 +4143,10 @@
   id: 2715
   time: '2026-03-18T16:45:06.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4227
+- author: msTheowo
+  changes:
+  - message: More syndicate objects use the new black palette.
+    type: Tweak
+  id: 2716
+  time: '2026-03-18T16:49:21.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4236
