@@ -1,13 +1,4 @@
 ﻿Entries:
-- author: Smugman
-  changes:
-  - message: Syndicate Recruiters now start with a special briefcase, giving them
-      access to their own uplink full of useless trash. Recruit people to obtain more
-      budget.
-    type: Add
-  id: 2213
-  time: '2025-08-26T22:43:46.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3058
 - author: mqole
   changes:
   - message: TEG circulators have been fitted with flow rate meters.
@@ -4149,3 +4140,16 @@
   id: 2712
   time: '2026-03-18T15:40:49.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4225
+- author: msTheowo
+  changes:
+  - message: Mimes can choose one of three different powers from their routine book
+      in their bag.
+    type: Add
+  - message: Traitor mimes can buy a new set of two unique mime powers from their
+      uplinks.
+    type: Add
+  - message: Mimes can scream silently after retaking their vow.
+    type: Fix
+  id: 2713
+  time: '2026-03-18T15:48:34.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4150
