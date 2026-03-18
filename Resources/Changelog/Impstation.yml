@@ -1,14 +1,4 @@
 ﻿Entries:
-- author: soup4food
-  changes:
-  - message: Added a seclight to the HoS locker
-    type: Add
-  - message: changed the standard gas mask in the Warden hardsuit table to the security
-      gas mask, matching both the sec hardsuit locker and HoS locker
-    type: Tweak
-  id: 2212
-  time: '2025-08-26T22:26:35.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3356
 - author: Smugman
   changes:
   - message: Syndicate Recruiters now start with a special briefcase, giving them
@@ -4149,3 +4139,13 @@
   id: 2711
   time: '2026-03-18T10:26:45.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4243
+- author: DVD Player
+  changes:
+  - message: The Freelancer's .35 Stun shots are now slightly better at stunning.
+      Very slightly.
+    type: Tweak
+  - message: .45 Stun now properly works as it did before.
+    type: Fix
+  id: 2712
+  time: '2026-03-18T15:40:49.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4225
