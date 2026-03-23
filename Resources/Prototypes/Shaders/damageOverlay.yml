@@ -1,0 +1,25 @@
+- type: DamageOverlay
+  id: BruteShader
+  color: Red
+  pulseRate: 3
+  outerMaxLevel: 2
+  outerMinLevel: 0.8
+  innerMaxLevel: 0.6
+  innerMinLevel: 0.2
+
+- type: DamageOverlay
+  id: OxygenShader
+  color: Black
+  outerMaxLevel: 0.6
+  outerMinLevel: 0.06
+  innerMaxLevel: 0.02
+  innerMinLevel: 0.02
+
+- type: DamageOverlay
+  id: CritShader
+  rule: Fade
+  pulseRate: 3
+  outerMaxLevel: 2
+  outerMinLevel: 1
+  innerMaxLevel: 0.6
+  innerMinLevel: 0.02
