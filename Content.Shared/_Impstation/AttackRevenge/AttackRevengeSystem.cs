@@ -4,6 +4,10 @@ using Content.Shared.Mobs.Components;
 
 namespace Content.Shared._Impstation.AttackRevenge;
 
+/// <summary>
+///     Handles entities that have their attack attempt on another entity cancelled,
+///     unless the entity recieving damage has already attacked an entity with the corresponding key
+/// </summary>
 public sealed class AttackRevengeSystem : EntitySystem
 {
     public override void Initialize()
@@ -14,6 +18,9 @@ public sealed class AttackRevengeSystem : EntitySystem
         SubscribeLocalEvent<AttackRevengeComponent, AttackAttemptEvent>(OnAttackAttempt);
     }
 
+    /// <summary>
+    ///     Adds the corresponding revenge key to an entity which attacks this entity
+    /// </summary>
     private void OnDamageChanged(Entity<AttackRevengeComponent> ent, ref DamageChangedEvent args)
     {
         if (!args.DamageIncreased || args.Origin is not { } attacker)
@@ -27,6 +34,10 @@ public sealed class AttackRevengeSystem : EntitySystem
         Dirty(attacker, memory);
     }
 
+    /// <summary>
+    ///     Cancels any attack this entity makes on another living entity,
+    ///     unless that entity has the corresponding revenge key
+    /// </summary>
     private void OnAttackAttempt(Entity<AttackRevengeComponent> ent, ref AttackAttemptEvent args)
     {
         if (args.Target is not { } target || !HasComp<MobStateComponent>(target))
