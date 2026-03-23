@@ -28,9 +28,9 @@ public sealed partial class AdminNanoChatMessageEntry : BoxContainer
 
         if (MessagePanel.PanelOverride is not StyleBoxFlat)
             return;
+
         var style = (StyleBoxFlat)MessagePanel.PanelOverride;
         style.BackgroundColor = NanoChatMessageBubble.OtherMessageColor;
         style.BorderColor = NanoChatMessageBubble.BorderColor;
-
     }
 }
