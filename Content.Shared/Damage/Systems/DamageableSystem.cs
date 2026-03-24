@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Linq;
 using Content.Shared.Chemistry;
 using Content.Shared.Damage.Components;
@@ -93,5 +94,17 @@ public sealed partial class DamageableSystem : EntitySystem
             }
         }
         return damageTypes;
+    }
+
+    /// <summary>
+    /// Goes through an entity damage's and saves them inside a dictionary if the value is higher than 0
+    /// The dictionary is structured with a string for the name of the damage type, and a FixedPoint2 for the numeric damage value
+    /// </summary>
+    /// <remarks>
+    ///     This method can be used with <see cref="GetDamagePerGroup"/>.
+    /// </remarks>
+    public Dictionary<ProtoId<DamageTypePrototype>, FixedPoint2> GetDamages(IReadOnlyDictionary<ProtoId<DamageGroupPrototype>, FixedPoint2> damagePerGroup, DamageableComponent component)
+    {
+        return GetDamages((Dictionary<ProtoId<DamageGroupPrototype>, FixedPoint2>)damagePerGroup, component.Damage);
     }
 }
