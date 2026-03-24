@@ -1,0 +1,131 @@
+- type: entity
+  name: Mo & Krill
+  parent: SimpleSpaceMobBase
+  id: MobMoAndKrill
+  description: MO AND KRILL!!!!!!!!!!!!!!!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _Impstation/Deadlock/moandkrill.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: moandkrill
+  - type: Vocal
+    sounds:
+      Unsexed: MoAndKrill
+  - type: HTN
+    rootTask:
+      task: DeadlockCompound
+  - type: MeleeWeapon
+    hidden: true
+    soundHit:
+      collection: MetalThud
+    damage:
+      types:
+        Blunt: 12
+        Slash: 10
+        Piercing: 3
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      940: Critical
+      941: Dead
+  - type: Tag
+    tags:
+    - DoorBumpOpener
+    - FootstepSound
+    - VimPilot
+  - type: Body
+  - type: FootstepModifier
+    footstepSoundCollection:
+      collection: PudgeStep
+      params:
+        volume: -3
+  - type: NpcFactionMember
+    factions:
+    - AllHostile
+  - type: ActionGrant
+    actions:
+    - ActionMoKrillScorn
+    - ActionMoKrillBurrow
+    - ActionMoKrillSandBlast
+    - ActionMoKrillCombo
+
+- type: entity
+  id: ActionMoKrillScorn
+  name: SCORN
+  description: Deal damage to nearby enemies and heal yourself based on the damage done. Heal is stronger against enemy heroes.
+  components:
+  - type: InstantAction
+    useDelay: 13
+    itemIconStyle: NoItem
+    icon:
+      sprite: _Impstation/Deadlock/moandkrill.rsi
+      state: scorn
+    event: !type:MoKrillScornEvent {}
+
+- type: entity
+  id: ActionMoKrillBurrow
+  name: BURROW
+  description: Burrow underground, moving faster, and gaining spirit and bullet armor. Damage from enemy heroes will reduce the speed bonus. When you jump out, deal spirit damage, slow, and knockup.
+  components:
+  - type: InstantAction
+    useDelay: 40
+    itemIconStyle: NoItem
+    icon:
+      sprite: _Impstation/Deadlock/moandkrill.rsi
+      state: burrow
+    event: !type:MoKrillBurrowEvent {}
+
+- type: entity
+  id: ActionMoKrillSandBlast
+  name: SAND BLAST
+  description: Spray sand that disarms enemies in front of you and deals damage.
+  components:
+  - type: InstantAction
+    useDelay: 40
+    itemIconStyle: NoItem
+    icon:
+      sprite: _Impstation/Deadlock/moandkrill.rsi
+      state: sandblast
+    event: !type:MoKrillSandBlastEvent {}
+
+- type: entity
+  id: ActionMoKrillCombo
+  name: COMBO
+  description: Hold the target in place, stunning them and dealing damage during the channel. If they die during, or within 3 seconds of Combo ending, you permanently gain max health.
+  components:
+  - type: EntityTargetAction
+    useDelay: 130
+    whitelist:
+      components:
+      - Body
+    canTargetSelf: false
+    interactOnMiss: false
+    itemIconStyle: NoItem
+    icon:
+      sprite: _Impstation/Deadlock/moandkrill.rsi
+      state: combo
+    event: !type:MoKrillComboEvent {}
+
+- type: soundCollection
+  id: MoAndKrillStep
+  files:
+  - /Audio/_Impstation/Deadlock/MoKrillStep.ogg
+
+- type: emoteSounds
+  id: MoAndKrill
+  sound:
+    path: /Audio/_Impstation/Deadlock/MoKrillEmote.ogg
+    params:
+      volume: -3
+
+- type: htnCompound
+  id: MoAndKrillCompound #TODO
+  branches:
+    - tasks:
+        - !type:HTNCompoundTask
+          task: MeleeCombatCompound
+    - tasks:
+        - !type:HTNCompoundTask
+          task: IdleCompound
