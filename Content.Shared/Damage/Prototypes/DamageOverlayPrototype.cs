@@ -1,8 +1,6 @@
-using Content.Shared.Damage.Prototypes;
-using Robust.Client.Graphics;
 using Robust.Shared.Prototypes;
 
-namespace Content.Client.UserInterface.Systems.DamageOverlays;
+namespace Content.Shared.Damage.Prototypes;
 
 /// <summary>
 ///     Prototype for a damage overlay applied to a client's window when their entity has sustained damage.
@@ -15,9 +13,9 @@ public sealed partial class DamageOverlayPrototype : IPrototype
     public string ID { get; private set; } = default!;
 
     /// <summary>
-    ///     Mask shader to be used for this overlay
+    ///     Masking ShaderPrototype to be used for this overlay
     /// </summary>
-    public ProtoId<ShaderPrototype> ShaderMask = "GradientCircleMask";
+    public string ShaderMask = "GradientCircleMask";
 
     // TODO: yes, i know damage types are obsolete, but this is how damage overlays were already implemented and im not going to bother changing it for a medical system that isnt fully implemented. someone smarter can do that
     /// <summary>

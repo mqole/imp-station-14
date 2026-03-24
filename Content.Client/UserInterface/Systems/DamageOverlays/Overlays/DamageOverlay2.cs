@@ -1,15 +1,12 @@
-using System.Numerics;
-using Content.Shared.Hands.Components;
-using Content.Shared.Mobs;
+using Content.Shared.Damage.Prototypes;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
-using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Client.UserInterface.Systems.DamageOverlays;
 
-public sealed class DamageOverlay2 : Overlay
+public sealed class DamageOverlay : Overlay
 {
     [Dependency] private readonly IEntityManager _entityManager = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -54,7 +51,7 @@ public sealed class DamageOverlay2 : Overlay
 
         foreach (var proto in _protoMan.EnumeratePrototypes<DamageOverlayPrototype>())
         {
-            var shader = _protoMan.Index(proto.ShaderMask).InstanceUnique();
+            var shader = _protoMan.Index((ProtoId<ShaderPrototype>)proto.ShaderMask).InstanceUnique();
             overlays.Add(proto, shader);
         }
 

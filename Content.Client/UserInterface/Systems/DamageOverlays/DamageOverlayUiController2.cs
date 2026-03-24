@@ -1,4 +1,5 @@
 using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mobs;
@@ -17,7 +18,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Client.UserInterface.Systems.DamageOverlays;
 
 [UsedImplicitly]
-public sealed class DamageOverlayUiController2 : UIController
+public sealed class DamageOverlayUiController : UIController
 {
     [Dependency] private readonly IOverlayManager _overlayManager = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
@@ -27,7 +28,7 @@ public sealed class DamageOverlayUiController2 : UIController
     [UISystemDependency] private readonly MobThresholdSystem _mobThresholdSystem = default!;
     [UISystemDependency] private readonly StatusEffectsSystem _statusEffects = default!;
 
-    private DamageOverlay2 _overlay = default!;
+    private DamageOverlay _overlay = default!;
 
     // TODO: unfortunately i cant find any feasible way to un-hardcode damage overlays. if someone wants to give it a shot, good fucking luck
     private readonly string _critShader = "CritShader";
@@ -38,7 +39,7 @@ public sealed class DamageOverlayUiController2 : UIController
     {
         base.Initialize();
 
-        _overlay = new DamageOverlay2();
+        _overlay = new DamageOverlay();
         _overlay.CacheOverlays();
 
         SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
