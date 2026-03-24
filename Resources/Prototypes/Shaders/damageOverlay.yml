@@ -1,4 +1,4 @@
-- type: DamageOverlay
+- type: damageOverlay
   id: CritShader
   rule: Fade
   pulseRate: 3
@@ -7,7 +7,7 @@
   innerMaxLevel: 0.6
   innerMinLevel: 0.02
 
-- type: DamageOverlay
+- type: damageOverlay
   id: BruteShader
   damageGroups:
   - Blunt
@@ -23,7 +23,7 @@
   darknessAlphaOuter: 0.8
   hideOnPainNumbness: true
 
-- type: DamageOverlay
+- type: damageOverlay
   id: OxygenShader
   damageGroups:
   - Asphyxiation

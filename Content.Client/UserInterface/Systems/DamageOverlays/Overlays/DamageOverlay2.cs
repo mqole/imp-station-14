@@ -53,6 +53,7 @@ public sealed class DamageOverlay : Overlay
         {
             var shader = _protoMan.Index((ProtoId<ShaderPrototype>)proto.ShaderMask).InstanceUnique();
             overlays.Add(proto, shader);
+            _lastShaderIntensity.Add(proto, 0f);
         }
 
         return overlays;
