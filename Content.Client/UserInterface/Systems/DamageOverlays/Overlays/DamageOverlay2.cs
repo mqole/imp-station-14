@@ -1,6 +1,8 @@
+using System.Numerics;
 using Content.Shared.Damage.Prototypes;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
+using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
@@ -29,6 +31,8 @@ public sealed class DamageOverlay : Overlay
     ///     We interpolate between our two dictionaries to create smooth transitions.
     /// </summary>
     private Dictionary<DamageOverlayPrototype, float> _lastShaderIntensity = [];
+
+    public override OverlaySpace Space => OverlaySpace.WorldSpace;
 
     // <summary>
     ///     Reinitializes the cached dictionary of damage overlay prototypes and shaders.
@@ -81,6 +85,12 @@ public sealed class DamageOverlay : Overlay
             var proto = overlay.Key;
 
             _lastShaderIntensity[proto] = UpdateIntensity(proto, lastFrameTime);
+            var level = _lastShaderIntensity[proto];
+
+            if (level <= 0)
+                continue;
+
+            // TODO: if you want to add support for other shader masks, you will need to make this code more modular.
 
             var adjustedTime = time * proto.PulseRate;
             var pulse = MathF.Max(0f, MathF.Sin(adjustedTime));
@@ -90,14 +100,14 @@ public sealed class DamageOverlay : Overlay
             var innerMax = proto.InnerMaxLevel * distance;
             var innerMin = proto.InnerMinLevel * distance;
 
-            var level = _lastShaderIntensity[proto];
             var outerRadius = outerMax - level * (outerMax - outerMin);
             var innerRadius = innerMax - level * (innerMax - innerMin);
 
             var shader = overlay.Value;
 
             shader.SetParameter("time", pulse);
-            shader.SetParameter("color", proto.Color);
+
+            shader.SetParameter("color", new Vector3(proto.Color.R, proto.Color.G, proto.Color.B));
 
             // darknessAlphaOuter is the maximum alpha for anything outside of the larger circle
             // darknessAlphaInner (on the shader) is the alpha for anything inside the smallest circle

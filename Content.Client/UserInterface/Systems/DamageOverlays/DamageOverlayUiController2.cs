@@ -104,10 +104,6 @@ public sealed class DamageOverlayUiController : UIController
     ///     Updates the damage overlays shown for the client of a specific entity,
     ///     based on the damage that entity has sustained.
     /// </summary>
-    /// <remarks>
-    ///     This is horribly hardcoded.
-    ///     Unfortunately there's not really a feasible way to unhardcode it.
-    /// </remarks>
     private void UpdateOverlays(
         EntityUid entity,
         MobStateComponent? mobState,
@@ -211,7 +207,8 @@ public sealed class DamageOverlayUiController : UIController
     ///     Modifies the intensity of the shader registered to the corresponding <see cref="DamageOverlayPrototype"/>.
     /// </summary>
     /// <param name="proto">The <see cref="DamageOverlayPrototype"/> to modify the intensity of.</param>
-    private void SetOverlayIntensity(DamageOverlayPrototype proto, float intensity)
+    [PublicAPI]
+    public void SetOverlayIntensity(DamageOverlayPrototype proto, float intensity)
     {
         _overlay.ShaderIntensity[proto] = intensity;
     }
@@ -219,9 +216,9 @@ public sealed class DamageOverlayUiController : UIController
     /// <summary>
     ///     Modifies the intensity of the shader registered to the corresponding <see cref="DamageOverlayPrototype"/>.
     /// </summary>
-    /// <param name="protoDtring">The <see cref="DamageOverlayPrototype"/> to modify the intensity of, as a string.</param>
-
-    private void SetOverlayIntensity(string protoString, float intensity)
+    /// <param name="protoString">The <see cref="DamageOverlayPrototype"/> to modify the intensity of, as a string.</param>
+    [PublicAPI]
+    public void SetOverlayIntensity(string protoString, float intensity)
     {
         if (!_protoMan.TryIndex<DamageOverlayPrototype>(protoString, out var proto))
             return;

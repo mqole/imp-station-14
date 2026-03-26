@@ -9,26 +9,28 @@
 
 - type: damageOverlay
   id: BruteShader
-  damageGroups:
-  - Blunt
-  - Piercing
-  - Slash
-  - Heat
+  damageTypes:
+    - Blunt
+    - Piercing
+    - Slash
+    - Heat
   color: Red
   pulseRate: 3
+  darknessAlphaOuter: 0.8
   outerMaxLevel: 2
   outerMinLevel: 0.8
   innerMaxLevel: 0.6
   innerMinLevel: 0.2
-  darknessAlphaOuter: 0.8
   hideOnPainNumbness: true
 
 - type: damageOverlay
   id: OxygenShader
-  damageGroups:
+  damageTypes:
   - Asphyxiation
   color: Black
+  darknessAlphaOuter: 0.8
   outerMaxLevel: 0.6
   outerMinLevel: 0.06
   innerMaxLevel: 0.02
   innerMinLevel: 0.02
+

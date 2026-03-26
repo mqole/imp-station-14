@@ -8,7 +8,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Client.UserInterface.Systems.DamageOverlays.Overlays;
 
-public sealed class DamageOverlay2 : Overlay
+public sealed class DamageOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> CircleMaskShader = "GradientCircleMask";
 
@@ -48,7 +48,7 @@ public sealed class DamageOverlay2 : Overlay
 
     public float DeadLevel = 1f;
 
-    public DamageOverlay2()
+    public DamageOverlay()
     {
         // TODO: Replace
         IoCManager.InjectDependencies(this);
