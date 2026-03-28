@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: Darkmajia
-  changes:
-  - message: Inserting compressed paint into a spray painter plays a sound.
-    type: Add
-  id: 2225
-  time: '2025-09-03T11:46:36.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3369
 - author: widgetbeck
   changes:
   - message: Fixed replicator nest sound effects lingering after the nest is destroyed.
@@ -4149,3 +4142,15 @@
   id: 2724
   time: '2026-03-28T05:28:54.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4231
+- author: Yental
+  changes:
+  - message: Members of the Space Wizard Federation may notice that the gems covering
+      their robes are crustier then ever before! (added resistances to wizard robes)
+    type: Add
+  - message: Someone tried to usurp the goddess of magic again, so she has adjusted
+      the fireball spell for their hubris, sorry! (fireball has a lower cooldown but
+      deals less damage).
+    type: Tweak
+  id: 2725
+  time: '2026-03-28T06:50:52.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4114
