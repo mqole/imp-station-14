@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: Smugman
-  changes:
-  - message: Mercenaries can now afford seeing things
-    type: Tweak
-  id: 2234
-  time: '2025-09-05T11:36:53.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3383
 - author: TheGrimbeeper
   changes:
   - message: Kill or maroon objective has stopped being a "yes man" and always saying
@@ -4141,3 +4134,11 @@
   id: 2733
   time: '2026-03-29T19:14:16.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4217
+- author: kipdotnet
+  changes:
+  - message: Edited the sprites for welding fuel tanks to be more distinct from water
+      tanks after colourblindness concerns.
+    type: Tweak
+  id: 2734
+  time: '2026-03-29T19:33:24.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4260
