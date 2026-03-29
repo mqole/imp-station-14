@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: honeyed-lemons
-  changes:
-  - message: Footsteps can now be heard outside on box! Fun!
-    type: Fix
-  id: 2233
-  time: '2025-09-05T11:26:33.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3395
 - author: Smugman
   changes:
   - message: Mercenaries can now afford seeing things
@@ -4140,3 +4133,11 @@
   id: 2732
   time: '2026-03-29T19:12:52.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4215
+- author: DVD Player
+  changes:
+  - message: The Svalinn can no longer be printed in a Protolathe that hasn't been
+      emagged, but can printed at a SecFab and an emagged Autolathe now.
+    type: Tweak
+  id: 2733
+  time: '2026-03-29T19:14:16.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4217
