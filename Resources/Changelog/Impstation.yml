@@ -1,12 +1,4 @@
 ﻿Entries:
-- author: TheGrimbeeper
-  changes:
-  - message: Kill or maroon objective has stopped being a "yes man" and always saying
-      you succeeded
-    type: Fix
-  id: 2235
-  time: '2025-09-06T07:50:14.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3414
 - author: wendyribstonpippin
   changes:
   - message: A record of the trials and tribulation of the northern settlement in
@@ -4142,3 +4134,11 @@
   id: 2734
   time: '2026-03-29T19:33:24.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4260
+- author: entings
+  changes:
+  - message: The Imp sector has finally updated their rulings on synthblood volume
+      to function on par with the rest of the crew.
+    type: Fix
+  id: 2735
+  time: '2026-03-29T19:39:40.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4269
