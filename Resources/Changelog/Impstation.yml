@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: CrystalClover
-  changes:
-  - message: You can now shield bash, knocking away attackers!
-    type: Tweak
-  id: 2232
-  time: '2025-09-05T11:24:06.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3381
 - author: honeyed-lemons
   changes:
   - message: Footsteps can now be heard outside on box! Fun!
@@ -4140,3 +4133,10 @@
   id: 2731
   time: '2026-03-29T19:07:06.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4137
+- author: msTheowo
+  changes:
+  - message: Uplinks have a new UI.
+    type: Add
+  id: 2732
+  time: '2026-03-29T19:12:52.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4215
