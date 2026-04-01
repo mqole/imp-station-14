@@ -5,6 +5,7 @@ using Content.Shared.Coordinates.Helpers;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Effects;
 using Content.Shared.FixedPoint;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
@@ -14,6 +15,9 @@ using Content.Shared.Stunnable;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
+using Robust.Shared.Network;
+using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 
@@ -32,8 +36,11 @@ public sealed partial class MoKrillSystem : EntitySystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
 
     private readonly float _abilityRange = 2f;
+    private static readonly EntProtoId AbilityPulse = "EffectSparks";
 
     private readonly TimeSpan _burrowSpinDuration = TimeSpan.FromSeconds(1);
 
@@ -66,6 +73,15 @@ public sealed partial class MoKrillSystem : EntitySystem
             RemCompDeferred<BurrowingComponent>(ent);
         }
 
+        var spinQuery = EntityQueryEnumerator<SpinningComponent>();
+        while (spinQuery.MoveNext(out var ent, out var comp))
+        {
+            if (_timing.CurTime < comp.OutTime)
+                continue;
+            _appearance.SetData(ent, BurrowVisuals.VisualState, BurrowVisualState.Normal);
+            RemCompDeferred<SpinningComponent>(ent);
+        }
+
         var comboQuery = EntityQueryEnumerator<ComboingComponent>();
         while (comboQuery.MoveNext(out var ent, out var comp))
         {
@@ -81,6 +97,9 @@ public sealed partial class MoKrillSystem : EntitySystem
     {
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power1_01.ogg"), ent, ent);
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Digger_scorn_cast.ogg"), ent, ent);
+
+        if (_net.IsServer)
+            Spawn(AbilityPulse, Transform(ent).Coordinates);
 
         var heal = 0f;
         var damage = new DamageSpecifier
@@ -99,6 +118,7 @@ public sealed partial class MoKrillSystem : EntitySystem
 
             _dmg.TryChangeDamage(mob, damage);
             heal -= 10f;
+            _color.RaiseEffect(Color.Red, [mob], Filter.Pvs(mob, entityManager: EntityManager));
         }
 
         var healing = new DamageSpecifier
@@ -114,6 +134,7 @@ public sealed partial class MoKrillSystem : EntitySystem
 
         EnsureComp<DamageableComponent>(ent, out var dmg);
         _dmg.TryChangeDamage((ent, dmg), healing);
+        _color.RaiseEffect(Color.Green, [ent], Filter.Pvs(ent, entityManager: EntityManager));
     }
 
     private void OnBurrow(Entity<ActionsComponent> ent, ref MoKrillBurrowStartEvent args)
@@ -131,7 +152,7 @@ public sealed partial class MoKrillSystem : EntitySystem
     private void OnBurrowEnd(Entity<ActionsComponent> ent, ref MoKrillBurrowEndEvent args)
     {
         RemComp<GodmodeComponent>(ent);
-        _appearance.SetData(ent, BurrowVisuals.VisualState, BurrowVisualState.Normal);
+        _appearance.SetData(ent, BurrowVisuals.VisualState, BurrowVisualState.Spinning);
 
         var lookup = _lookup.GetEntitiesInRange(ent, _abilityRange, LookupFlags.Dynamic);
         foreach (var mob in lookup)
@@ -140,10 +161,15 @@ public sealed partial class MoKrillSystem : EntitySystem
             hit.EndTime = _timing.CurTime + _burrowSpinDuration;
         }
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowend.ogg"), ent, ent);
+        var spin = EnsureComp<SpinningComponent>(ent);
+        spin.OutTime = _timing.CurTime + spin.Duration;
     }
 
     private void OnSandBlast(Entity<ActionsComponent> ent, ref MoKrillSandBlastEvent args)
     {
+        if (_net.IsServer)
+            Spawn(AbilityPulse, Transform(ent).Coordinates);
+
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power3_02.ogg"), ent, ent);
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a3_sandblast_cast_delay.ogg"), ent, ent);
 
@@ -162,6 +188,8 @@ public sealed partial class MoKrillSystem : EntitySystem
                 continue;
 
             _dmg.TryChangeDamage(mob, damage);
+            _color.RaiseEffect(Color.Red, [mob], Filter.Pvs(mob, entityManager: EntityManager));
+
             var disarmArgs = new DisarmedEvent(mob, ent, 0);
             RaiseLocalEvent(mob, ref disarmArgs);
         }
@@ -169,6 +197,9 @@ public sealed partial class MoKrillSystem : EntitySystem
 
     private void OnComboStart(Entity<ActionsComponent> ent, ref MoKrillComboStartEvent args)
     {
+        if (_net.IsServer)
+            Spawn(AbilityPulse, Transform(ent).Coordinates);
+
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power4_08.ogg"), ent, ent);
         _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/combo.ogg"), ent, ent);
 
@@ -181,7 +212,7 @@ public sealed partial class MoKrillSystem : EntitySystem
             return;
 
         _transform.SetCoordinates(args.Target, coords);
-        _transform.AttachToGridOrMap(args.Target, xform);
+        _transform.AttachToGridOrMap(args.Target, Transform(args.Target));
 
         var comboing = EnsureComp<ComboingComponent>(ent);
         comboing.EndTime = _timing.CurTime + comboing.Duration;
@@ -210,20 +241,30 @@ public sealed partial class MoKrillComboEndEvent : EntityEventArgs { }
 public enum BurrowVisuals : byte
 {
     VisualState,
+    Spin
 }
 
 [Serializable, NetSerializable]
 public enum BurrowVisualState : byte
 {
     Normal,
-    Burrowing
+    Burrowing,
+    Spinning
 }
+
 [RegisterComponent]
 public sealed partial class BurrowVisualsComponent : Component { }
 [RegisterComponent]
 public sealed partial class BurrowingComponent : Component
 {
     public TimeSpan Duration = TimeSpan.FromSeconds(5);
+    public TimeSpan OutTime;
+}
+
+[RegisterComponent]
+public sealed partial class SpinningComponent : Component
+{
+    public TimeSpan Duration = TimeSpan.FromSeconds(2.4);
     public TimeSpan OutTime;
 }
 
@@ -244,6 +285,7 @@ public sealed partial class BeingBurrowHitComponent : Component
 
 public sealed class BeingBurrowHitSystem : EntitySystem
 {
+    [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
     [Dependency] private readonly DamageableSystem _dmg = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
@@ -258,9 +300,11 @@ public sealed class BeingBurrowHitSystem : EntitySystem
                 continue;
             comp.NextHit = _timing.CurTime + comp.HitDelay;
             _dmg.TryChangeDamage(ent, comp.Damage);
+            _color.RaiseEffect(Color.Red, [ent], Filter.Pvs(ent, entityManager: EntityManager));
+
 
             if (_timing.CurTime > comp.EndTime)
-                RemCompDeferred<BeingComboedComponent>(ent);
+                RemCompDeferred<BeingBurrowHitComponent>(ent);
         }
     }
 }
@@ -316,6 +360,7 @@ public sealed class BeingComboedSystem : EntitySystem
 {
     [Dependency] private readonly DamageableSystem _dmg = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
 
     public override void Update(float frameTime)
     {
@@ -328,6 +373,7 @@ public sealed class BeingComboedSystem : EntitySystem
                 continue;
             comp.NextHit = _timing.CurTime + comp.HitDelay;
             _dmg.TryChangeDamage(ent, comp.Damage);
+            _color.RaiseEffect(Color.Red, [ent], Filter.Pvs(ent, entityManager: EntityManager));
 
             if (_timing.CurTime > comp.EndTime)
             {

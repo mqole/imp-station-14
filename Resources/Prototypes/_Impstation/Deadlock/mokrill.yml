@@ -12,6 +12,8 @@
       state: mokrill
     - map: [ "enum.BurrowVisuals.VisualState" ]
       state: burrowdirt
+    - map: [ "enum.BurrowVisuals.Spin" ]
+      state: spin
   - type: Vocal
     sounds:
       Unsexed: MoAndKrill
@@ -107,6 +109,7 @@
     icon:
       sprite: _Impstation/deadlock.rsi
       state: combo
+  - type: TargetAction
   - type: EntityTargetAction
     whitelist:
       components:

@@ -28,8 +28,11 @@ public sealed class BurrowVisualizerSystem : EntitySystem
         if (!TryComp<SpriteComponent>(uid, out _))
             return;
 
-        var isBurrowing = visualState == BurrowVisualState.Burrowing;
+        var isBurrowing = !(visualState != BurrowVisualState.Burrowing);
+        var isSpinning = visualState == BurrowVisualState.Spinning;
+
         _sprite.LayerSetVisible(uid, BurrowVisuals.VisualState, isBurrowing);
         _sprite.LayerSetVisible(uid, DamageStateVisualLayers.Base, !isBurrowing);
+        _sprite.LayerSetVisible(uid, BurrowVisuals.Spin, isSpinning);
     }
 }
