@@ -50,6 +50,7 @@
     - ActionMoKrillBurrow
     - ActionMoKrillSandBlast
     - ActionMoKrillCombo
+  - type: BurrowVisuals
 
 - type: entity
   id: ActionMoKrillScorn
@@ -111,12 +112,14 @@
 - type: soundCollection
   id: MoAndKrillStep
   files:
-  - /Audio/_Impstation/Deadlock/MoKrillStep.ogg
+  - /Audio/_Impstation/Deadlock/Mokrill_footstep_01.ogg
+  - /Audio/_Impstation/Deadlock/Mokrill_footstep_02.ogg
+  - /Audio/_Impstation/Deadlock/Mokrill_footstep_03.ogg
 
 - type: emoteSounds
   id: MoAndKrill
   sound:
-    path: /Audio/_Impstation/Deadlock/MoKrillEmote.ogg
+    path: /Audio/_Impstation/Deadlock/krill_ping_need_plan.ogg
     params:
       volume: -3
 

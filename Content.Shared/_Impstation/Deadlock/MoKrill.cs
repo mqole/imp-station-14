@@ -1,65 +1,344 @@
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
+using Content.Shared.CombatMode;
+using Content.Shared.Coordinates.Helpers;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
+using Content.Shared.FixedPoint;
+using Content.Shared.Interaction;
+using Content.Shared.Interaction.Events;
+using Content.Shared.Movement.Events;
+using Content.Shared.Physics;
+using Content.Shared.Stunnable;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Map;
+using Robust.Shared.Serialization;
+using Robust.Shared.Timing;
 
 namespace Content.Shared._Impstation.Deadlock;
 
+/// <summary>
+///     yuuup im hardcoding this
+/// </summary>
 public sealed partial class MoKrillSystem : EntitySystem
 {
+    [Dependency] private readonly DamageableSystem _dmg = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IMapManager _map = default!;
+    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly SharedInteractionSystem _interaction = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
+
+    private readonly float _abilityRange = 2f;
+
+    private readonly TimeSpan _burrowSpinDuration = TimeSpan.FromSeconds(1);
+
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<ActionsComponent, MoKrillScornEvent>(OnScorn);
-        SubscribeLocalEvent<ActionsComponent, MoKrillBurrowEvent>(OnBurrow);
+
+        SubscribeLocalEvent<ActionsComponent, MoKrillBurrowStartEvent>(OnBurrow);
+        SubscribeLocalEvent<ActionsComponent, MoKrillBurrowEndEvent>(OnBurrowEnd);
+
         SubscribeLocalEvent<ActionsComponent, MoKrillSandBlastEvent>(OnSandBlast);
-        SubscribeLocalEvent<ActionsComponent, MoKrillComboEvent>(OnCombo);
+
+        SubscribeLocalEvent<ActionsComponent, MoKrillComboStartEvent>(OnComboStart);
+        SubscribeLocalEvent<ActionsComponent, MoKrillComboEndEvent>(OnComboEnd);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var burrowQuery = EntityQueryEnumerator<BurrowingComponent>();
+        while (burrowQuery.MoveNext(out var ent, out var comp))
+        {
+            if (_timing.CurTime < comp.OutTime)
+                continue;
+            var ev = new MoKrillBurrowEndEvent();
+            RaiseLocalEvent(ent, ev);
+        }
+
+        var comboQuery = EntityQueryEnumerator<ComboingComponent>();
+        while (comboQuery.MoveNext(out var ent, out var comp))
+        {
+            if (_timing.CurTime < comp.EndTime)
+                continue;
+            var ev = new MoKrillComboEndEvent();
+            RaiseLocalEvent(ent, ev);
+        }
     }
 
     private void OnScorn(Entity<ActionsComponent> ent, ref MoKrillScornEvent args)
     {
-        // play sound.
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power1_01.ogg"), ent);
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Digger_scorn_cast.ogg"), ent);
 
-        // get all entities in a certain radius.
-        // damage them.
-        // heal.
+        var heal = 0f;
+        var damage = new DamageSpecifier
+        {
+            DamageDict = new Dictionary<string, FixedPoint2>
+            {
+                {"Blunt", 12f},
+            },
+        };
+
+        var lookup = _lookup.GetEntitiesInRange(ent, _abilityRange, LookupFlags.Dynamic);
+        foreach (var mob in lookup)
+        {
+            if (!TryComp<DamageableComponent>(mob, out _))
+                continue;
+
+            _dmg.TryChangeDamage(mob, damage);
+            heal -= 10f;
+        }
+
+        var healing = new DamageSpecifier
+        {
+            DamageDict = new Dictionary<string, FixedPoint2>
+            {
+                {"Brute", heal/4},
+                {"Burn", heal/4},
+                {"Airloss", heal/4},
+                {"Tozin", heal/4},
+            },
+        };
+
+        EnsureComp<DamageableComponent>(ent, out var dmg);
+        _dmg.TryChangeDamage((ent, dmg), healing);
     }
 
-    private void OnBurrow(Entity<ActionsComponent> ent, ref MoKrillBurrowEvent args)
+    private void OnBurrow(Entity<ActionsComponent> ent, ref MoKrillBurrowStartEvent args)
     {
-        // play sound.
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power2_01.ogg"), ent);
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowing.ogg"), ent);
 
-        // make mokrill untargetable
-        // swap sprite to a 'burrowing' layer
+        EnsureComp<GodmodeComponent>(ent);
+        _appearance.SetData(ent, BurrowVisuals.VisualState, BurrowVisualState.Burrowing);
 
-        // wait duration
+        var burrow = EnsureComp<BurrowingComponent>(ent);
+        burrow.OutTime = _timing.CurTime + burrow.Duration;
+    }
 
-        // get all entities in a certain radius.
-        // damage them.
-        // play sound, stop other sound.
-        // swap sprite back.
-        // become targetable again.
+    private void OnBurrowEnd(Entity<ActionsComponent> ent, ref MoKrillBurrowEndEvent args)
+    {
+        RemComp<GodmodeComponent>(ent);
+        _appearance.SetData(ent, BurrowVisuals.VisualState, BurrowVisualState.Normal);
+
+        var lookup = _lookup.GetEntitiesInRange(ent, _abilityRange, LookupFlags.Dynamic);
+        foreach (var mob in lookup)
+        {
+            var hit = EnsureComp<BeingBurrowHitComponent>(mob);
+            hit.EndTime = _timing.CurTime + _burrowSpinDuration;
+        }
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowend.ogg"), ent);
+
+        var ev = new MoKrillBurrowEndEvent();
+        RaiseLocalEvent(ent, ev);
     }
 
     private void OnSandBlast(Entity<ActionsComponent> ent, ref MoKrillSandBlastEvent args)
     {
-        // play sound.
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power3_02.ogg"), ent);
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a3_sandblast_cast_delay.ogg"), ent);
 
-        // get all entities in a certain radius.
-        // damage them.
-        // disarm them.
+        var damage = new DamageSpecifier
+        {
+            DamageDict = new Dictionary<string, FixedPoint2>
+            {
+                {"Blunt", 10f},
+            },
+        };
+
+        var lookup = _lookup.GetEntitiesInRange(ent, _abilityRange, LookupFlags.Dynamic);
+        foreach (var mob in lookup)
+        {
+            if (!TryComp<DamageableComponent>(mob, out _))
+                continue;
+
+            _dmg.TryChangeDamage(mob, damage);
+            var disarmArgs = new DisarmedEvent(mob, ent, 0);
+            RaiseLocalEvent(mob, ref disarmArgs);
+        }
     }
 
-    private void OnCombo(Entity<ActionsComponent> ent, ref MoKrillComboEvent args)
+    private void OnComboStart(Entity<ActionsComponent> ent, ref MoKrillComboStartEvent args)
     {
-        // play sound.
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power4_08.ogg"), ent);
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/combo.ogg"), ent);
 
-        // pull target entity to mokrill.
-        // stun target entity.
-        // continually do damage to that entity over a duration.
+        var xform = Transform(args.Performer);
+        // Get the tile in front of the mokrill
+        var offsetValue = xform.LocalRotation.ToWorldVec();
+        var coords = xform.Coordinates.Offset(offsetValue).SnapToGrid(EntityManager, _map);
+
+        if (xform.MapID != _transform.GetMapId(coords) || !_interaction.InRangeUnobstructed(args.Performer, args.Target, range: 1000F, collisionMask: CollisionGroup.Opaque, popup: true))
+            return;
+
+        _transform.SetCoordinates(args.Target, coords);
+        _transform.AttachToGridOrMap(args.Target, xform);
+
+        var comboing = EnsureComp<ComboingComponent>(ent);
+        comboing.EndTime = _timing.CurTime + comboing.Duration;
+
+        EnsureComp<StunnedComponent>(args.Target);
+        var comboed = EnsureComp<BeingComboedComponent>(args.Target);
+        comboed.EndTime = _timing.CurTime + comboing.Duration;
+    }
+
+    private void OnComboEnd(Entity<ActionsComponent> ent, ref MoKrillComboEndEvent args)
+    {
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a4_combo_end_01.ogg"), ent);
+        RemComp<ComboingComponent>(ent);
     }
 }
 
 public sealed partial class MoKrillScornEvent : InstantActionEvent { }
-public sealed partial class MoKrillBurrowEvent : InstantActionEvent { }
+public sealed partial class MoKrillBurrowStartEvent : InstantActionEvent { }
+public sealed partial class MoKrillBurrowEndEvent : EntityEventArgs { }
 public sealed partial class MoKrillSandBlastEvent : InstantActionEvent { }
-public sealed partial class MoKrillComboEvent : EntityTargetActionEvent { }
+public sealed partial class MoKrillComboStartEvent : EntityTargetActionEvent { }
+public sealed partial class MoKrillComboEndEvent : EntityEventArgs { }
+
+[Serializable, NetSerializable]
+
+public enum BurrowVisuals : byte
+{
+    VisualState,
+}
+
+[Serializable, NetSerializable]
+public enum BurrowVisualState : byte
+{
+    Normal,
+    Burrowing
+}
+[RegisterComponent]
+public sealed partial class BurrowVisualsComponent : Component
+{
+    public string BurrowState = "burrow";
+}
+
+[RegisterComponent]
+public sealed partial class BurrowingComponent : Component
+{
+    public TimeSpan Duration = TimeSpan.FromSeconds(5);
+    public TimeSpan OutTime;
+}
+
+[RegisterComponent]
+public sealed partial class BeingBurrowHitComponent : Component
+{
+    public TimeSpan HitDelay = TimeSpan.FromMilliseconds(20);
+    public TimeSpan NextHit;
+    public TimeSpan EndTime;
+    public DamageSpecifier Damage = new()
+    {
+        DamageDict = new Dictionary<string, FixedPoint2>
+        {
+            {"Blunt", 5f},
+        },
+    };
+}
+
+public sealed class BeingBurrowHitSystem : EntitySystem
+{
+    [Dependency] private readonly DamageableSystem _dmg = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<BeingBurrowHitComponent>();
+        while (query.MoveNext(out var ent, out var comp))
+        {
+            if (_timing.CurTime < comp.NextHit)
+                continue;
+            comp.NextHit = _timing.CurTime + comp.HitDelay;
+            _dmg.TryChangeDamage(ent, comp.Damage);
+
+            if (_timing.CurTime < comp.EndTime)
+                RemCompDeferred<BeingComboedComponent>(ent);
+        }
+    }
+}
+
+[RegisterComponent]
+public sealed partial class ComboingComponent : Component
+{
+    public TimeSpan Duration = TimeSpan.FromSeconds(2.4);
+    public TimeSpan EndTime;
+}
+
+public sealed class ComboingSystem : EntitySystem
+{
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<ComboingComponent, ChangeDirectionAttemptEvent>(OnAttempt);
+        SubscribeLocalEvent<ComboingComponent, UpdateCanMoveEvent>(OnAttempt);
+        SubscribeLocalEvent<ComboingComponent, InteractionAttemptEvent>(OnAttemptInteract);
+        SubscribeLocalEvent<ComboingComponent, UseAttemptEvent>(OnAttempt);
+        SubscribeLocalEvent<ComboingComponent, AttackAttemptEvent>(OnAttempt);
+    }
+
+    private void OnAttemptInteract(Entity<ComboingComponent> ent, ref InteractionAttemptEvent args)
+    {
+        args.Cancelled = true;
+    }
+
+    private void OnAttempt(EntityUid uid, ComboingComponent _, CancellableEntityEventArgs args)
+    {
+        args.Cancel();
+    }
+
+}
+
+[RegisterComponent]
+public sealed partial class BeingComboedComponent : Component
+{
+    public TimeSpan HitDelay = TimeSpan.FromMilliseconds(40);
+    public TimeSpan NextHit;
+    public TimeSpan EndTime;
+    public DamageSpecifier Damage = new()
+    {
+        DamageDict = new Dictionary<string, FixedPoint2>
+        {
+            {"Blunt", 10f},
+        },
+    };
+}
+
+public sealed class BeingComboedSystem : EntitySystem
+{
+    [Dependency] private readonly DamageableSystem _dmg = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<BeingComboedComponent>();
+        while (query.MoveNext(out var ent, out var comp))
+        {
+            if (_timing.CurTime < comp.NextHit)
+                continue;
+            comp.NextHit = _timing.CurTime + comp.HitDelay;
+            _dmg.TryChangeDamage(ent, comp.Damage);
+
+            if (_timing.CurTime < comp.EndTime)
+            {
+                RemCompDeferred<BeingComboedComponent>(ent);
+                RemComp<StunnedComponent>(ent);
+            }
+        }
+    }
+}
