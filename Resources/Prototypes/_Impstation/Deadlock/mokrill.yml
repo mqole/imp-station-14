@@ -6,16 +6,18 @@
   components:
   - type: Sprite
     drawdepth: Mobs
-    sprite: _Impstation/Deadlock/moandkrill.rsi
+    sprite: _Impstation/deadlock.rsi
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base" ]
-      state: moandkrill
+      state: mokrill
+    - map: [ "enum.BurrowVisuals.VisualState" ]
+      state: burrowdirt
   - type: Vocal
     sounds:
       Unsexed: MoAndKrill
   - type: HTN
     rootTask:
-      task: DeadlockCompound
+      task: MoAndKrillCompound
   - type: MeleeWeapon
     hidden: true
     soundHit:
@@ -38,7 +40,7 @@
   - type: Body
   - type: FootstepModifier
     footstepSoundCollection:
-      collection: PudgeStep
+      collection: MoAndKrillStep
       params:
         volume: -3
   - type: NpcFactionMember
@@ -57,12 +59,13 @@
   name: SCORN
   description: Deal damage to nearby enemies and heal yourself based on the damage done. Heal is stronger against enemy heroes.
   components:
-  - type: InstantAction
+  - type: Action
     useDelay: 13
     itemIconStyle: NoItem
     icon:
-      sprite: _Impstation/Deadlock/moandkrill.rsi
+      sprite: _Impstation/deadlock.rsi
       state: scorn
+  - type: InstantAction
     event: !type:MoKrillScornEvent {}
 
 - type: entity
@@ -70,25 +73,27 @@
   name: BURROW
   description: Burrow underground, moving faster, and gaining spirit and bullet armor. Damage from enemy heroes will reduce the speed bonus. When you jump out, deal spirit damage, slow, and knockup.
   components:
-  - type: InstantAction
+  - type: Action
     useDelay: 40
     itemIconStyle: NoItem
     icon:
-      sprite: _Impstation/Deadlock/moandkrill.rsi
+      sprite: _Impstation/deadlock.rsi
       state: burrow
-    event: !type:MoKrillBurrowEvent {}
+  - type: InstantAction
+    event: !type:MoKrillBurrowStartEvent {}
 
 - type: entity
   id: ActionMoKrillSandBlast
   name: SAND BLAST
   description: Spray sand that disarms enemies in front of you and deals damage.
   components:
-  - type: InstantAction
+  - type: Action
     useDelay: 40
     itemIconStyle: NoItem
     icon:
-      sprite: _Impstation/Deadlock/moandkrill.rsi
+      sprite: _Impstation/deadlock.rsi
       state: sandblast
+  - type: InstantAction
     event: !type:MoKrillSandBlastEvent {}
 
 - type: entity
@@ -96,18 +101,18 @@
   name: COMBO
   description: Hold the target in place, stunning them and dealing damage during the channel. If they die during, or within 3 seconds of Combo ending, you permanently gain max health.
   components:
-  - type: EntityTargetAction
+  - type: Action
     useDelay: 130
+    itemIconStyle: NoItem
+    icon:
+      sprite: _Impstation/deadlock.rsi
+      state: combo
+  - type: EntityTargetAction
     whitelist:
       components:
       - Body
     canTargetSelf: false
-    interactOnMiss: false
-    itemIconStyle: NoItem
-    icon:
-      sprite: _Impstation/Deadlock/moandkrill.rsi
-      state: combo
-    event: !type:MoKrillComboEvent {}
+    event: !type:MoKrillComboStartEvent {}
 
 - type: soundCollection
   id: MoAndKrillStep

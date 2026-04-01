@@ -63,6 +63,7 @@ public sealed partial class MoKrillSystem : EntitySystem
                 continue;
             var ev = new MoKrillBurrowEndEvent();
             RaiseLocalEvent(ent, ev);
+            RemCompDeferred<BurrowingComponent>(ent);
         }
 
         var comboQuery = EntityQueryEnumerator<ComboingComponent>();
@@ -72,13 +73,14 @@ public sealed partial class MoKrillSystem : EntitySystem
                 continue;
             var ev = new MoKrillComboEndEvent();
             RaiseLocalEvent(ent, ev);
+            RemCompDeferred<ComboingComponent>(ent);
         }
     }
 
     private void OnScorn(Entity<ActionsComponent> ent, ref MoKrillScornEvent args)
     {
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power1_01.ogg"), ent);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Digger_scorn_cast.ogg"), ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power1_01.ogg"), ent, ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Digger_scorn_cast.ogg"), ent, ent);
 
         var heal = 0f;
         var damage = new DamageSpecifier
@@ -116,8 +118,8 @@ public sealed partial class MoKrillSystem : EntitySystem
 
     private void OnBurrow(Entity<ActionsComponent> ent, ref MoKrillBurrowStartEvent args)
     {
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power2_01.ogg"), ent);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowing.ogg"), ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power2_01.ogg"), ent, ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowing.ogg"), ent, ent);
 
         EnsureComp<GodmodeComponent>(ent);
         _appearance.SetData(ent, BurrowVisuals.VisualState, BurrowVisualState.Burrowing);
@@ -137,16 +139,13 @@ public sealed partial class MoKrillSystem : EntitySystem
             var hit = EnsureComp<BeingBurrowHitComponent>(mob);
             hit.EndTime = _timing.CurTime + _burrowSpinDuration;
         }
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowend.ogg"), ent);
-
-        var ev = new MoKrillBurrowEndEvent();
-        RaiseLocalEvent(ent, ev);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/burrowend.ogg"), ent, ent);
     }
 
     private void OnSandBlast(Entity<ActionsComponent> ent, ref MoKrillSandBlastEvent args)
     {
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power3_02.ogg"), ent);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a3_sandblast_cast_delay.ogg"), ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power3_02.ogg"), ent, ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a3_sandblast_cast_delay.ogg"), ent, ent);
 
         var damage = new DamageSpecifier
         {
@@ -170,8 +169,8 @@ public sealed partial class MoKrillSystem : EntitySystem
 
     private void OnComboStart(Entity<ActionsComponent> ent, ref MoKrillComboStartEvent args)
     {
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power4_08.ogg"), ent);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/combo.ogg"), ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/krill_use_power4_08.ogg"), ent, ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/combo.ogg"), ent, ent);
 
         var xform = Transform(args.Performer);
         // Get the tile in front of the mokrill
@@ -194,7 +193,7 @@ public sealed partial class MoKrillSystem : EntitySystem
 
     private void OnComboEnd(Entity<ActionsComponent> ent, ref MoKrillComboEndEvent args)
     {
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a4_combo_end_01.ogg"), ent);
+        _audio.PlayPredicted(new SoundPathSpecifier("/Audio/_Impstation/Deadlock/Mokrill_a4_combo_end_01.ogg"), ent, ent);
         RemComp<ComboingComponent>(ent);
     }
 }
@@ -220,11 +219,7 @@ public enum BurrowVisualState : byte
     Burrowing
 }
 [RegisterComponent]
-public sealed partial class BurrowVisualsComponent : Component
-{
-    public string BurrowState = "burrow";
-}
-
+public sealed partial class BurrowVisualsComponent : Component { }
 [RegisterComponent]
 public sealed partial class BurrowingComponent : Component
 {
@@ -235,7 +230,7 @@ public sealed partial class BurrowingComponent : Component
 [RegisterComponent]
 public sealed partial class BeingBurrowHitComponent : Component
 {
-    public TimeSpan HitDelay = TimeSpan.FromMilliseconds(20);
+    public TimeSpan HitDelay = TimeSpan.FromMilliseconds(200);
     public TimeSpan NextHit;
     public TimeSpan EndTime;
     public DamageSpecifier Damage = new()
@@ -264,7 +259,7 @@ public sealed class BeingBurrowHitSystem : EntitySystem
             comp.NextHit = _timing.CurTime + comp.HitDelay;
             _dmg.TryChangeDamage(ent, comp.Damage);
 
-            if (_timing.CurTime < comp.EndTime)
+            if (_timing.CurTime > comp.EndTime)
                 RemCompDeferred<BeingComboedComponent>(ent);
         }
     }
@@ -305,7 +300,7 @@ public sealed class ComboingSystem : EntitySystem
 [RegisterComponent]
 public sealed partial class BeingComboedComponent : Component
 {
-    public TimeSpan HitDelay = TimeSpan.FromMilliseconds(40);
+    public TimeSpan HitDelay = TimeSpan.FromMilliseconds(400);
     public TimeSpan NextHit;
     public TimeSpan EndTime;
     public DamageSpecifier Damage = new()
@@ -334,7 +329,7 @@ public sealed class BeingComboedSystem : EntitySystem
             comp.NextHit = _timing.CurTime + comp.HitDelay;
             _dmg.TryChangeDamage(ent, comp.Damage);
 
-            if (_timing.CurTime < comp.EndTime)
+            if (_timing.CurTime > comp.EndTime)
             {
                 RemCompDeferred<BeingComboedComponent>(ent);
                 RemComp<StunnedComponent>(ent);

@@ -25,7 +25,7 @@ public sealed class BurrowVisualizerSystem : EntitySystem
             visualState = BurrowVisualState.Normal;
         }
 
-        if (!TryComp<SpriteComponent>(uid, out var sprite))
+        if (!TryComp<SpriteComponent>(uid, out _))
             return;
 
         var isBurrowing = visualState == BurrowVisualState.Burrowing;
