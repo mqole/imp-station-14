@@ -118,7 +118,9 @@ public sealed partial class MoKrillSystem : EntitySystem
 
             _dmg.TryChangeDamage(mob, damage);
             heal -= 10f;
-            _color.RaiseEffect(Color.Red, [mob], Filter.Pvs(mob, entityManager: EntityManager));
+            List<EntityUid> mobList = [];
+            mobList.Add(mob);
+            _color.RaiseEffect(Color.Red, mobList, Filter.Pvs(mob, entityManager: EntityManager));
         }
 
         var healing = new DamageSpecifier
@@ -134,7 +136,9 @@ public sealed partial class MoKrillSystem : EntitySystem
 
         EnsureComp<DamageableComponent>(ent, out var dmg);
         _dmg.TryChangeDamage((ent, dmg), healing);
-        _color.RaiseEffect(Color.Green, [ent], Filter.Pvs(ent, entityManager: EntityManager));
+        List<EntityUid> list = [];
+        list.Add(ent);
+        _color.RaiseEffect(Color.Green, list, Filter.Pvs(ent, entityManager: EntityManager));
     }
 
     private void OnBurrow(Entity<ActionsComponent> ent, ref MoKrillBurrowStartEvent args)
@@ -188,7 +192,9 @@ public sealed partial class MoKrillSystem : EntitySystem
                 continue;
 
             _dmg.TryChangeDamage(mob, damage);
-            _color.RaiseEffect(Color.Red, [mob], Filter.Pvs(mob, entityManager: EntityManager));
+            List<EntityUid> list = [];
+            list.Add(mob);
+            _color.RaiseEffect(Color.Red, list, Filter.Pvs(mob, entityManager: EntityManager));
 
             var disarmArgs = new DisarmedEvent(mob, ent, 0);
             RaiseLocalEvent(mob, ref disarmArgs);
@@ -300,7 +306,9 @@ public sealed class BeingBurrowHitSystem : EntitySystem
                 continue;
             comp.NextHit = _timing.CurTime + comp.HitDelay;
             _dmg.TryChangeDamage(ent, comp.Damage);
-            _color.RaiseEffect(Color.Red, [ent], Filter.Pvs(ent, entityManager: EntityManager));
+            List<EntityUid> list = [];
+            list.Add(ent);
+            _color.RaiseEffect(Color.Red, list, Filter.Pvs(ent, entityManager: EntityManager));
 
 
             if (_timing.CurTime > comp.EndTime)
@@ -373,7 +381,9 @@ public sealed class BeingComboedSystem : EntitySystem
                 continue;
             comp.NextHit = _timing.CurTime + comp.HitDelay;
             _dmg.TryChangeDamage(ent, comp.Damage);
-            _color.RaiseEffect(Color.Red, [ent], Filter.Pvs(ent, entityManager: EntityManager));
+            List<EntityUid> list = [];
+            list.Add(ent);
+            _color.RaiseEffect(Color.Red, list, Filter.Pvs(ent, entityManager: EntityManager));
 
             if (_timing.CurTime > comp.EndTime)
             {
