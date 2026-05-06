@@ -43,7 +43,6 @@ public sealed class StrangeMoodTests
         """;
 
     [Test]
-    [Repeat(10)]
     public async Task TestDuplicatePrevention()
     {
         await using var pair = await PoolManager.GetServerClient();
@@ -58,16 +57,21 @@ public sealed class StrangeMoodTests
         var moodProto = protoMan.Index<StrangeMoodPrototype>("DuplicateTest");
 
         var datasetSet = dataset.Values.ToHashSet();
-        var mood = moodSystem.RollMood(moodProto);
-        var moodVarSet = mood.MoodVars.Values.ToHashSet();
 
-        Assert.That(moodVarSet, Is.EquivalentTo(datasetSet));
+        var i = 0;
+        while (i < 10)
+        {
+            var mood = moodSystem.RollMood(moodProto);
+            var moodVarSet = mood.MoodVars.Values.ToHashSet();
+
+            Assert.That(moodVarSet, Is.EquivalentTo(datasetSet));
+            i++;
+        }
 
         await pair.CleanReturnAsync();
     }
 
     [Test]
-    [Repeat(10)]
     public async Task TestDuplicateOverlap()
     {
         await using var pair = await PoolManager.GetServerClient();
@@ -81,10 +85,16 @@ public sealed class StrangeMoodTests
         var moodProto = protoMan.Index<StrangeMoodPrototype>("DuplicateOverlapTest");
 
         var datasetSet = dataset.Values.ToHashSet();
-        var mood = moodSystem.RollMood(moodProto);
-        var moodVarSet = mood.MoodVars.Values.ToHashSet();
 
-        Assert.That(moodVarSet, Is.EquivalentTo(datasetSet));
+        var i = 0;
+        while (i < 10)
+        {
+            var mood = moodSystem.RollMood(moodProto);
+            var moodVarSet = mood.MoodVars.Values.ToHashSet();
+
+            Assert.That(moodVarSet, Is.EquivalentTo(datasetSet));
+            i++;
+        }
 
         await pair.CleanReturnAsync();
     }
