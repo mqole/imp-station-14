@@ -4,12 +4,14 @@ using Content.Shared.Fluids.Components;
 using Content.Shared.Heretic.Prototypes;
 using Robust.Shared.Prototypes;
 using System.Linq;
+using Content.Shared.Chemistry.EntitySystems; // imp add
 
 namespace Content.Server.Heretic.Ritual;
 
 public sealed partial class RitualReagentPuddleBehavior : RitualCustomBehavior
 {
     private EntityLookupSystem _lookup = default!;
+    private readonly SharedSolutionContainerSystem _solution = default!;
 
     [DataField] public List<ProtoId<ReagentPrototype>>? Reagents;
 
@@ -42,9 +44,10 @@ public sealed partial class RitualReagentPuddleBehavior : RitualCustomBehavior
                 if (puddle.Solution == null)
                     continue;
 
-                var soln = puddle.Solution.Value;
+                if (!_solution.ResolveSolution(ent, puddle.SolutionName, ref puddle.Solution, out var soln))
+                    continue;
 
-                if (!soln.Comp.Solution.ContainsPrototype(reagent))
+                if (!soln.ContainsPrototype(reagent))
                     continue;
 
                 _uids.Add(ent);

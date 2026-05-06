@@ -20,11 +20,13 @@ public sealed class RecruiterPenSystem : SharedRecruiterPenSystem
     [Dependency] private readonly SolutionTransferSystem _transfer = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private readonly SharedSolutionContainerSystem _solution = default!; // imp
 
     protected override void DrawBlood(EntityUid uid, Entity<SolutionComponent> dest, EntityUid user)
     {
         // how did you even use this mr plushie...
-        if (CompOrNull<BloodstreamComponent>(user)?.BloodSolution is not { } blood)
+        if (!TryComp<BloodstreamComponent>(user, out var bloodComp) || // imp compornull -> trycomp
+            bloodComp.BloodSolution is not { } blood)
             return;
 
         var desired = dest.Comp.Solution.AvailableVolume;
@@ -43,7 +45,12 @@ public sealed class RecruiterPenSystem : SharedRecruiterPenSystem
 
         if (TryComp<SignatureWriterComponent>(uid, out var signatureComp))
         {
-            var bloodColor = blood.Comp.Solution.GetColor(_proto);
+            // IMP ADD if statement that doesnt violate access rules
+            // this whole system needs a refactor tbh but this is fine
+            if (!_solution.ResolveSolution(user, bloodComp.BloodSolutionName, ref bloodComp.BloodSolution, out var bloodSolution))
+                return;
+
+            var bloodColor = bloodSolution.GetColor(_proto);
             signatureComp.Color = bloodColor;
         }
 
