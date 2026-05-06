@@ -98,6 +98,7 @@ namespace Content.IntegrationTests.Tests.Chemistry
 
                     //Now safe set the temperature and mix the reagents
                     solutionContainerSystem.SetTemperature(solutionEnt.Value, reactionPrototype.MinimumTemperature);
+                    solutionContainerSystem.SetCanReact(solutionEnt.Value, true);
 
                 if (reactionPrototype.MixingCategories != null)
                 {
