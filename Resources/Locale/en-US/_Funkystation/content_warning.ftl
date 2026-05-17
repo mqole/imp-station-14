@@ -6,7 +6,7 @@ content-warning-reject = This is not the place for me.
 content-warning-message =
     Space Station 14 is a game about surviving a disaster with incompetent and cruel people on a space station.
 
-    Your character is not a stand in for yourself. At Impstation, we believe this is the in-correct way to play the game. With that in-mind, we also believe in fully sharing what we think may be potentially triggering scenarios.
+    Your character is not a stand in for yourself. At Impstation, we believe this is the incorrect way to play the game. With that in mind, we also believe in fully sharing what we think may be potentially triggering scenarios.
 
     Do not play on Impstation if you are sensitive to:
 
