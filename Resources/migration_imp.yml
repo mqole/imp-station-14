@@ -9,7 +9,7 @@
 # Table: null
 
 # 2024-09-09
-BorgModuleService: BorgModuleBartender
+# BorgModuleService: BorgModuleBartender
 
 # 2024-11-25
 #impstation change
@@ -157,3 +157,7 @@ JermovCircuitBoard: null
 # kill teg
 TegCenter: null
 TegCirculator: null
+
+# 2026-03-19
+#removes painting "the sleeping gypsy"
+PaintingSleepingGypsy: RandomPainting
