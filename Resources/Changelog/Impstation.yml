@@ -1,13 +1,6 @@
 ﻿Entries:
 - author: entings
   changes:
-  - message: Arachnids can breathe normally again. Probably.
-    type: Fix
-  id: 2334
-  time: '2025-10-19T09:49:41.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3571
-- author: entings
-  changes:
   - message: Boar are slightly less ludicrous, and also slightly smarter.
     type: Tweak
   id: 2335
@@ -4104,3 +4097,13 @@
   id: 2833
   time: '2026-05-27T08:54:31.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4268
+- author: TheGrimbeeper, MattFright
+  changes:
+  - message: New device to empower your artifact research! Build the Advanced Node
+      Scanner today for ultimate control of your artifact analysis journey! Now bundled
+      with the artifact crusher research. (See PR or guidebook for details). Sprite
+      by MattFright.
+    type: Add
+  id: 2834
+  time: '2026-05-27T09:11:19.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/3651
