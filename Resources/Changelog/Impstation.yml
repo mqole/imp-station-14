@@ -1,14 +1,4 @@
 ﻿Entries:
-- author: VeeNomine
-  changes:
-  - message: Added the Drum Kit, Hammond Organ, and Hammered Dulcimer, which are all
-      purchasable at cargo for 1500 each.
-    type: Add
-  - message: Decreased the theremin's volume.
-    type: Tweak
-  id: 2333
-  time: '2025-10-19T09:50:13.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3577
 - author: entings
   changes:
   - message: Arachnids can breathe normally again. Probably.
@@ -4106,3 +4096,11 @@
   id: 2832
   time: '2026-05-27T08:41:59.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4291
+- author: jkwookee
+  changes:
+  - message: Sudden increases in the power & danger levels of Supermatters have been
+      reported throughout NT sectors.
+    type: Add
+  id: 2833
+  time: '2026-05-27T08:54:31.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4268
