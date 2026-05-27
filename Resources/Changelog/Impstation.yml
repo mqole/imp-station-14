@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: starlighthowls
-  changes:
-  - message: Dolphin got cursed, dont worry about it.
-    type: Tweak
-  id: 2331
-  time: '2025-10-19T08:04:50.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3582
 - author: DinnerCalzone, mqole
   changes:
   - message: It's Upmerge, putting us up to date with Wizden as of their October 12th
@@ -4107,3 +4100,10 @@
   id: 2830
   time: '2026-05-27T08:29:44.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4320
+- author: msTheowo
+  changes:
+  - message: You no longer go critical in Deathmatch mode.
+    type: Tweak
+  id: 2831
+  time: '2026-05-27T08:40:29.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4317
