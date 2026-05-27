@@ -1,15 +1,4 @@
 ﻿Entries:
-- author: DVDPlayerOfDiscordFame
-  changes:
-  - message: The Disabler Carbine has been added, unlocked in the Wave Particle Harnessing
-      research category and printed at the Tech Fab
-    type: Add
-  - message: The Stun Projector is now the Disabler Magnum-- losing its hitscan properties
-      for a faster rate of fire and a new firing sound.
-    type: Tweak
-  id: 2327
-  time: '2025-10-15T03:39:24.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3548
 - author: Entings, Squamatic
   changes:
   - message: TLC updates to Arachnids and Moths!
@@ -4118,3 +4107,10 @@
   id: 2826
   time: '2026-05-27T00:57:59.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4387
+- author: taydeo, mqole
+  changes:
+  - message: New content warning pop-up when you first connect.
+    type: Add
+  id: 2827
+  time: '2026-05-27T00:59:20.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4373
