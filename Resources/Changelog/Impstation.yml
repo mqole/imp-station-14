@@ -1,19 +1,4 @@
 ﻿Entries:
-- author: DinnerCalzone, mqole
-  changes:
-  - message: It's Upmerge, putting us up to date with Wizden as of their October 12th
-      publish. See changelog for full details.
-    type: Add
-  - message: Vox characters with the 'Twinned' tail marking may need to double-check
-      their settings to use the correct marking.
-    type: Tweak
-  - message: Some ingredient boxes have had their contents altered.
-    type: Tweak
-  - message: Vulpkanin aren't real.
-    type: Remove
-  id: 2332
-  time: '2025-10-19T07:33:41.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3558
 - author: VeeNomine
   changes:
   - message: Added the Drum Kit, Hammond Organ, and Hammered Dulcimer, which are all
@@ -4107,3 +4092,17 @@
   id: 2831
   time: '2026-05-27T08:40:29.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4317
+- author: DVD Player
+  changes:
+  - message: .22 Auto is Kill, but the guns that used it are still there. They use
+      .35 Auto now.
+    type: Remove
+  - message: A number of guns have received balanced (and damage!) adjustments-- click
+      the PR for details
+    type: Tweak
+  - message: A couple ammo calibres and magazines have received name changes for clarity
+      and some style.
+    type: Tweak
+  id: 2832
+  time: '2026-05-27T08:41:59.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4291
