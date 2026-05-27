@@ -1,13 +1,4 @@
 ﻿Entries:
-- author: TheGrimbeeper
-  changes:
-  - message: Both Natural and Reticulated artifacts ask for "Expressiveness"
-    type: Tweak
-  - message: Gas triggers are less common.
-    type: Tweak
-  id: 2329
-  time: '2025-10-15T03:49:43.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3563
 - author: Kandiyaki
   changes:
   - message: the Heretics gamemode can now roll at lower populations, complete with
@@ -4109,3 +4100,11 @@
   id: 2828
   time: '2026-05-27T08:17:10.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4391
+- author: jkwookee
+  changes:
+  - message: Toy manufacturers have had several defects in their toys, which may cause
+      unintended consequences.
+    type: Tweak
+  id: 2829
+  time: '2026-05-27T08:19:16.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4370
