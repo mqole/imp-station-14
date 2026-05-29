@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: AvianMaiden
-  changes:
-  - message: Tweaked some grenade things; added polish.
-    type: Tweak
-  id: 2336
-  time: '2025-10-19T09:50:20.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3575
 - author: yesteryuri
   changes:
   - message: The Nuclear Operative ship has a Syndicate Communications Computer to
@@ -4107,3 +4100,10 @@
   id: 2835
   time: '2026-05-28T09:43:38.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4420
+- author: eviltori
+  changes:
+  - message: a process has occurred to the relentless positivity accent.
+    type: Fix
+  id: 2836
+  time: '2026-05-29T16:45:19.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4418
