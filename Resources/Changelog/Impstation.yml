@@ -1,12 +1,4 @@
 ﻿Entries:
-- author: yesteryuri
-  changes:
-  - message: The Nuclear Operative ship has a Syndicate Communications Computer to
-      advertise their ill intent... once.
-    type: Tweak
-  id: 2337
-  time: '2025-10-19T09:49:35.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3572
 - author: TheGrimbeeper
   changes:
   - message: resurrection triggering from people going to/from crit
@@ -4107,3 +4099,11 @@
   id: 2836
   time: '2026-05-29T16:45:19.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4418
+- author: RCOI, hivehum
+  changes:
+  - message: "\u6DFB\u52A0\u4E86\u4E00\u5957\u65B0\u7684\u516C\u544A\u914D\u97F3 (added\
+      \ a new suite of PA voiceovers)"
+    type: Add
+  id: 2837
+  time: '2026-05-29T16:47:16.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4413
