@@ -1,15 +1,4 @@
 ﻿Entries:
-- author: mqole
-  changes:
-  - message: Reptilians can wear helmets without breaking the world again.
-    type: Fix
-  - message: Moth wings are no longer stuffed inside their hardsuits.
-    type: Fix
-  - message: Removed Vulpkanin.
-    type: Remove
-  id: 2339
-  time: '2025-10-20T04:11:09.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3586
 - author: Kipdotnet, Starlighthowls, Widgetbeck
   changes:
   - message: A reclusive species of spacefaring sauropods have been spotted amongst
@@ -4097,3 +4086,13 @@
   id: 2838
   time: '2026-05-29T17:00:24.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4416
+- author: TheGrimbeeper
+  changes:
+  - message: Fixed client errors when sleeping in artifact bed.
+    type: Fix
+  - message: Fix issues when linking advanced node scanner to 2nd analyzer, or analyzer
+      to 2nd advanced node scanner. Now they are jealous
+    type: Fix
+  id: 2839
+  time: '2026-05-30T04:44:38.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4427
