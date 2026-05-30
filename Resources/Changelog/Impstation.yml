@@ -1,26 +1,4 @@
 ﻿Entries:
-- author: Kipdotnet, Starlighthowls, Widgetbeck
-  changes:
-  - message: A reclusive species of spacefaring sauropods have been spotted amongst
-      interstellar shuttle crews.
-    type: Add
-  id: 2340
-  time: '2025-10-20T05:23:44.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3504
-- author: yesteryuri
-  changes:
-  - message: Bartenders remembered their golden shaker
-    type: Fix
-  - message: Security cadets are allowed more than 15 seconds of job training
-    type: Fix
-  - message: Couriers have access to the senior courier pda
-    type: Fix
-  - message: The folder trinket groups have been merged, you'll have to re-add the
-      clipboard trinket if you used it before this week.
-    type: Tweak
-  id: 2341
-  time: '2025-10-20T05:25:37.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3587
 - author: DinnerCalzone
   changes:
   - message: AI restoration computers have been added to Amber, Bagel, Cog, Hummingbird,
@@ -4096,3 +4074,17 @@
   id: 2839
   time: '2026-05-30T04:44:38.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4427
+- author: salamanderskies
+  changes:
+  - message: Schooner Science now has an additional vent and scrubber.
+    type: Tweak
+  id: 2840
+  time: '2026-05-30T07:11:12.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4425
+- author: salamanderskies
+  changes:
+  - message: Saltern's Salvage once again has a mass scanner computer.
+    type: Tweak
+  id: 2841
+  time: '2026-05-30T07:11:28.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4426
