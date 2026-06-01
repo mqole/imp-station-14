@@ -1,12 +1,4 @@
 ﻿Entries:
-- author: DVDPlayerOfDiscordFame
-  changes:
-  - message: the energy magnum, now the Type-25 energy magnum, has received a new
-      coat of paint!
-    type: Tweak
-  id: 2345
-  time: '2025-10-22T11:09:09.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3600
 - author: VeeNomine
   changes:
   - message: Tck'Tck is no longer permanently slowed when anchoring.
@@ -4092,3 +4084,10 @@
   id: 2844
   time: '2026-06-01T17:06:37.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4435
+- author: msTheowo
+  changes:
+  - message: Snakeskin boots are valuable again (they're noslips once more).
+    type: Tweak
+  id: 2845
+  time: '2026-06-01T17:20:10.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4438
