@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: mousesweater
-  changes:
-  - message: engineering hardsuits and salvage hardsuits now look correct on reptilians!
-    type: Fix
-  id: 2347
-  time: '2025-10-24T08:49:30.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3605
 - author: yesteryuri
   changes:
   - message: Lights fit in trash bags again
@@ -4091,3 +4084,15 @@
   id: 2846
   time: '2026-06-01T17:24:43.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4430
+- author: msTheowo
+  changes:
+  - message: The blood-red phone is now individually purchasable from traitor uplinks
+      for 1 TC.
+    type: Add
+  - message: The lobbying bundle no longer contains a blood-red phone.
+    type: Remove
+  - message: The lobbying bundle's price has been decreased by 1 TC.
+    type: Tweak
+  id: 2847
+  time: '2026-06-01T17:55:50.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4437
