@@ -1,13 +1,4 @@
 ﻿Entries:
-- author: VeeNomine
-  changes:
-  - message: Tck'Tck is no longer permanently slowed when anchoring.
-    type: Fix
-  - message: Tck'Tck is now able to properly supply power to the station.
-    type: Fix
-  id: 2346
-  time: '2025-10-24T08:48:02.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3610
 - author: mousesweater
   changes:
   - message: engineering hardsuits and salvage hardsuits now look correct on reptilians!
@@ -4091,3 +4082,12 @@
   id: 2845
   time: '2026-06-01T17:20:10.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4438
+- author: honeyed-lemons
+  changes:
+  - message: The brig on Box is harder to escape from!
+    type: Tweak
+  - message: Xeno has way more intercoms now!
+    type: Tweak
+  id: 2846
+  time: '2026-06-01T17:24:43.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4430
