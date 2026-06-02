@@ -1,12 +1,4 @@
 ﻿Entries:
-- author: mousesweater
-  changes:
-  - message: magnum disabler and disabler carbine have been pacifism approved to match
-      various developments in the disabler field.
-    type: Tweak
-  id: 2352
-  time: '2025-10-25T03:02:01.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3616
 - author: msTheowo
   changes:
   - message: Janitor trolleys and mop buckets now have a radial menu for taking things
@@ -4094,3 +4086,11 @@
   id: 2851
   time: '2026-06-02T07:32:01.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4440
+- author: mkanke
+  changes:
+  - message: Added vanilla extract and the recipes to turn it into 3 different kinds
+      of cream soda
+    type: Add
+  id: 2852
+  time: '2026-06-02T07:33:48.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4434
