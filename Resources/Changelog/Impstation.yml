@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: Spung22
-  changes:
-  - message: The document printer can now fit on tables!
-    type: Tweak
-  id: 2349
-  time: '2025-10-25T02:29:25.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3615
 - author: msTheowo
   changes:
   - message: Cargo invoices now list the items included in crates.
@@ -4096,3 +4089,12 @@
   id: 2848
   time: '2026-06-01T23:24:06.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4389
+- author: Soup4Food
+  changes:
+  - message: Security Play time requirements for the Warden have increased.
+    type: Tweak
+  - message: Warden Play time requirements for the HoS have increased.
+    type: Tweak
+  id: 2849
+  time: '2026-06-02T00:01:08.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4240
