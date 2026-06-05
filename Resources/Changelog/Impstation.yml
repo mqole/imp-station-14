@@ -1,13 +1,6 @@
 ﻿Entries:
 - author: DVDPlayerOfDiscordFame
   changes:
-  - message: Grenades might look a little different
-    type: Tweak
-  id: 2355
-  time: '2025-10-26T00:54:00.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3612
-- author: DVDPlayerOfDiscordFame
-  changes:
   - message: CBURN crews get a new toy
     type: Add
   id: 2356
@@ -4091,3 +4084,11 @@
   id: 2854
   time: '2026-06-05T13:14:00.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4450
+- author: Mkanke, Teasq, yesteryuri
+  changes:
+  - message: A conductor hat and train whistle have been added to the mail pool! Also
+      look for the hat in the uniform printer
+    type: Add
+  id: 2855
+  time: '2026-06-05T18:57:59.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4448
