@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: DVDPlayerOfDiscordFame
-  changes:
-  - message: CBURN crews get a new toy
-    type: Add
-  id: 2356
-  time: '2025-10-26T01:01:21.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3360
 - author: soup4food
   changes:
   - message: All syndicate duffle bag bundles can now have their name and description
@@ -4092,3 +4085,10 @@
   id: 2855
   time: '2026-06-05T18:57:59.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4448
+- author: mothrii
+  changes:
+  - message: atmosian plush can use its helmet light
+    type: Tweak
+  id: 2856
+  time: '2026-06-07T10:27:23.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4453
