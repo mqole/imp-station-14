@@ -1,13 +1,6 @@
 ﻿Entries:
 - author: starlighthowls
   changes:
-  - message: Migrating Electric sheep have been drawn in by the stations power.
-    type: Add
-  id: 2358
-  time: '2025-10-26T03:15:14.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3595
-- author: starlighthowls
-  changes:
   - message: Those Eeep were rabid sorry here's some normal ones.
     type: Tweak
   id: 2359
@@ -4091,3 +4084,14 @@
   id: 2857
   time: '2026-06-08T09:15:26.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4454
+- author: mqole
+  changes:
+  - message: Added a new rule to the Security & Command rules.
+    type: Add
+  - message: Modified RP rules 4 and 5 to clarify some intent about how crew members
+      can choose to engage with antagonists. A little selfsec is okay UNDER CERTAIN
+      CONDITIONS!!!!!!
+    type: Tweak
+  id: 2858
+  time: '2026-06-08T23:06:50.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4015
