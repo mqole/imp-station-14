@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: starlighthowls
-  changes:
-  - message: Those Eeep were rabid sorry here's some normal ones.
-    type: Tweak
-  id: 2359
-  time: '2025-10-26T06:30:49.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3620
 - author: 12rabbits
   changes:
   - message: Fixed the ready manifest displaying jobs as having negative players readied,
@@ -4095,3 +4088,12 @@
   id: 2858
   time: '2026-06-08T23:06:50.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4015
+- author: sev7ves
+  changes:
+  - message: The accessibility issue notifier has been redone. You gotta write yours
+      again in the new menu! it can be found in the escape menu or the menu bar in
+      game!
+    type: Tweak
+  id: 2859
+  time: '2026-06-08T23:09:25.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4023
