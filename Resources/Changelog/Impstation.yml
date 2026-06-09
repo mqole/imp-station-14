@@ -1,11 +1,4 @@
 ﻿Entries:
-- author: mqole
-  changes:
-  - message: Banished ghost hair.
-    type: Fix
-  id: 2361
-  time: '2025-10-27T05:54:44.0000000+00:00'
-  url: https://github.com/impstation/imp-station-14/pull/3627
 - author: kipdotnet
   changes:
   - message: Banana has been un-reverted.
@@ -4096,3 +4089,10 @@
   id: 2860
   time: '2026-06-08T23:45:49.0000000+00:00'
   url: https://github.com/impstation/imp-station-14/pull/4220
+- author: msTheowo
+  changes:
+  - message: Added Syndicate Instigators.
+    type: Add
+  id: 2861
+  time: '2026-06-09T00:03:08.0000000+00:00'
+  url: https://github.com/impstation/imp-station-14/pull/4386
