@@ -19,6 +19,14 @@ public sealed partial class HumanoidProfileComponent : Component
     public Gender Gender;
 
     /// <summary>
+    ///     Optional list of custom pronouns for an entity, as well as the pronounGrammar inflection they belong to.
+    ///     If this list does not contain a pronoun for a desired inflection,
+    ///     the gender's pronoun will be used as a fallback.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public Dictionary<ProtoId<PronounGrammarPrototype>, string> Pronouns = [];
+
+    /// <summary>
     /// Holds the EmoteSoundsPrototype that the humanoid will use to speak with
     /// To change in-game, you still have to use the <see cref="VoiceChangedEvent"/>
     /// or edit the <see cref="VocalComponent"/>

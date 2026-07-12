@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
+using Content.Server.Administration.UI;
 using Content.Server.Cargo.Components;
 using Content.Server.Doors.Systems;
 using Content.Server.Hands.Systems;
@@ -28,6 +29,7 @@ using Content.Shared.Station.Components;
 using Content.Shared.Verbs;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Server.Physics;
+using Robust.Shared.GameObjects.Components.Localization;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
@@ -493,6 +495,18 @@ public sealed partial class AdminVerbSystem
             Priority = (int) TricksVerbPriorities.RenameAndRedescribe,
         };
         args.Verbs.Add(renameAndRedescribe);
+
+        if (TryComp<GrammarComponent>(args.Target, out var grammar))
+        {
+            Verb editPronouns = new()
+            {
+                Text = "edit pronouns",
+                Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/AdminActions/rename_and_redescribe.png")),
+                Act = () => _euiManager.OpenEui(new EditPronounsEui(args.Target), player),
+                Impact = LogImpact.Medium
+            };
+            args.Verbs.Add(editPronouns);
+        };
 
         if (TryComp<StationDataComponent>(args.Target, out var stationData))
         {

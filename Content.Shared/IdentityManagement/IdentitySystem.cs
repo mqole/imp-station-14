@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using Robust.Shared.Containers;
 using Robust.Shared.Enums;
 using Robust.Shared.GameObjects.Components.Localization;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.IdentityManagement;
@@ -59,6 +60,7 @@ public sealed partial class IdentitySystem : EntitySystem
         SubscribeLocalEvent<IdentityComponent, DidUnequipHandEvent>((uid, _, _) => QueueIdentityUpdate(uid));
         SubscribeLocalEvent<IdentityComponent, WearerMaskToggledEvent>((uid, _, _) => QueueIdentityUpdate(uid));
         SubscribeLocalEvent<IdentityComponent, EntityRenamedEvent>((uid, _, _) => QueueIdentityUpdate(uid));
+        SubscribeLocalEvent<IdentityComponent, EntityGrammarUpdatedEvent>((uid, _, _) => QueueIdentityUpdate(uid));
         SubscribeLocalEvent<IdentityComponent, VoiceMaskNameUpdatedEvent>((uid, _, _) => QueueIdentityUpdate(uid));
 
         SubscribeLocalEvent<IdentityBlockerComponent, GetVerbsEvent<ExamineVerb>>(OnDetailedExamine);
@@ -255,6 +257,7 @@ public sealed partial class IdentitySystem : EntitySystem
         var age = 18;
         var gender = Gender.Epicene;
         var species = HumanoidCharacterProfile.DefaultSpecies;
+        Dictionary<ProtoId<PronounGrammarPrototype>, string> pronouns = [];
 
         // Always use their actual age and gender, since that can't really be changed by an ID.
         if (Resolve(target, ref target.Comp2, false))
@@ -262,12 +265,13 @@ public sealed partial class IdentitySystem : EntitySystem
             gender = target.Comp2.Gender;
             age = target.Comp2.Age;
             species = target.Comp2.Species;
+            pronouns = target.Comp2.Pronouns;
         }
 
         var ageString = _humanoidProfile.GetAgeRepresentation(species, age);
         var trueName = Name(target);
         if (!Resolve(target, ref target.Comp1, false))
-            return new(trueName, gender, ageString, string.Empty);
+            return new(trueName, gender, pronouns, ageString, string.Empty);
 
         string? presumedJob = null;
         string? presumedName = null;
@@ -280,7 +284,7 @@ public sealed partial class IdentitySystem : EntitySystem
         }
 
         // If it didn't find a job, that's fine.
-        return new(trueName, gender, ageString, presumedName, presumedJob);
+        return new(trueName, gender, pronouns, ageString, presumedName, presumedJob);
     }
 
     #endregion

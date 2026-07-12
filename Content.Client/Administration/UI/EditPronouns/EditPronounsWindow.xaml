@@ -1,0 +1,15 @@
+<DefaultWindow
+    SetSize="300 400"
+    Margin="4 0"
+    xmlns="https://spacestation14.io">
+    <BoxContainer Orientation="Vertical">
+        <BoxContainer Name="EntityBox" Orientation="Horizontal">
+            <Label Text="Entity: "/>
+            <Label Name="EntityLabel"/>
+        </BoxContainer>
+        <BoxContainer Name="PronounBox" Orientation="Vertical">
+            <Label Text="Pronouns: "/>
+            <GridContainer Columns="2" Name="PronounColumns"/>
+        </BoxContainer>
+    </BoxContainer>
+</DefaultWindow>

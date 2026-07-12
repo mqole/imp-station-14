@@ -1,6 +1,7 @@
 ﻿using Robust.Shared.Containers;
 using Robust.Shared.Enums;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.IdentityManagement.Components;
 
@@ -30,16 +31,18 @@ public sealed class IdentityRepresentation
 {
     public string TrueName;
     public Gender TrueGender;
+    public Dictionary<ProtoId<PronounGrammarPrototype>, string> TruePronouns;
 
     public string AgeString;
 
     public string? PresumedName;
     public string? PresumedJob;
 
-    public IdentityRepresentation(string trueName, Gender trueGender, string ageString, string? presumedName = null, string? presumedJob = null)
+    public IdentityRepresentation(string trueName, Gender trueGender, Dictionary<ProtoId<PronounGrammarPrototype>, string> truePronouns, string ageString, string? presumedName = null, string? presumedJob = null)
     {
         TrueName = trueName;
         TrueGender = trueGender;
+        TruePronouns = truePronouns;
 
         AgeString = ageString;
 
