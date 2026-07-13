@@ -3,13 +3,22 @@
     Margin="4 0"
     xmlns="https://spacestation14.io">
     <BoxContainer Orientation="Vertical">
-        <BoxContainer Name="EntityBox" Orientation="Horizontal">
-            <Label Text="Entity: "/>
-            <Label Name="EntityLabel"/>
+        <BoxContainer>
+            <GridContainer Columns="2">
+                <Label Text="{Loc 'edit-pronouns-inflection'}"
+                       ToolTip="{Loc 'edit-pronouns-inflection-tooltip'}"/>
+                <Label Text="{Loc 'edit-pronouns-pronoun'}"
+                       ToolTip="{Loc 'edit-pronouns-inflection-pronoun-tooltip'}"/>
+            </GridContainer>
         </BoxContainer>
-        <BoxContainer Name="PronounBox" Orientation="Vertical">
-            <Label Text="Pronouns: "/>
-            <GridContainer Columns="2" Name="PronounColumns"/>
+    <BoxContainer Name="PronounBox"/>
+        <BoxContainer Orientation="Horizontal">
+            <Button Name="AddButton"
+                    Text="{Loc 'edit-pronouns-add'}"/>
+            <Button Name="ResetButton"
+                    Text="{Loc 'edit-pronouns-reset'}"/>
+            <Button Name="SaveButton"
+                    Text="{Loc 'edit-pronouns-save'}"/>
         </BoxContainer>
     </BoxContainer>
 </DefaultWindow>
