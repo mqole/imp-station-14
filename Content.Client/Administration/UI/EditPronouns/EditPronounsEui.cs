@@ -17,6 +17,7 @@ public sealed class EditPronounsEui : BaseEui
     {
         _window = new EditPronounsWindow();
         _window.OnClose += () => SendMessage(new CloseEuiMessage());
+        _window.OnSaveMessage += args => SendMessage(new EditPronounsSaveMessage(args.target, args.pronouns));
     }
 
     public override void Opened()

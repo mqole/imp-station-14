@@ -6,5 +6,5 @@ edit-pronouns-pronoun = Pronoun
 edit-pronouns-pronoun-tooltip = The pronoun used for this form.
 
 edit-pronouns-add = Add New
-edit-pronouns-clear = Reset Changes
+edit-pronouns-reset = Reset Changes
 edit-pronouns-save = Save Changes

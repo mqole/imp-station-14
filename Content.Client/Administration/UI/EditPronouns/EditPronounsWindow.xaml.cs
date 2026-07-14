@@ -24,14 +24,21 @@ public sealed partial class EditPronounsWindow : DefaultWindow
     private NetEntity _target = NetEntity.Invalid;
     private Dictionary<ProtoId<PronounGrammarPrototype>, string> _pronouns = [];
 
+    private List<ProtoId<PronounGrammarPrototype>> _removedPronouns = [];
+    private List<PronounGrammarPrototype> _inflections = [];
+
+    public Action<(NetEntity target, Dictionary<ProtoId<PronounGrammarPrototype>, string> pronouns)>? OnSaveMessage;
+
     public EditPronounsWindow()
     {
         IoCManager.InjectDependencies(this);
         _grammar = _entityManager.System<GrammarSystem>();
         RobustXamlLoader.Load(this);
 
+        AddButton.OnPressed += AddPressed;
         SaveButton.OnPressed += SavePressed;
         ResetButton.OnPressed += ResetPressed;
+        NewDropdown.OnItemSelected += AddPronoun;
     }
 
     public void SetTargetEntity(NetEntity target)
@@ -51,23 +58,20 @@ public sealed partial class EditPronounsWindow : DefaultWindow
     /// </summary>
     public void SetPronouns(Dictionary<ProtoId<PronounGrammarPrototype>, string> pronouns)
     {
-        PronounBox.DisposeAllChildren();
+        PronounContainer.DisposeAllChildren();
         _pronouns = pronouns;
 
         foreach (var pronoun in pronouns)
         {
-            var columns = new GridContainer { Columns = 2, MinSize = new Vector2(70, 70) };
-            PronounBox.AddChild(columns);
+            var entry = new PronounEntry(pronoun);
+            entry.OnRemove += args =>
+            {
+                PronounContainer.RemoveChild(entry);
+                _removedPronouns.Add(entry.Inflection);
+            };
+            entry.ToolTip = Loc.GetString(_protoMan.Index(pronoun.Key).Description);
 
-            columns.AddChild(new Label
-            {
-                Text = pronoun.Key.Id
-            });
-            columns.AddChild(new LineEdit
-            {
-                PlaceHolder = pronoun.Value,
-                MinSize = new Vector2(70, 0)
-            });
+            PronounContainer.AddChild(entry);
         }
     }
 
@@ -82,11 +86,52 @@ public sealed partial class EditPronounsWindow : DefaultWindow
         }
 
         if (_grammar.TryGetPronouns((uid.Value, grammar), out var pronouns) &&
-            pronouns.Count != _pronouns.Count &&
-            pronouns.Except(_pronouns).Any())
+            (pronouns.Count != _pronouns.Count ||
+            pronouns.Except(_pronouns).Any()))
         {
             SetPronouns(pronouns);
         }
+    }
+
+    /// <summary>
+    ///     Adds a new dropdown to the list from which a new inflection may be selected.
+    /// </summary>
+    private void AddPressed(BaseButton.ButtonEventArgs args)
+    {
+        _inflections.Clear();
+        NewDropdown.Clear();
+
+        var protos = _protoMan.EnumeratePrototypes<PronounGrammarPrototype>().ToList();
+        foreach (var child in PronounContainer.Children)
+        {
+            if (child is not PronounEntry entry)
+                continue;
+            protos.Remove(_protoMan.Index(entry.Inflection));
+        }
+
+        foreach (var inflection in protos)
+        {
+            NewDropdown.AddItem(Loc.GetString(inflection.Name));
+            _inflections.Add(inflection);
+        }
+        NewDropdown.Visible = true;
+        AddButton.Disabled = true;
+    }
+
+    /// <summary>
+    ///     Adds the selected option in the dropdown as a new pronoun
+    /// </summary>
+    private void AddPronoun(OptionButton.ItemSelectedEventArgs args)
+    {
+        var inflection = _inflections[args.Id];
+        PronounEntry entry = new(new KeyValuePair<ProtoId<PronounGrammarPrototype>, string>(inflection.ID, ""));
+
+        PronounContainer.AddChild(entry);
+        entry.ToolTip = inflection.Description;
+
+        NewDropdown.Visible = false;
+        AddButton.Disabled = false;
+        _removedPronouns.Remove(entry.Inflection);
     }
 
     /// <summary>
@@ -94,35 +139,29 @@ public sealed partial class EditPronounsWindow : DefaultWindow
     /// </summary>
     private void SavePressed(BaseButton.ButtonEventArgs args)
     {
-        Dictionary<PronounGrammarPrototype, string> newPronouns = [];
+        Dictionary<ProtoId<PronounGrammarPrototype>, string> newPronouns = [];
 
-        if (!_entityManager.TryGetEntity(_target, out var uid) ||
-            !_entityManager.TryGetComponent<GrammarComponent>(uid, out var grammar))
+        foreach (var child in _removedPronouns)
+            newPronouns.Add(child, "");
+
+        foreach (var child in PronounContainer.Children)
         {
-            return;
+            if (child is not PronounEntry entry ||
+            entry.PronounLineEdit.Text is "")
+                continue;
+            newPronouns.Add(entry.Inflection, entry.PronounLineEdit.Text);
         }
 
-        foreach (var pair in PronounBox.Children)
-        {
-            if (pair.GetChild(0) is not Label inflection ||
-                inflection.Text is null ||
-                pair.GetChild(1) is not LineEdit pronoun)
-            {
-                continue;
-            }
-
-            if (!_protoMan.TryIndex<PronounGrammarPrototype>(inflection.Text, out var inflectionProto))
-                continue;
-
-            newPronouns.Add(inflectionProto, pronoun.Text);
-        }
-
-        foreach (var pronoun in newPronouns)
-            _grammar.SetPronoun((uid.Value, grammar), pronoun);
+        OnSaveMessage?.Invoke((_target, newPronouns));
+        _removedPronouns.Clear();
     }
 
+    /// <summary>
+    ///     Resets any edited values.
+    /// </summary>
     private void ResetPressed(BaseButton.ButtonEventArgs args)
     {
-
+        SetPronouns(_pronouns);
+        _removedPronouns.Clear();
     }
 }

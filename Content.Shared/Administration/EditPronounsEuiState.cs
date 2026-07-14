@@ -17,3 +17,10 @@ public sealed class EditPronounsEuiState(NetEntity target, Dictionary<ProtoId<Pr
     /// </summary>
     public readonly Dictionary<ProtoId<PronounGrammarPrototype>, string> Pronouns = pronouns;
 }
+
+[Serializable, NetSerializable]
+public sealed class EditPronounsSaveMessage(NetEntity target, Dictionary<ProtoId<PronounGrammarPrototype>, string> pronouns) : EuiMessageBase
+{
+    public NetEntity Target { get; } = target;
+    public Dictionary<ProtoId<PronounGrammarPrototype>, string> Pronouns { get; } = pronouns;
+}
