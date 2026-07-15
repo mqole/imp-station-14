@@ -1,19 +1,29 @@
 <Control xmlns="https://spacestation14.io"
          xmlns:cc="clr-namespace:Content.Client.Administration.UI.CustomControls">
-    <BoxContainer Orientation="Horizontal"
-                  HorizontalExpand="True"
-                  SeparationOverride="4">
-        <Label Name="InflectionLabel"
-               SizeFlagsStretchRatio="3"
-               HorizontalExpand="True"
-               MouseFilter="Pass"
-               ClipText="True"/>
-        <cc:VSeparator/>
-        <LineEdit Name="PronounLineEdit"
-                  Access="Public"
-                  SizeFlagsStretchRatio="3"
-                  HorizontalExpand="True"/>
-        <TextureButton Name="RemoveButton"
-                       StyleClasses="CrossButtonRed"/>
+    <BoxContainer Orientation="Vertical">
+        <PanelContainer StyleClasses="LowDivider"/>
+        <BoxContainer Orientation="Horizontal"
+                    HorizontalExpand="True"
+                    SeparationOverride="4">
+            <Label Name="InflectionLabel"
+                Access="Public"
+                Margin="5 5 5 5"
+                SizeFlagsStretchRatio="3"
+                HorizontalExpand="True"
+                MouseFilter="Pass"
+                ClipText="True"/>
+            <cc:VSeparator/>
+            <LineEdit Name="PronounLineEdit"
+                    Access="Public"
+                    Margin="5 5 5 5"
+                    SizeFlagsStretchRatio="3"
+                    HorizontalExpand="True"/>
+            <TextureButton Name="RemoveButton"
+                        StyleClasses="CrossButtonRed"
+                        VerticalAlignment="Center"
+                        Margin="0 0 5 0"
+                        Scale="0.75 0.75"
+                        SizeFlagsStretchRatio="1"/>
+        </BoxContainer>
     </BoxContainer>
 </Control>

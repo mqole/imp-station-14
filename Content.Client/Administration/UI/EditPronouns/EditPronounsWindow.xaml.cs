@@ -62,17 +62,20 @@ public sealed partial class EditPronounsWindow : DefaultWindow
         _pronouns = pronouns;
 
         foreach (var pronoun in pronouns)
-        {
-            var entry = new PronounEntry(pronoun);
-            entry.OnRemove += args =>
-            {
-                PronounContainer.RemoveChild(entry);
-                _removedPronouns.Add(entry.Inflection);
-            };
-            entry.ToolTip = Loc.GetString(_protoMan.Index(pronoun.Key).Description);
+            AddPronounEntry(pronoun);
+    }
 
-            PronounContainer.AddChild(entry);
-        }
+    private void AddPronounEntry(KeyValuePair<ProtoId<PronounGrammarPrototype>, string> pronoun)
+    {
+        var entry = new PronounEntry(pronoun);
+        entry.OnRemove += args =>
+        {
+            PronounContainer.RemoveChild(entry);
+            _removedPronouns.Add(entry.Inflection);
+        };
+        entry.InflectionLabel.ToolTip = Loc.GetString(_protoMan.Index(pronoun.Key).Description);
+
+        PronounContainer.AddChild(entry);
     }
 
     protected override void FrameUpdate(FrameEventArgs args)
@@ -101,6 +104,7 @@ public sealed partial class EditPronounsWindow : DefaultWindow
         _inflections.Clear();
         NewDropdown.Clear();
 
+        // dropdown should only show inflections that we dont have!
         var protos = _protoMan.EnumeratePrototypes<PronounGrammarPrototype>().ToList();
         foreach (var child in PronounContainer.Children)
         {
@@ -124,14 +128,13 @@ public sealed partial class EditPronounsWindow : DefaultWindow
     private void AddPronoun(OptionButton.ItemSelectedEventArgs args)
     {
         var inflection = _inflections[args.Id];
-        PronounEntry entry = new(new KeyValuePair<ProtoId<PronounGrammarPrototype>, string>(inflection.ID, ""));
+        var pronoun = new KeyValuePair<ProtoId<PronounGrammarPrototype>, string>(inflection.ID, "");
 
-        PronounContainer.AddChild(entry);
-        entry.ToolTip = inflection.Description;
+        AddPronounEntry(pronoun);
 
         NewDropdown.Visible = false;
         AddButton.Disabled = false;
-        _removedPronouns.Remove(entry.Inflection);
+        _removedPronouns.Remove(inflection.ID);
     }
 
     /// <summary>
