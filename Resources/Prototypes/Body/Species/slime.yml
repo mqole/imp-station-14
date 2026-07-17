@@ -81,6 +81,7 @@
       FootLeft: OrganSlimePersonFootLeft
       FootRight: OrganSlimePersonFootRight
       Brain: OrganSlimePersonCore
+      Eyes: OrganSlimePersonEyes
       Lungs: OrganSlimePersonLungs
   - type: HumanoidProfile
     species: SlimePerson
@@ -291,6 +292,14 @@
     - id: Narcotic
     - id: Alcohol
       rateModifier: 2.5
+
+- type: entity
+  parent: [ OrganBaseEyes, OrganSlimePersonInternal, OrganSlimePersonExternal ]
+  id: OrganSlimePersonEyes
+  components:
+  - type: VisualOrgan
+    data:
+      sprite: Mobs/Customization/eyes.rsi
 
 - type: entity
   parent: [ OrganBaseLungs, OrganSlimePersonInternal, OrganSlimePersonMetabolizer ]
