@@ -53,11 +53,12 @@ public sealed partial class EditPronounsWindow : DefaultWindow
             _presets.Add(pronounSet);
         }
 
-        AddButton.OnPressed += AddPressed;
-        SaveButton.OnPressed += SavePressed;
-        ResetButton.OnPressed += ResetPressed;
-        NewDropdown.OnItemSelected += AddPronoun;
         PresetDropdown.OnItemSelected += SetPreset;
+        AddButton.OnPressed += AddPressed;
+        RemoveDropdownButton.OnPressed += RemoveDropdown;
+        NewDropdown.OnItemSelected += SetNewPronoun;
+        ResetButton.OnPressed += ResetPressed;
+        SaveButton.OnPressed += SavePressed;
     }
 
     /// <summary>
@@ -152,23 +153,37 @@ public sealed partial class EditPronounsWindow : DefaultWindow
             NewDropdown.AddItem(Loc.GetString(inflection.Name));
             _unusedInflections.Add(inflection);
         }
-        NewDropdown.Visible = true;
-        AddButton.Disabled = true;
+
+        ToggleAddDropdown(true);
+    }
+
+    /// <summary>
+    ///     Re-hides the 'add' dropdown.
+    /// </summary>
+    private void RemoveDropdown(BaseButton.ButtonEventArgs args)
+    {
+        ToggleAddDropdown(false);
     }
 
     /// <summary>
     ///     Adds the selected option in the dropdown as a new pronoun
     /// </summary>
-    private void AddPronoun(OptionButton.ItemSelectedEventArgs args)
+    private void SetNewPronoun(OptionButton.ItemSelectedEventArgs args)
     {
         var inflection = _unusedInflections[args.Id];
         var pronoun = new KeyValuePair<ProtoId<PronounGrammarPrototype>, string>(inflection.ID, "");
 
         AddPronounEntry(pronoun);
 
-        NewDropdown.Visible = false;
-        AddButton.Disabled = false;
+        ToggleAddDropdown(false);
         _removedPronouns.Remove(inflection.ID);
+    }
+
+    private void ToggleAddDropdown(bool visible)
+    {
+        NewDropdown.Visible = visible;
+        RemoveDropdownButton.Visible = visible;
+        AddButton.Disabled = visible;
     }
 
     /// <summary>

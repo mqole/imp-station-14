@@ -46,9 +46,17 @@
         <BoxContainer Orientation="Vertical"
                       Margin="5 5 5 0"
                       HorizontalAlignment="Center">
-            <OptionButton Name="NewDropdown"
+            <BoxContainer Orientation="Horizontal">
+                <OptionButton Name="NewDropdown"
+                            Visible="false"
+                            Margin="5 5 5 5"/>
+                <TextureButton Name="RemoveDropdownButton"
+                        StyleClasses="CrossButtonRed"
                         Visible="false"
-                        Margin="5 5 5 5"/>
+                        VerticalAlignment="Center"
+                        Margin="0 0 5 0"
+                        Scale="0.75 0.75"/>
+            </BoxContainer>
             <BoxContainer Orientation="Horizontal">
                 <Label Margin="5 5 5 5"
                     Text="{Loc edit-pronouns-select-preset}"/>

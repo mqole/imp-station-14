@@ -33,7 +33,7 @@
     PossessiveAdjective: their
     PossessivePronoun: theirs
     Reflexive: themselves
-  plurality: Plural
+  isPlural: true
 
 - type: pronounSet
   id: TheyThemself
@@ -44,7 +44,7 @@
     PossessiveAdjective: their
     PossessivePronoun: theirs
     Reflexive: themself
-  plurality: Plural
+  isPlural: true
 
 - type: pronounSet
   id: ItIts

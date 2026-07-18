@@ -22,7 +22,7 @@ public sealed partial class PronounSetPrototype : IPrototype
 
     /// <summary>
     ///     The pronoun to use for each inflection when this set is selected.
-    ///     Use <see cref="GetPronouns"/> as an accessor instead.
+    ///     Use <see cref="GetPronouns" as accessor.
     /// </summary>
     /// <remarks>
     ///     TODO: Ideally this should be localized, but a better way to do it would probably be to sync pronouns to a culture and that sounds like an ordeal
@@ -34,35 +34,26 @@ public sealed partial class PronounSetPrototype : IPrototype
     ///     Default form of conjugation to use for verbs (singular IS vs plural ARE, etc.)
     /// </summary>
     [DataField]
-    public PronounConjugationType Plurality = PronounConjugationType.Singular;
+    public bool IsPlural;
 
     /// <summary>
     ///     List of pronouns that use generalized plural conjugation.
     ///     This is done so we can have a single checkbox 'plural' instead of a big list of verb conjugations.
     /// </summary>
-    private readonly List<ProtoId<PronounGrammarPrototype>> _pluralPronouns = ["ConjugateBe", "ConjugateHave", "ConjugateBasic"];
+    private readonly List<ProtoId<PronounGrammarPrototype>> _pluralPronouns = new() { "ConjugateBe", "ConjugateHave", "ConjugateBasic" };
 
     /// <summary>
     ///     Gets a dictionary of pronouns to use for this PronounSet, including inflections reliant on plurality.
     /// </summary>
     public Dictionary<ProtoId<PronounGrammarPrototype>, string> GetPronouns()
     {
-        if (Plurality == PronounConjugationType.Singular)
+        if (!IsPlural)
             return Pronouns;
 
         var newPronouns = Pronouns;
         foreach (var pronoun in _pluralPronouns)
-            newPronouns.Add(pronoun, "epicene");
+            newPronouns[pronoun] = "epicene";
 
         return newPronouns;
     }
-}
-
-/// <summary>
-///     Default form of conjugation a set of pronouns will use for verbs (singular IS vs plural ARE, etc.)
-/// </summary>
-public enum PronounConjugationType : byte
-{
-    Singular,
-    Plural
 }
