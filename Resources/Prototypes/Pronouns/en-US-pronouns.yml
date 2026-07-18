@@ -1,0 +1,129 @@
+# taken from https://en.pronouns.page/pronouns
+
+# binary
+
+- type: pronounSet
+  id: SheHer
+  name: she / her
+  pronouns:
+    Subject: she
+    Object: her
+    PossessiveAdjective: her
+    PossessivePronoun: hers
+    Reflexive: herself
+
+- type: pronounSet
+  id: HeHim
+  name: he / him
+  pronouns:
+    Subject: he
+    Object: him
+    PossessiveAdjective: his
+    PossessivePronoun: his
+    Reflexive: himself
+
+# normative-ish
+
+- type: pronounSet
+  id: TheyThemselves
+  name: they / them (themselves)
+  pronouns:
+    Subject: they
+    Object: them
+    PossessiveAdjective: their
+    PossessivePronoun: theirs
+    Reflexive: themselves
+  plurality: Plural
+
+- type: pronounSet
+  id: TheyThemself
+  name: they / them (themself)
+  pronouns:
+    Subject: they
+    Object: them
+    PossessiveAdjective: their
+    PossessivePronoun: theirs
+    Reflexive: themself
+  plurality: Plural
+
+- type: pronounSet
+  id: ItIts
+  name: it / its
+  pronouns:
+    Subject: it
+    Object: it
+    PossessiveAdjective: its
+    PossessivePronoun: its
+    Reflexive: itself
+
+- type: pronounSet
+  id: OneOnes
+  name: one / ones
+  pronouns:
+    Subject: one
+    Object: one
+    PossessiveAdjective: one's
+    PossessivePronoun: one's
+    Reflexive: oneself
+
+# neopronouns
+
+- type: pronounSet
+  id: AeAer
+  name: ae / aer
+  pronouns:
+    Subject: ae
+    Object: aer
+    PossessiveAdjective: aer
+    PossessivePronoun: aers
+    Reflexive: aerself
+
+- type: pronounSet
+  id: EyEm
+  name: ey / em
+  pronouns:
+    Subject: ey
+    Object: em
+    PossessiveAdjective: eir
+    PossessivePronoun: eirs
+    Reflexive: emself
+
+- type: pronounSet
+  id: FaeFaer
+  name: fae / faer
+  pronouns:
+    Subject: fae
+    Object: faer
+    PossessiveAdjective: faer
+    PossessivePronoun: faers
+    Reflexive: faerself
+
+- type: pronounSet
+  id: XeXem
+  name: xe / xem
+  pronouns:
+    Subject: xe
+    Object: xem
+    PossessiveAdjective: xyr
+    PossessivePronoun: xyrs
+    Reflexive: xemself
+
+- type: pronounSet
+  id: ZeHir
+  name: ze / hir
+  pronouns:
+    Subject: ze
+    Object: hir
+    PossessiveAdjective: hir
+    PossessivePronoun: hirs
+    Reflexive: hirself
+
+- type: pronounSet
+  id: ZeZir
+  name: ze / zir
+  pronouns:
+    Subject: ze
+    Object: zir
+    PossessiveAdjective: zir
+    PossessivePronoun: zirs
+    Reflexive: zirself

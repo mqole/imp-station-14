@@ -42,12 +42,19 @@
             </BoxContainer>
         </PanelContainer>
         <!-- Buttons -->
+        <!-- TODO add easy plural conjugation toggle -->
         <BoxContainer Orientation="Vertical"
                       Margin="5 5 5 0"
                       HorizontalAlignment="Center">
             <OptionButton Name="NewDropdown"
                         Visible="false"
                         Margin="5 5 5 5"/>
+            <BoxContainer Orientation="Horizontal">
+                <Label Margin="5 5 5 5"
+                    Text="{Loc edit-pronouns-select-preset}"/>
+                <OptionButton Name="PresetDropdown"
+                            Margin="5 5 5 5"/>
+            </BoxContainer>
             <BoxContainer Orientation="Horizontal">
                 <Button Name="AddButton"
                         Text="{Loc 'edit-pronouns-add'}"
