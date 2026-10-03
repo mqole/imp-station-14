@@ -1,7 +1,7 @@
 - type: species
   id: Gingerbread
   name: species-name-gingerbread
-  roundStart: false
+  roundStart: true # for testing
   randomViable: true # imp
   randomChance: 0.33 # imp
   prototype: MobGingerbread

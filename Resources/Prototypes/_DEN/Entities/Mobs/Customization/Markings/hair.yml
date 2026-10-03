@@ -7,7 +7,6 @@
 - type: marking
   id: amazon
   bodyPart: Hair
-  markingCategory: Hair
   sprites:
     - sprite: _DEN/Mobs/Customization/Hair/hairdoppler.rsi
       state: hair_amazon
@@ -15,7 +14,6 @@
 - type: marking
   id: baum
   bodyPart: Hair
-  markingCategory: Hair
   sprites:
     - sprite: _DEN/Mobs/Customization/Hair/hairdoppler.rsi
       state: hair_baum
