@@ -104,6 +104,7 @@
     - HeadSide
     - FacialHair
     - Hair
+    - Tenta # imp add
   - type: UserInterface
     interfaces:
       enum.HumanoidMarkingModifierKey.Key:

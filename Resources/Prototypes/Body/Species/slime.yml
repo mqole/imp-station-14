@@ -40,7 +40,7 @@
     enum.HumanoidVisualLayers.Eyes:
       limit: 1
       required: true
-      defaultMarkings: [ SlimeEyesDefault ]
+      default: [ SlimeEyesDefault ]
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1
       required: false

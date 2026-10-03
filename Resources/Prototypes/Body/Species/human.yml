@@ -33,10 +33,10 @@
     enum.HumanoidVisualLayers.RLeg:
       limit: 2 # imp 1 -> 2
       required: false
-    enum.HumanoidVisualLayers.LHand:
+    enum.HumanoidVisualLayers.LFoot:
       limit: 2 # imp 1 -> 2
       required: false
-    enum.HumanoidVisualLayers.RHand:
+    enum.HumanoidVisualLayers.RFoot:
       limit: 2 # imp 1 -> 2
       required: false
     enum.HumanoidVisualLayers.HeadSide: #imp add
