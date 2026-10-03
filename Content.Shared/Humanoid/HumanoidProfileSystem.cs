@@ -78,6 +78,13 @@ public sealed class HumanoidProfileSystem : EntitySystem
             return Loc.GetString("identity-age-middle-aged");
         }
 
+        // imp add ancient age
+        if (age >= speciesPrototype.AncientAge)
+        {
+            return Loc.GetString("identity-age-ancient");
+        }
+        // imp end
+
         return Loc.GetString("identity-age-old");
     }
 }

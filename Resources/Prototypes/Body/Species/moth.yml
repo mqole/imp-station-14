@@ -14,7 +14,7 @@
       required: true
       default: [ MothWingsDefault ]
     enum.HumanoidVisualLayers.Chest:
-      limit: 2
+      limit: 4 # imp 2 -> 4
       required: false
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1

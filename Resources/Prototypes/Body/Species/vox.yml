@@ -5,58 +5,59 @@
     enum.HumanoidVisualLayers.Hair:
       limit: 1
       required: false
+      #weight: 1
     enum.HumanoidVisualLayers.FacialHair:
       limit: 1
       required: false
     enum.HumanoidVisualLayers.Head:
       limit: 4
-      required: true
+      required: false # imp
     enum.HumanoidVisualLayers.Snout:
       limit: 1
-      required: true
-      default: [ VoxBeak ]
+      required: false # imp
+      #default: [ VoxBeak ] # imp
     enum.HumanoidVisualLayers.SnoutCover:
       limit: 1
       required: false
     enum.HumanoidVisualLayers.LArm:
       limit: 1
-      required: true
-      default: [ VoxLArmScales ]
+      required: false # imp
+      #default: [ VoxLArmScales ] # imp
     enum.HumanoidVisualLayers.RArm:
       limit: 1
-      required: true
-      default: [ VoxRArmScales ]
+      required: false # imp
+      #default: [ VoxRArmScales ] # imp
     enum.HumanoidVisualLayers.LHand:
       limit: 1
-      required: true
-      default: [ VoxLHandScales ]
+      required: false # imp
+      #default: [ VoxLHandScales ] #imp
     enum.HumanoidVisualLayers.RHand:
       limit: 1
-      required: true
-      default: [ VoxRHandScales ]
+      required: false # imp
+      #default: [ VoxRHandScales ] #imp
     enum.HumanoidVisualLayers.LLeg:
       limit: 1
-      required: true
-      default: [ VoxLLegScales ]
+      required: false # imp
+      #default: [ VoxLLegScales ] #imp
     enum.HumanoidVisualLayers.RLeg:
       limit: 1
-      required: true
-      default: [ VoxRLegScales ]
+      required: false # imp
+      #default: [ VoxRLegScales ] #imp
     enum.HumanoidVisualLayers.LFoot:
       limit: 1
-      required: true
-      default: [ VoxLFootScales ]
+      required: false # imp
+      #default: [ VoxLFootScales ] #imp
     enum.HumanoidVisualLayers.RFoot:
       limit: 1
-      required: true
-      default: [ VoxRFootScales ]
+      required: false # imp
+      #default: [ VoxRFootScales ] #imp
     enum.HumanoidVisualLayers.Chest:
       limit: 2
       required: false
     enum.HumanoidVisualLayers.Tail:
       limit: 1
       required: true
-      default: [ VoxTail ]
+      default: [ VoxTailBack ] # imp VoxTail -> VoxTailBack
     enum.HumanoidVisualLayers.UndergarmentTop:
       limit: 1
       required: false
@@ -65,6 +66,14 @@
       limit: 1
       required: false
       nudityDefault: [ UndergarmentBottomBoxersVox ]
+    # imp add start
+    enum.HumanoidVisualLayers.HeadSide:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.Overlay:
+      limit: 4
+      required: false
+    # imp end
 
 - type: entity
   parent: BaseSpeciesAppearance
@@ -319,10 +328,16 @@
 - type: entity
   parent: [ OrganBaseHandLeft, OrganVoxExternal ]
   id: OrganVoxHandLeft
+  components: # imp
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Vox/parts.rsi
 
 - type: entity
   parent: [ OrganBaseHandRight, OrganVoxExternal ]
   id: OrganVoxHandRight
+  components: # imp
+  - type: Sprite
+    sprite: _Impstation/Mobs/Species/Vox/parts.rsi
 
 - type: entity
   parent: [ OrganBaseLegLeft, OrganVoxExternal ]
