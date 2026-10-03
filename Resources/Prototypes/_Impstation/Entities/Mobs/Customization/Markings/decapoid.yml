@@ -124,9 +124,9 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/snout.rsi
-    state: gills-stripes1
+    state: gillstripes1
   - sprite: _Impstation/Mobs/Customization/Decapoid/snout.rsi
-    state: gills-stripes2
+    state: gillstripes2
 
 # Eyes
 
@@ -136,9 +136,9 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-tall1
+    state: tall1
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-tall2
+    state: tall2
 
 - type: marking
   id: DecapoidEyesDefault
@@ -151,7 +151,7 @@
         !type:EyeColoring
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-default
+    state: eyes1
 
 - type: marking
   id: DecapoidEyesSpider
@@ -164,7 +164,7 @@
         !type:EyeColoring
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-spider
+    state: eyes6
 
 - type: marking
   id: DecapoidEyesStalks
@@ -177,7 +177,7 @@
         !type:EyeColoring
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-stalks
+    state: eyes4
 
 - type: marking
   id: DecapoidEyesThree
@@ -190,7 +190,7 @@
         !type:EyeColoring
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-three
+    state: eyes2 # love that eyes three is eyes 2
 
 - type: marking
   id: DecapoidEyesWideClose
@@ -203,7 +203,7 @@
         !type:EyeColoring
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-wide-close
+    state: eyes3
 
 - type: marking
   id: DecapoidEyesWideFar
@@ -216,7 +216,7 @@
         !type:EyeColoring
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/eyes.rsi
-    state: eyes-wide-far
+    state: eyes5
 
 # RArm
 
@@ -481,7 +481,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-mid
+    state: 1
 
 - type: marking
   id: DecapoidWhiskerMidR
@@ -489,7 +489,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-midr
+    state: 2
 
 - type: marking
   id: DecapoidWhiskerMidL
@@ -497,7 +497,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-midl
+    state: 3
 
 - type: marking
   id: DecapoidWhiskerShort
@@ -505,7 +505,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-short
+    state: 4
 
 - type: marking
   id: DecapoidWhiskerLong
@@ -513,7 +513,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-long
+    state: 5
 
 - type: marking
   id: DecapoidWhiskerLongR
@@ -521,7 +521,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-longr
+    state: 6
 
 - type: marking
   id: DecapoidWhiskerLongL
@@ -529,7 +529,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-longl
+    state: 7
 
 - type: marking
   id: DecapoidWhiskerSimple
@@ -537,7 +537,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-simple
+    state: 8
 
 - type: marking
   id: DecapoidWhiskerStraight
@@ -545,7 +545,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-straight
+    state: 9
 
 - type: marking
   id: DecapoidWhiskerHanging
@@ -553,7 +553,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-hanging
+    state: 10
 
 - type: marking
   id: DecapoidWhiskerCurled
@@ -561,7 +561,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/headside.rsi
-    state: whisker-curled
+    state: 11
 
 # HeadTop
 
@@ -573,7 +573,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-curly
+    state: curly
 
 - type: marking
   id: GrasperFreaky
@@ -581,7 +581,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-freaky
+    state: freaky
 
 - type: marking
   id: GrasperHigh
@@ -589,7 +589,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-highup
+    state: highup
 
 - type: marking
   id: GrasperLong
@@ -597,7 +597,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-long
+    state: long
 
 - type: marking
   id: GrasperMoon
@@ -605,9 +605,9 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-moon1
+    state: moon1
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-moon2
+    state: moon2
 
 - type: marking
   id: GrasperShort
@@ -615,7 +615,7 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-short
+    state: short
 
 - type: marking
   id: GrasperUneven
@@ -623,4 +623,4 @@
   groupWhitelist: [ Decapoid ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Decapoid/tail.rsi
-    state: grasper-uneven
+    state: uneven

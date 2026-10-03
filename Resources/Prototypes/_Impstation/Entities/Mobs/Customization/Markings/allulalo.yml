@@ -88,7 +88,7 @@
   bodyPart: RArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmDefaultRight
 
 - type: marking
@@ -96,9 +96,9 @@
   bodyPart: RArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmSplit1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmSplit2
 
 - type: marking
@@ -106,11 +106,11 @@
   bodyPart: RArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmOwl1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmOwl2
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmOwl3
 
 # LArm
@@ -120,7 +120,7 @@
   bodyPart: LArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmDefaultLeft
 
 - type: marking
@@ -128,9 +128,9 @@
   bodyPart: LArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmSplit1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmSplit2
 
 - type: marking
@@ -138,11 +138,11 @@
   bodyPart: LArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmOwl1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmOwl2
-  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
     state: allulaloArmOwl3
 
 # RLeg
@@ -152,7 +152,7 @@
   bodyPart: RLeg
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rleg.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/legs.rsi
     state: allulaloLegUnderbellyDefaultRight
 
 # LLeg
@@ -162,7 +162,7 @@
   bodyPart: LLeg
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/lleg.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/legs.rsi
     state: allulaloLegUnderbellyDefaultLeft
 
 # UndergarmentBottom
@@ -176,7 +176,7 @@
   bodyPart: LFoot #dont look at me
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/lleg.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/legs.rsi
     state: allulaloLegPlumage
 
 # RFoot
@@ -186,7 +186,7 @@
   bodyPart: RFoot
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/rleg.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/legs.rsi
     state: allulaloLegPlumage
 
 # LHand
