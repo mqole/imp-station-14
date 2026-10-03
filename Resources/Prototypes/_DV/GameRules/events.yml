@@ -105,7 +105,7 @@
         - NamesFakeHumanFirst
         - NamesFakeHumanLast
         nameFormat: name-format-standard
-      - type: RandomHumanoidProfile
+      - type: RandomHumanoidAppearance
         randomizeName: false
       - type: EmitSoundOnSpawn # fell out of the ceiling
         sound: /Audio/Effects/clang.ogg

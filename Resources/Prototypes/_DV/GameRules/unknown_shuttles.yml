@@ -41,7 +41,7 @@
         - NamesFakeHumanFirst
         - NamesFakeHumanLast
         nameFormat: name-format-standard
-      - type: RandomHumanoidProfile
+      - type: RandomHumanoidAppearance
         randomizeName: false
       - type: NpcFactionMember
         factions:
@@ -86,7 +86,7 @@
         - NamesFakeHumanFirst
         - NamesFakeHumanLast
         nameFormat: name-format-standard
-      - type: RandomHumanoidProfile
+      - type: RandomHumanoidAppearance
         randomizeName: false
       - type: NpcFactionMember
         factions:

@@ -214,18 +214,25 @@
         Quantity: 10
 
 - type: entity
-  parent: OrganThaven
+  parent: OrganBase
+  id: OrganThavenVisual
+  abstract: true
+  suffix: thaven
+  components:
+  - type: VisualOrgan
+    data:
+      sprite: _Impstation/Mobs/Species/Thaven/parts.rsi #imp edit, waiting on proper macro merge to migrate files
+  - type: VisualOrganMarkings
+    markingData:
+      group: Thaven
+
+- type: entity
+  parent: [ OrganThaven, OrganThavenVisual ]
   id: OrganThavenExternal
   abstract: true
   components:
   - type: Sprite
     sprite: _Impstation/Mobs/Species/Thaven/parts.rsi #imp edit, waiting on proper macro merge to migrate files
-  - type: VisualOrgan
-    data:
-      sprite: _Impstation/Mobs/Species/Thaven/parts.rsi #imp edit, waiting on proper macro merge to migrate files
-    - type: VisualOrganMarkings
-    markingData:
-      group: Thaven
 
 - type: entity
   parent: [ OrganBaseTorso, OrganThavenExternal ]

@@ -886,7 +886,7 @@
         - MobMask
         layer:
         - MobLayer
-  - type: RandomHumanoidProfile
+  - type: RandomHumanoidAppearance
     randomizeName: false
   - type: RandomMetadata
     nameSegments:
