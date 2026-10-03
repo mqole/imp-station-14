@@ -7,7 +7,6 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
-using Content.Shared.Random.Helpers; // imp
 
 namespace Content.Shared.Humanoid;
 

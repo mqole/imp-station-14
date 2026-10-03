@@ -40,7 +40,7 @@
     enum.HumanoidVisualLayers.Eyes:
       limit: 1
       required: true
-      defaultMarkings: [ SlimeEyesDefault ]
+      default: [ SlimeEyesDefault ]
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1
       required: false
@@ -221,10 +221,10 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: Mobs/Species/Slime/parts.rsi
+    sprite: _Impstation/Mobs/Species/Slime/parts.rsi # imp edit
   - type: VisualOrgan
     data:
-      sprite: Mobs/Species/Slime/parts.rsi
+      sprite: _Impstation/Mobs/Species/Slime/parts.rsi # imp edit
   - type: VisualOrganMarkings
     markingData:
       group: Slime

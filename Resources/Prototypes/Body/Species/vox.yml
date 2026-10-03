@@ -328,16 +328,10 @@
 - type: entity
   parent: [ OrganBaseHandLeft, OrganVoxExternal ]
   id: OrganVoxHandLeft
-  components: # imp
-  - type: Sprite
-    sprite: _Impstation/Mobs/Species/Vox/parts.rsi
 
 - type: entity
   parent: [ OrganBaseHandRight, OrganVoxExternal ]
   id: OrganVoxHandRight
-  components: # imp
-  - type: Sprite
-    sprite: _Impstation/Mobs/Species/Vox/parts.rsi
 
 - type: entity
   parent: [ OrganBaseLegLeft, OrganVoxExternal ]
