@@ -7,7 +7,7 @@
   #followSkinColor: true
   forcedColoring: true
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Ant/headtop.rsi
+  - sprite: _Impstation/Mobs/Customization/Visitors/Ants/headtop.rsi
     state: antennae_1
 
 - type: marking
@@ -17,7 +17,7 @@
   #followSkinColor: true
   forcedColoring: true
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Ant/headtop.rsi
+  - sprite: _Impstation/Mobs/Customization/Visitors/Ants/headtop.rsi
     state: antennae_2
 
 - type: marking
@@ -27,7 +27,7 @@
   #followSkinColor: true
   forcedColoring: true
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Ant/headtop.rsi
+  - sprite: _Impstation/Mobs/Customization/Visitors/Ants/headtop.rsi
     state: antennae_3
 
 - type: marking
@@ -37,7 +37,7 @@
   #followSkinColor: true
   forcedColoring: true
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Ant/headtop.rsi
+  - sprite: _Impstation/Mobs/Customization/Visitors/Ants/headtop.rsi
     state: antennae_4
 
 # Chest
@@ -49,5 +49,5 @@
   #followSkinColor: true
   forcedColoring: true
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Ant/chest.rsi
+  - sprite: _Impstation/Mobs/Customization/Visitors/Ants/chest.rsi
     state: abdomen
