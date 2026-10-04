@@ -40,12 +40,9 @@
   id: Fangs
   bodyPart: Snout
   groupWhitelist: [ Reptilian ]
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-        color: "#FFFFFF"
   sprites:
+  - sprite: Mobs/Customization/reptilian_parts.rsi
+    state: snout_round
   - sprite: _Impstation/Mobs/Customization/Reptilian/snout.rsi
     state: fangs
 
@@ -54,6 +51,8 @@
   bodyPart: Snout
   groupWhitelist: [ Reptilian ]
   sprites:
+  - sprite: Mobs/Customization/reptilian_parts.rsi
+    state: snout_round
   - sprite: _Impstation/Mobs/Customization/Reptilian/snout.rsi
     state: beard
 
@@ -70,12 +69,9 @@
   bodyPart: Snout
   forcedColoring: true
   groupWhitelist: [ Reptilian ]
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-        color: "#FFFFFF"
   sprites:
+  - sprite: Mobs/Customization/reptilian_parts.rsi
+    state: snout_round
   - sprite: _Impstation/Mobs/Customization/Reptilian/snout.rsi
     state: piercings1
 

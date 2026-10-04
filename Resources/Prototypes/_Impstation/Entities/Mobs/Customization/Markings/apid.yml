@@ -103,11 +103,11 @@
   id: ApidBeeButtDefault
   bodyPart: Tail
   groupWhitelist: [Apid]
-  forcedColoring: false
   coloring:
     default:
       type:
-        !type:SkinColoring #did U know that this just doesnt work on randomappearance mobs for midround spawns upstream. fascinating
+        !type:SimpleColoring
+        color: "#ffe600"
   sprites:
   - sprite: _Impstation/Mobs/Customization/Apid/tail.rsi
     state: apidBeeButtDefault
