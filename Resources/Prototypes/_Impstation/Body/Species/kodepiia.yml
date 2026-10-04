@@ -233,10 +233,10 @@
 - type: entity
   parent: [ OrganBaseTorso, OrganKodepiiaExternal ]
   id: OrganKodepiiaTorso
-  components:
-  - type: VisualOrganMarkings
-    hideableLayers:
-    - enum.HumanoidVisualLayers.Tenta
+  # components:
+  # - type: VisualOrganMarkings
+  #   hideableLayers:
+  #   - enum.HumanoidVisualLayers.Tenta
 
 - type: entity
   parent: [ OrganBaseHead, OrganKodepiiaExternal ]
