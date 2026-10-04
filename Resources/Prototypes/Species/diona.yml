@@ -11,11 +11,9 @@
   femaleFirstNames: NamesDionaFirst
   lastNames: NamesDionaLast
   naming: TheFirstofLast
-  # imp start
   sexes:
-  - Male
-  - Female
   - Unsexed
+  # imp start
   youngAge: 50
   oldAge: 90
   ancientAge: 300

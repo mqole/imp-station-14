@@ -71,7 +71,7 @@
     - state: kidney-r
 
 - type: entity
-  parent: [ OrganPleebnarInternal, OrganBaseEyes ]
+  parent: [ OrganPleebnarInternal, OrganAnimalEyes ]
   id: OrganPleebnarEyes
   name: shuui
   description: "Soulful."

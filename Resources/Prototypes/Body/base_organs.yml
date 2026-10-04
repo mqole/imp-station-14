@@ -71,6 +71,7 @@
       - Overlay
       - UndergarmentTop
       - UndergarmentBottom
+      - Tenta # imp
 
 - type: entity
   parent: OrganBase
@@ -590,15 +591,18 @@
   - type: Sprite
     sprite: Mobs/Species/Human/organs.rsi
 
-#IMP EDIT START: these were manually pulled from https://github.com/space-wizards/space-station-14/pull/42554
-#since this PR relies partially on visual nubody which is not part of the initial nubody, the relevant parts are being
-#pulled now and will be properly replaced after the implementation of visual nubody
 - type: entity
   id: OrganBaseHeadSexed
   abstract: true
   components:
   - type: Sprite
     state: head_m
+  - type: VisualOrgan
+    data:
+      state: head_m
+    sexStateOverrides:
+      Male: head_m
+      Female: head_f
 
 - type: entity
   id: OrganBaseTorsoSexed
@@ -606,5 +610,9 @@
   components:
   - type: Sprite
     state: torso_m
-#IMP EDIT END
-
+  - type: VisualOrgan
+    data:
+      state: torso_m
+    sexStateOverrides:
+      Male: torso_m
+      Female: torso_f
