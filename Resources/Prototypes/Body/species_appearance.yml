@@ -4,10 +4,6 @@
   components:
   - type: Sprite
     layers:
-    #'Behind' sprites
-    - map: [ "enum.HumanoidVisualLayers.TailUnderlay" ] # imp
-    - map: [ "enum.HumanoidVisualLayers.TailBehind" ] # Floof
-
     # Torso
     - map: [ "enum.HumanoidVisualLayers.Chest" ]
 
@@ -44,10 +40,12 @@
     - map: [ "belt" ]
     - map: [ "id" ]
     - map: [ "outerClothing" ]
-    - map: [ "enum.HumanoidVisualLayers.TailBehindBackpack" ] # imp
-    - map: [ "back" ]
-    - map: [ "enum.HumanoidVisualLayers.TailOversuit" ] # Floof
+    # imp edit start
+    - map: [ "enum.HumanoidVisualLayers.Tail" ]
+    - map: [ "enum.HumanoidVisualLayers.TailOverlay" ]
     - map: [ "neck" ]
+    - map: [ "back" ]
+    - map: [ "suitstorage" ]
 
     # Stuff that goes in front of equipment
     - map: [ "enum.HumanoidVisualLayers.SnoutCover" ]
@@ -55,11 +53,10 @@
     - map: [ "enum.HumanoidVisualLayers.Hair" ]
     - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
     - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
-    # imp start
+    #MACRO start
     # Kodepiiae 'arms' are drawn in front of everything but tails
     - map: [ "enum.HumanoidVisualLayers.Tenta" ]
-    # imp end
-    - map: [ "enum.HumanoidVisualLayers.Tail" ]
+    #MACRO end
 
     # Stuff that goes in front of stuff that goes in front of equipment
     - map: [ "mask" ]
@@ -115,3 +112,11 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+  - type: InitialBody
+    relationships:
+      Torso: [Head, ArmLeft, ArmRight, LegLeft, LegRight, Appendix, Lungs, Heart, Stomach, Liver, Kidneys]
+      Head: [Brain, Eyes, Tongue, Ears]
+      ArmLeft: [HandLeft]
+      ArmRight: [HandRight]
+      LegLeft: [FootLeft]
+      LegRight: [FootRight]

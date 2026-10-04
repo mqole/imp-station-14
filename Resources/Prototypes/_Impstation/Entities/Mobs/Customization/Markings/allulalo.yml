@@ -88,7 +88,7 @@
   bodyPart: RArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
     state: allulaloArmDefaultRight
 
 - type: marking
@@ -96,9 +96,9 @@
   bodyPart: RArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
     state: allulaloArmSplit1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
     state: allulaloArmSplit2
 
 - type: marking
@@ -106,11 +106,11 @@
   bodyPart: RArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
     state: allulaloArmOwl1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
     state: allulaloArmOwl2
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/rarm.rsi
     state: allulaloArmOwl3
 
 # LArm
@@ -120,7 +120,7 @@
   bodyPart: LArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
     state: allulaloArmDefaultLeft
 
 - type: marking
@@ -128,9 +128,9 @@
   bodyPart: LArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
     state: allulaloArmSplit1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
     state: allulaloArmSplit2
 
 - type: marking
@@ -138,11 +138,11 @@
   bodyPart: LArm
   groupWhitelist: [ Allulalo ]
   sprites:
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
     state: allulaloArmOwl1
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
     state: allulaloArmOwl2
-  - sprite: _Impstation/Mobs/Customization/Allulalo/arms.rsi
+  - sprite: _Impstation/Mobs/Customization/Allulalo/larm.rsi
     state: allulaloArmOwl3
 
 # RLeg

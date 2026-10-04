@@ -221,10 +221,10 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: Mobs/Species/Slime/parts.rsi
+    sprite: _Impstation/Mobs/Species/Slime/parts.rsi # imp edit
   - type: VisualOrgan
     data:
-      sprite: Mobs/Species/Slime/parts.rsi
+      sprite: _Impstation/Mobs/Species/Slime/parts.rsi # imp edit
   - type: VisualOrganMarkings
     markingData:
       group: Slime
