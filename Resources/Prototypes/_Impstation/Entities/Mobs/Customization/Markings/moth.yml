@@ -739,7 +739,7 @@
 
 - type: marking
   id: MothFireflyOverlay
-  bodyPart: TailOverlay
+  bodyPart: Overlay
   groupWhitelist: [ Moth ]
   colorLinks:
     firefly_secondary_behind: firefly_secondary_front
