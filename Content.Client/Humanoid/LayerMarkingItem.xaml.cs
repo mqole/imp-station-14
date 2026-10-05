@@ -11,6 +11,7 @@ using Robust.Client.UserInterface;
 using Robust.Shared.Input;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared._Floof.Sprite; // Floofstation
 
 namespace Content.Client.Humanoid;
 
@@ -106,9 +107,21 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
         if (_markingsModel.GetMarking(_organ, _layer, _markingPrototype.ID) is { } marking &&
             _colorSliders is { } sliders)
         {
+
+            // IMP: my cbt trying to get this to cooperate with floof tech
+            // sprite index may not == the amount of times iterated through the loop, so we have to store them seperate.
+            // kill me
+            var slider = 0;
             for (var i = 0; i < _markingPrototype.Sprites.Count; i++)
             {
-                sliders[i].Color = marking.MarkingColors[i];
+                if (HasColorLinks(_markingPrototype, i))
+                {
+                    continue;
+                }
+                //sliders[i].Color = marking.MarkingColors[i];
+                sliders[slider].Color = marking.MarkingColors[i];
+                slider += 1;
+                // END IMP
             }
         }
     }
@@ -151,6 +164,11 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
 
         for (var i = 0; i < _markingPrototype.Sprites.Count; i++)
         {
+            // Floof add
+            if (HasColorLinks(_markingPrototype, i))
+                continue; // dont show it, cus its parented to another marking
+            // Floofstation edit end
+
             var container = new BoxContainer()
             {
                 Orientation = LayoutOrientation.Vertical,
