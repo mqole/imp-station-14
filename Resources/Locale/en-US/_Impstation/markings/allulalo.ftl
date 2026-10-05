@@ -67,14 +67,12 @@ marking-AllulaloWingsOwlLeft-allulaloArmOwl3 = Flight feathers
 # RLeg
 
 marking-AllulaloLegUnderbellyDefaultRight= Underbelly
-marking-AllulaloLegUnderbellyDefaultRight-allulaloLegUnderbellyDefaultLeft = left leg underbelly
 marking-AllulaloLegUnderbellyDefaultRight-allulaloLegUnderbellyDefaultRight = right leg underbelly
 
 # LLeg
 
 marking-AllulaloLegUnderbellyDefaultLeft= Underbelly
 marking-AllulaloLegUnderbellyDefaultLeft-allulaloLegUnderbellyDefaultLeft = left leg underbelly
-marking-AllulaloLegUnderbellyDefaultLeft-allulaloLegUnderbellyDefaultRight = right leg underbelly
 
 # UndergarmentBottom
 
