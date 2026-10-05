@@ -159,6 +159,15 @@
   id: MothWingsDefault
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    default_neck: TailBehindBackpack
+    default_primary_behind: TailBehind
+    default_primary_front: TailBehindBackpack
+    default_secondary_behind: TailBehind
+    default_secondary_front: TailBehindBackpack
+  colorLinks:
+    default_primary_behind: default_primary_front
+    default_secondary_behind: default_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: default_neck
@@ -175,6 +184,12 @@
   id: MothWingsCharred
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    charred_neck: TailBehindBackpack
+    charred_primary_behind: TailBehind
+    charred_primary_front: TailBehindBackpack
+  colorLinks:
+    charred_primary_behind: charred_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: charred_neck
@@ -187,6 +202,15 @@
   id: MothWingsDbushy
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    dbushy_neck: TailBehindBackpack
+    dbushy_primary_behind: TailBehind
+    dbushy_primary_front: TailBehindBackpack
+    dbushy_secondary_behind: TailBehind
+    dbushy_secondary_front: TailBehindBackpack
+  colorLinks:
+    dbushy_primary_behind: dbushy_primary_front
+    dbushy_secondary_behind: dbushy_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: dbushy_neck
@@ -203,6 +227,15 @@
   id: MothWingsDeathhead
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    deathhead_neck: TailBehindBackpack
+    deathhead_primary_behind: TailBehind
+    deathhead_primary_front: TailBehindBackpack
+    deathhead_secondary_behind: TailBehind
+    deathhead_secondary_front: TailBehindBackpack
+  colorLinks:
+    deathhead_primary_behind: deathhead_primary_front
+    deathhead_secondary_behind: deathhead_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: deathhead_neck
@@ -219,6 +252,15 @@
   id: MothWingsFan
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    fan_neck: TailBehindBackpack
+    fan_primary_behind: TailBehind
+    fan_primary_front: TailBehindBackpack
+    fan_secondary_behind: TailBehind
+    fan_secondary_front: TailBehindBackpack
+  colorLinks:
+    fan_primary_behind: fan_primary_front
+    fan_secondary_behind: fan_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: fan_neck
@@ -235,6 +277,15 @@
   id: MothWingsDfan
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    dfan_neck: TailBehindBackpack
+    dfan_primary_behind: TailBehind
+    dfan_primary_front: TailBehindBackpack
+    dfan_secondary_behind: TailBehind
+    dfan_secondary_front: TailBehindBackpack
+  colorLinks:
+    dfan_primary_behind: dfan_primary_front
+    dfan_secondary_behind: dfan_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: dfan_neck
@@ -251,6 +302,12 @@
   id: MothWingsFeathery
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    feathery_neck: TailBehindBackpack
+    feathery_primary_behind: TailBehind
+    feathery_primary_front: TailBehindBackpack
+  colorLinks:
+    feathery_primary_behind: feathery_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: feathery_neck
@@ -263,6 +320,15 @@
   id: MothWingsFirewatch
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    firewatch_neck: TailBehindBackpack
+    firewatch_primary_behind: TailBehind
+    firewatch_primary_front: TailBehindBackpack
+    firewatch_secondary_behind: TailBehind
+    firewatch_secondary_front: TailBehindBackpack
+  colorLinks:
+    firewatch_primary_behind: firewatch_primary_front
+    firewatch_secondary_behind: firewatch_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: firewatch_neck
@@ -279,6 +345,15 @@
   id: MothWingsGothic
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    gothic_neck: TailBehindBackpack
+    gothic_primary_behind: TailBehind
+    gothic_primary_front: TailBehindBackpack
+    gothic_secondary_behind: TailBehind
+    gothic_secondary_front: TailBehindBackpack
+  colorLinks:
+    gothic_primary_behind: gothic_primary_front
+    gothic_secondary_behind: gothic_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: gothic_neck
@@ -295,6 +370,12 @@
   id: MothWingsJungle
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    jungle_neck: TailBehindBackpack
+    jungle_primary_behind: TailBehind
+    jungle_primary_front: TailBehindBackpack
+  colorLinks:
+    jungle_primary_behind: jungle_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: jungle_neck
@@ -307,6 +388,13 @@
   id: MothWingsLadybug
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    ladybug_neck: TailBehindBackpack
+    ladybug_primary_behind: TailBehind
+    ladybug_primary_front: TailBehindBackpack
+    ladybug_secondary_front: TailBehindBackpack
+  colorLinks:
+    ladybug_primary_behind: ladybug_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: ladybug_neck
@@ -321,6 +409,15 @@
   id: MothWingsMaple
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    maple_neck: TailBehindBackpack
+    maple_primary_behind: TailBehind
+    maple_primary_front: TailBehindBackpack
+    maple_secondary_behind: TailBehind
+    maple_secondary_front: TailBehindBackpack
+  colorLinks:
+    maple_primary_behind: maple_primary_front
+    maple_secondary_behind: maple_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: maple_neck
@@ -337,6 +434,17 @@
   id: MothWingsMoffra
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    moffra_neck: TailBehindBackpack
+    moffra_neck_secondary: TailBehindBackpack
+    moffra_primary_behind: TailBehind
+    moffra_primary_front: TailBehindBackpack
+    moffra_secondary_behind: TailBehind
+    moffra_secondary_front: TailBehindBackpack
+  colorLinks:
+    moffra_primary_behind: moffra_primary_front
+    moffra_secondary_behind: moffra_secondary_front
+    moffra_neck_secondary: moffra_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: moffra_neck
@@ -355,6 +463,12 @@
   id: MothWingsOakworm
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    oakworm_neck: TailBehindBackpack
+    oakworm_primary_behind: TailBehind
+    oakworm_primary_front: TailBehindBackpack
+  colorLinks:
+    oakworm_primary_behind: oakworm_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: oakworm_neck
@@ -367,6 +481,15 @@
   id: MothWingsPlasmafire
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    plasmafire_neck: TailBehindBackpack
+    plasmafire_primary_behind: TailBehind
+    plasmafire_primary_front: TailBehindBackpack
+    plasmafire_secondary_behind: TailBehind
+    plasmafire_secondary_front: TailBehindBackpack
+  colorLinks:
+    plasmafire_primary_behind: plasmafire_primary_front
+    plasmafire_secondary_behind: plasmafire_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: plasmafire_neck
@@ -383,6 +506,12 @@
   id: MothWingsPointy
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    pointy_neck: TailBehindBackpack
+    pointy_primary_behind: TailBehind
+    pointy_primary_front: TailBehindBackpack
+  colorLinks:
+    pointy_primary_behind: pointy_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: pointy_neck
@@ -395,6 +524,15 @@
   id: MothWingsRoyal
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    royal_neck: TailBehindBackpack
+    royal_primary_behind: TailBehind
+    royal_primary_front: TailBehindBackpack
+    royal_secondary_behind: TailBehind
+    royal_secondary_front: TailBehindBackpack
+  colorLinks:
+    royal_primary_behind: royal_primary_front
+    royal_secondary_behind: royal_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: royal_neck
@@ -411,6 +549,12 @@
   id: MothWingsStellar
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    stellar_neck: TailBehindBackpack
+    stellar_primary_behind: TailBehind
+    stellar_primary_front: TailBehindBackpack
+  colorLinks:
+    stellar_primary_behind: stellar_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: stellar_neck
@@ -423,6 +567,12 @@
   id: MothWingsStriped
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    striped_neck: TailBehindBackpack
+    striped_primary_behind: TailBehind
+    striped_primary_front: TailBehindBackpack
+  colorLinks:
+    striped_primary_behind: striped_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: striped_neck
@@ -435,6 +585,12 @@
   id: MothWingsSwirly
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    swirly_neck: TailBehindBackpack
+    swirly_primary_behind: TailBehind
+    swirly_primary_front: TailBehindBackpack
+  colorLinks:
+    swirly_primary_behind: swirly_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: swirly_neck
@@ -447,6 +603,12 @@
   id: MothWingsWhitefly
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    whitefly_neck: TailBehindBackpack
+    whitefly_primary_behind: TailBehind
+    whitefly_primary_front: TailBehindBackpack
+  colorLinks:
+    whitefly_primary_behind: whitefly_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: whitefly_neck
@@ -459,6 +621,12 @@
   id: MothWingsWitchwing
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    witchwing_neck: TailBehindBackpack
+    witchwing_primary_behind: TailBehind
+    witchwing_primary_front: TailBehindBackpack
+  colorLinks:
+    witchwing_primary_behind: witchwing_primary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: witchwing_neck
@@ -471,6 +639,15 @@
   id: MothWingsUnderwing
   bodyPart: Tail
   groupWhitelist: [Moth]
+  layering: # imp edit start
+    underwing_neck: TailBehindBackpack
+    underwing_primary_behind: TailBehind
+    underwing_primary_front: TailBehindBackpack
+    underwing_secondary_behind: TailBehind
+    underwing_secondary_front: TailBehindBackpack
+  colorLinks:
+    underwing_primary_behind: underwing_primary_front
+    underwing_secondary_behind: underwing_secondary_front
   sprites:
   - sprite: _Impstation/Mobs/Customization/Moth/taillayers.rsi
     state: underwing_neck

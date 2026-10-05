@@ -4,6 +4,11 @@
   components:
   - type: Sprite
     layers:
+
+    # imp/floof: 'Behind' sprites
+    - map: [ "enum.HumanoidVisualLayers.TailUnderlay" ] # imp
+    - map: [ "enum.HumanoidVisualLayers.TailBehind" ] # Floof
+
     # Torso
     - map: [ "enum.HumanoidVisualLayers.Chest" ]
 
@@ -40,13 +45,10 @@
     - map: [ "belt" ]
     - map: [ "id" ]
     - map: [ "outerClothing" ]
-    # imp edit start
-    - map: [ "enum.HumanoidVisualLayers.Tail" ]
-    - map: [ "enum.HumanoidVisualLayers.TailOverlay" ]
-    - map: [ "neck" ]
-    # end imp
+    - map: [ "enum.HumanoidVisualLayers.TailBehindBackpack" ] # imp
     - map: [ "back" ]
-    #- map: [ "neck" ] # imp reorder
+    - map: [ "enum.HumanoidVisualLayers.TailOversuit" ] # Floof
+    - map: [ "neck" ]
     - map: [ "suitstorage" ]
 
     # Stuff that goes in front of equipment
@@ -59,8 +61,8 @@
     # Kodepiiae 'arms' are drawn in front of everything but tails
     - map: [ "enum.HumanoidVisualLayers.Tenta" ]
     #MACRO end
-    #- map: [ "enum.HumanoidVisualLayers.Tail" ] # imp reorder
-    #- map: [ "enum.HumanoidVisualLayers.TailOverlay" ] # imp reorder
+    - map: [ "enum.HumanoidVisualLayers.Tail" ]
+    - map: [ "enum.HumanoidVisualLayers.TailOverlay" ]
 
     # Stuff that goes in front of stuff that goes in front of equipment
     - map: [ "mask" ]

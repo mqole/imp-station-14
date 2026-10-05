@@ -73,7 +73,13 @@
       - UndergarmentTop
       - UndergarmentBottom
       - Special
-      - Tenta # imp
+      # IMP START - some of these visual layers may not be needed. pending marking cleanup
+      - TailBehind
+      - TailBehindBackpack
+      - TailOversuit
+      - TailUnderlay
+      - Tenta
+      # IMP END
 
 - type: entity
   parent: OrganBase

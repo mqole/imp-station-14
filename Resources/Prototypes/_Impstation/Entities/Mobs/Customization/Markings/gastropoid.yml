@@ -405,6 +405,9 @@
   id: GastropoidShellBig
   bodyPart: Tail
   groupWhitelist: [ Gastropoid ]
+  layering:
+    bigstripes: TailOversuit
+    big: TailOversuit
   sprites:
   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
     state: big
@@ -415,6 +418,8 @@
   id: GastropoidShellCone
   bodyPart: Tail
   groupWhitelist: [ Gastropoid ]
+  layering:
+    cone: TailOversuit
   sprites:
   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
     state: cone
@@ -423,6 +428,8 @@
   id: GastropoidShellProsthetic
   bodyPart: Tail
   groupWhitelist: [ Gastropoid ]
+  layering:
+    prosthetic: TailOversuit
   sprites:
   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
     state: prosthetic
@@ -431,6 +438,8 @@
   id: GastropoidShellProstheticSimple
   bodyPart: Tail
   groupWhitelist: [ Gastropoid ]
+  layering:
+    prostheticsimple: TailOversuit
   sprites:
   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
     state: prostheticsimple
@@ -439,6 +448,9 @@
   id: GastropoidShellSmall
   bodyPart: Tail
   groupWhitelist: [ Gastropoid ]
+  layering:
+    smallstripes: TailOversuit
+    small: TailOversuit
   sprites:
   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
     state: small
@@ -464,6 +476,17 @@
   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
     state: prostheticinnerlight
   shader: unshaded
+
+# - type: marking
+#   id: ProstheticPulse
+#   bodyPart: Tail
+#   groupWhitelist: [ Gastropoid ]
+#   layering:
+#     prostheticpulse: Tail
+#   sprites:
+#   - sprite: _Impstation/Mobs/Customization/Gastropoid/tail.rsi
+#     state: prostheticpulse
+#   shader: unshaded
 
 - type: marking
   id: SimpleBow
