@@ -32,30 +32,49 @@ marking-AllulaloEyesUnshaded = Eyes (Glowing)
 marking-AllulaloEyesUnshaded-allulaloEyesUnshadedLeft = Left eye
 marking-AllulaloEyesUnshaded-allulaloEyesUnshadedRight = Right eye
 
+marking-AllulaloEyesHeterochromia = Eyes (Heterochromia)
+marking-AllulaloEyesHeterochromia-allulaloEyesDefaultLeft = Left Eye
+marking-AllulaloEyesHeterochromia-allulaloEyesDefaultRight = Right Eye
+
 # RArm
 
-marking-AllulaloWingsDefault = Default Wings
-marking-AllulaloWingsDefault-allulaloArmDefaultRight = Wing (Right)
-marking-AllulaloWingsDefault-allulaloArmDefaultLeft = Wing (Left)
+marking-AllulaloWingsDefaultRight = Default Wing
+marking-AllulaloWingsDefaultRight-allulaloArmDefaultRight = Wing
 
-marking-AllulaloWingsSplit = Split Wings
-marking-AllulaloWingsSplit-allulaloArmSplit1 = Lower feathers
-marking-AllulaloWingsSplit-allulaloArmSplit2 = Upper feathers
+marking-AllulaloWingsSplitRight = Split Wing
+marking-AllulaloWingsSplitRight-allulaloArmSplit1 = Lower feathers
+marking-AllulaloWingsSplitRight-allulaloArmSplit2 = Upper feathers
 
-marking-AllulaloWingsOwl = Diving Wings
-marking-AllulaloWingsOwl-allulaloArmOwl1 = Middle feathers
-marking-AllulaloWingsOwl-allulaloArmOwl2 = Pattern feathers
-marking-AllulaloWingsOwl-allulaloArmOwl3 = Flight feathers
+marking-AllulaloWingsOwlRight = Owl Wing
+marking-AllulaloWingsOwlRight-allulaloArmOwl1 = Middle feathers
+marking-AllulaloWingsOwlRight-allulaloArmOwl2 = Pattern feathers
+marking-AllulaloWingsOwlRight-allulaloArmOwl3 = Flight feathers
 
 # LArm
 
+marking-AllulaloWingsDefaultLeft = Default Wing
+marking-AllulaloWingsDefaultLeft-allulaloArmDefaultLeft = Wing
+
+marking-AllulaloWingsSplitLeft = Split Wing
+marking-AllulaloWingsSplitLeft-allulaloArmSplit1 = Lower feathers
+marking-AllulaloWingsSplitLeft-allulaloArmSplit2 = Upper feathers
+
+marking-AllulaloWingsOwlLeft = Owl Wing
+marking-AllulaloWingsOwlLeft-allulaloArmOwl1 = Middle feathers
+marking-AllulaloWingsOwlLeft-allulaloArmOwl2 = Pattern feathers
+marking-AllulaloWingsOwlLeft-allulaloArmOwl3 = Flight feathers
+
 # RLeg
+
+marking-AllulaloLegUnderbellyDefaultRight= Underbelly
+marking-AllulaloLegUnderbellyDefaultRight-allulaloLegUnderbellyDefaultLeft = left leg underbelly
+marking-AllulaloLegUnderbellyDefaultRight-allulaloLegUnderbellyDefaultRight = right leg underbelly
 
 # LLeg
 
-marking-AllulaloLegUnderbellyDefault= Underbelly 
-marking-AllulaloLegUnderbellyDefault-allulaloLegUnderbellyDefaultLeft = left leg underbelly
-marking-AllulaloLegUnderbellyDefault-allulaloLegUnderbellyDefaultRight = right leg underbelly
+marking-AllulaloLegUnderbellyDefaultLeft= Underbelly
+marking-AllulaloLegUnderbellyDefaultLeft-allulaloLegUnderbellyDefaultLeft = left leg underbelly
+marking-AllulaloLegUnderbellyDefaultLeft-allulaloLegUnderbellyDefaultRight = right leg underbelly
 
 # UndergarmentBottom
 
@@ -63,10 +82,13 @@ marking-AllulaloLegUnderbellyDefault-allulaloLegUnderbellyDefaultRight = right l
 
 # LFoot
 
-marking-AllulaloLegPlumage= Excessive Feathers
-marking-AllulaloLegPlumage-allulaloLegPlumage = plumage
+marking-AllulaloLegPlumageLeft= Excessive Feathers
+marking-AllulaloLegPlumageLeft-allulaloLegPlumageLeft = plumage
 
 # RFoot
+
+marking-AllulaloLegPlumageRight= Excessive Feathers
+marking-AllulaloLegPlumageRight-allulaloLegPlumageRight = plumage
 
 # LHand
 
