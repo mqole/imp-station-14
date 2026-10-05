@@ -13,6 +13,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Nutrition.AnimalHusbandry;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Temperature.Components;
+using Robust.Shared.Utility;
 
 namespace Content.Server.Heretic.EntitySystems;
 
@@ -44,13 +45,20 @@ public sealed class GhoulSystem : Shared.Heretic.EntitySystems.SharedGhoulSystem
                 pair => pair.Value with { EyeColor = greycolor, SkinColor = greycolor });
             _visualBody.ApplyProfiles(ent, ghoulProfiles);
 
-            foreach (var markingSet in markings.Values)
+            // god this is so dogshit i wish markings in visnubody had literally any api. sorry for my crimes here
+            var newMarkings = markings.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.ToDictionary(
+                    it => it.Key,
+                    it => it.Value.ShallowClone()));
+
+            foreach (var markingSet in newMarkings.Values)
             {
                 foreach (var (layer, layerMarkings) in markingSet)
                 {
-                    foreach (var marking in layerMarkings)
+                    for (var i = 0; i < layerMarkings.Count; i++)
                     {
-                        marking.SetColor(greycolor);
+                        layerMarkings[i] = layerMarkings[i].WithColor(greycolor);
                     }
                 }
             }

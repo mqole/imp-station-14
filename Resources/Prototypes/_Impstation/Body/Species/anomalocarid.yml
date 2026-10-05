@@ -122,15 +122,6 @@
       Kidneys: OrganAnomalocaridKidneys
   - type: HumanoidProfile
     species: Anomalocarid
-  - type: HideableHumanoidLayers # will probably be removed later
-    hideLayersOnEquip:
-    - Snout
-    - SnoutCover
-    - HeadTop
-    - HeadSide
-    - FacialHair
-    - Hair
-    - Eyes
 
 - type: entity
   parent:
@@ -375,12 +366,12 @@
 - type: entity
   parent: [OrganBaseHead, OrganAnomalocaridExternal]
   id: OrganAnomalocaridHead
-  # components:
-  # - type: VisualOrganMarkings
-  #   hideableLayers:
-  #   - enum.HumanoidVisualLayers.Eyes
-  #   - enum.HumanoidVisualLayers.HeadTop
-  #   - enum.HumanoidVisualLayers.HeadSide
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Eyes
+    - enum.HumanoidVisualLayers.HeadTop
+    - enum.HumanoidVisualLayers.HeadSide
 
 - type: entity
   parent: [OrganBaseArmLeft, OrganAnomalocaridExternal]
