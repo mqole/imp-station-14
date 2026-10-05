@@ -12,11 +12,15 @@
             "directions": 4
         },
         {
+            "name": "allulaloLegPlumageLeft",
+            "directions": 4
+        },
+        {
             "name": "allulaloLegUnderbellyDefaultRight",
             "directions": 4
         },
         {
-            "name": "allulaloLegPlumage",
+            "name": "allulaloLegPlumageRight",
             "directions": 4
         }
     ]

@@ -177,7 +177,7 @@
   groupWhitelist: [ Allulalo ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Allulalo/legs.rsi
-    state: allulaloLegPlumage
+    state: allulaloLegPlumageLeft
 
 # RFoot
 
@@ -187,7 +187,7 @@
   groupWhitelist: [ Allulalo ]
   sprites:
   - sprite: _Impstation/Mobs/Customization/Allulalo/legs.rsi
-    state: allulaloLegPlumage
+    state: allulaloLegPlumageRight
 
 # LHand
 
