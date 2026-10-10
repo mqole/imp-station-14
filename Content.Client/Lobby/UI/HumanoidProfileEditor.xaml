@@ -155,8 +155,12 @@
         </BoxContainer>
         <!-- Right side -->
         <BoxContainer Orientation="Vertical" VerticalExpand="True" VerticalAlignment="Center">
-            <profile:ProfilePreviewSpriteView Name="SpriteView" Scale="8 8" Margin="4" SizeFlagsStretchRatio="1" />
-            <BoxContainer Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5">
+        <!-- imp edit start, makes the ui fit anomalocarid -->
+            <profile:ProfilePreviewSpriteView Name="SpriteView" Scale="8 8" Margin="0, 0" SetSize="320 480"
+                                              Stretch="Fit" HorizontalExpand="False" VerticalExpand="False"
+                                              VerticalAlignment="Bottom" />
+            <BoxContainer Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5">
+        <!-- imp edit end -->
                 <Button Name="SpriteRotateLeft" Text="◀" StyleClasses="OpenRight" />
                 <cc:VSeparator Margin="2 0 3 0" />
                 <Button Name="SpriteRotateRight" Text="▶" StyleClasses="OpenLeft" />

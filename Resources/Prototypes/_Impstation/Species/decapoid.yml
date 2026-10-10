@@ -3,7 +3,7 @@
   name: species-name-decapoid
   roundStart: true
   randomViable: true
-  prototype: MobDecapoid
+  prototype: BaseMobDecapoidInternals
   defaultSkinTone: "#385878"
   dollPrototype: AppearanceDecapoid
   skinColoration: Hues
