@@ -16,8 +16,8 @@
       required: false
     enum.HumanoidVisualLayers.Snout:
       limit: 1
-      required: false # imp
-      #default: [ VoxBeak ] # imp
+      required: true
+      default: [ VoxBeak ]
     enum.HumanoidVisualLayers.SnoutCover:
       limit: 1
       required: false
