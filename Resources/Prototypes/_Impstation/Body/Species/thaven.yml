@@ -1,7 +1,6 @@
 # TODO IMP: THIS FILE IS MARKED FOR DEATH ONCE WE PROPERLY MERGE IT FROM MACROCOSM
 
 - type: markingsGroup
-  parent: Undergarments
   id: Thaven
   onlyGroupWhitelisted: true
   limits:
@@ -51,11 +50,8 @@
     enum.HumanoidVisualLayers.Tail:
       limit: 1
       required: false
-    enum.HumanoidVisualLayers.TailOverlay:
-      limit: 6
-      required: false
-    enum.HumanoidVisualLayers.Special:
-      limit: 0
+    enum.HumanoidVisualLayers.Overlay:
+      limit: 1
       required: false
 
 - type: entity
