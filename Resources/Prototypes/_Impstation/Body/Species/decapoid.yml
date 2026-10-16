@@ -1,6 +1,7 @@
 # TODO IMP: THIS FILE IS MARKED FOR DEATH ONCE WE PROPERLY MERGE IT FROM MACROCOSM
 
 - type: markingsGroup
+  parent: Undergarments
   id: Decapoid
   onlyGroupWhitelisted: true
   limits:
