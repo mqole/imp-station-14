@@ -293,9 +293,9 @@
   bodyPart: Tail
   groupWhitelist: [ Reptilian ]
   layering:
-    gecko1_front: TailBehindBackpack
+    gecko1_front: TailOversuit
     gecko1_behind: TailBehind
-    gecko2_front: TailBehindBackpack
+    gecko2_front: TailOversuit
     gecko2_behind: TailBehind
   colorLinks:
     gecko1_behind: gecko1_front
@@ -315,11 +315,11 @@
   bodyPart: Tail
   groupWhitelist: [ Reptilian ]
   layering:
-    snizard1_front: TailBehindBackpack
+    snizard1_front: TailOversuit
     snizard1_behind: TailBehind
-    snizard2_front: TailBehindBackpack
+    snizard2_front: TailOversuit
     snizard2_behind: TailBehind
-    snizard3: TailBehindBackpack
+    snizard3: TailOversuit
   colorLinks:
     snizard1_behind: snizard1_front
     snizard2_behind: snizard2_front

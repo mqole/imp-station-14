@@ -670,11 +670,11 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    luna_neck: TailBehindBackpack
+    luna_neck: TailOversuit
     luna_primary_behind: TailBehind
-    luna_primary_front: TailBehindBackpack
+    luna_primary_front: TailOversuit
     luna_secondary_behind: TailBehind
-    luna_secondary_front: TailBehindBackpack
+    luna_secondary_front: TailOversuit
   colorLinks:
     luna_primary_behind: luna_primary_front
     luna_secondary_behind: luna_secondary_front
@@ -695,12 +695,12 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    bee_neck: TailBehindBackpack
+    bee_neck: TailOversuit
     bee_primary_behind: TailBehind
-    bee_primary_front: TailBehindBackpack
+    bee_primary_front: TailOversuit
     bee_secondary_behind: TailBehind
-    bee_secondary_front: TailBehindBackpack
-    bee_tertiary_front: TailBehindBackpack
+    bee_secondary_front: TailOversuit
+    bee_tertiary_front: TailOversuit
   colorLinks:
     bee_primary_behind: bee_primary_front
     bee_secondary_behind: bee_secondary_front
@@ -723,11 +723,11 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    beetle_neck: TailBehindBackpack
+    beetle_neck: TailOversuit
     beetle_primary_behind: TailBehind
-    beetle_primary_front: TailBehindBackpack
+    beetle_primary_front: TailOversuit
     beetle_secondary_behind: TailBehind
-    beetle_secondary_front: TailBehindBackpack
+    beetle_secondary_front: TailOversuit
   colorLinks:
     beetle_primary_behind: beetle_primary_front
   sprites:
@@ -747,9 +747,9 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    firefly_neck: TailBehindBackpack
+    firefly_neck: TailOversuit
     firefly_primary_behind: TailBehind
-    firefly_primary_front: TailBehindBackpack
+    firefly_primary_front: TailOversuit
   colorLinks:
     firefly_primary_behind: firefly_primary_front
   sprites:
@@ -766,7 +766,7 @@
   groupWhitelist: [ Moth ]
   layering:
     firefly_secondary_behind: TailBehind
-    firefly_secondary_front: TailBehindBackpack
+    firefly_secondary_front: TailOversuit
   colorLinks:
     firefly_secondary_behind: firefly_secondary_front
   sprites:
@@ -780,13 +780,13 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    glasswing_neck: TailBehindBackpack
+    glasswing_neck: TailOversuit
     glasswing_primary_behind: TailBehind
-    glasswing_primary_front: TailBehindBackpack
+    glasswing_primary_front: TailOversuit
     glasswing_secondary_behind: TailBehind
-    glasswing_secondary_front: TailBehindBackpack
+    glasswing_secondary_front: TailOversuit
     glasswing_tertiary_behind: TailBehind
-    glasswing_tertiary_front: TailBehindBackpack
+    glasswing_tertiary_front: TailOversuit
   colorLinks:
     glasswing_primary_behind: glasswing_primary_front
     glasswing_secondary_behind: glasswing_secondary_front
@@ -812,11 +812,11 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    rhinobeetle_neck: TailBehindBackpack
+    rhinobeetle_neck: TailOversuit
     rhinobeetle_primary_behind: TailBehind
-    rhinobeetle_primary_front: TailBehindBackpack
+    rhinobeetle_primary_front: TailOversuit
     rhinobeetle_secondary_behind: TailBehind
-    rhinobeetle_secondary_front: TailBehindBackpack
+    rhinobeetle_secondary_front: TailOversuit
   colorLinks:
     rhinobeetle_primary_behind: rhinobeetle_primary_front
     rhinobeetle_secondary_behind: rhinobeetle_secondary_front
@@ -837,10 +837,10 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    snoth_neck: TailBehindBackpack
+    snoth_neck: TailOversuit
     snoth_primary_behind: TailBehind
-    snoth_primary_front: TailBehindBackpack
-    snoth_secondary_front: TailBehindBackpack
+    snoth_primary_front: TailOversuit
+    snoth_secondary_front: TailOversuit
   colorLinks:
     snoth_primary_behind: snoth_primary_front
   sprites:
@@ -858,13 +858,13 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    truebutterfly_neck: TailBehindBackpack
+    truebutterfly_neck: TailOversuit
     truebutterfly_primary_behind: TailBehind
-    truebutterfly_primary_front: TailBehindBackpack
+    truebutterfly_primary_front: TailOversuit
     truebutterfly_secondary_behind: TailBehind
-    truebutterfly_secondary_front: TailBehindBackpack
+    truebutterfly_secondary_front: TailOversuit
     truebutterfly_tertiary_behind: TailBehind
-    truebutterfly_tertiary_front: TailBehindBackpack
+    truebutterfly_tertiary_front: TailOversuit
   colorLinks:
     truebutterfly_primary_behind: truebutterfly_primary_front
     truebutterfly_secondary_behind: truebutterfly_secondary_front
@@ -890,9 +890,9 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    backstabbed_neck: TailBehindBackpack
+    backstabbed_neck: TailOversuit
     backstabbed_primary_behind: TailBehind
-    backstabbed_primary_front: TailBehindBackpack
+    backstabbed_primary_front: TailOversuit
   colorLinks:
     backstabbed_primary_behind: backstabbed_primary_front
   sprites:
@@ -908,11 +908,11 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    dragonfly_neck: TailBehindBackpack
+    dragonfly_neck: TailOversuit
     dragonfly_primary_behind: TailBehind
-    dragonfly_primary_front: TailBehindBackpack
+    dragonfly_primary_front: TailOversuit
     dragonfly_secondary_behind: TailBehind
-    dragonfly_secondary_front: TailBehindBackpack
+    dragonfly_secondary_front: TailOversuit
   colorLinks:
     dragonfly_primary_behind: dragonfly_primary_front
     dragonfly_secondary_behind: dragonfly_secondary_front
@@ -933,11 +933,11 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    fly_neck: TailBehindBackpack
+    fly_neck: TailOversuit
     fly_primary_behind: TailBehind
-    fly_primary_front: TailBehindBackpack
+    fly_primary_front: TailOversuit
     fly_secondary_behind: TailBehind
-    fly_secondary_front: TailBehindBackpack
+    fly_secondary_front: TailOversuit
   colorLinks:
     fly_primary_behind: fly_primary_front
     fly_secondary_behind: fly_secondary_front
@@ -958,9 +958,9 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    lanternfly_neck: TailBehindBackpack
+    lanternfly_neck: TailOversuit
     lanternfly_primary_behind: TailBehind
-    lanternfly_primary_front: TailBehindBackpack
+    lanternfly_primary_front: TailOversuit
   colorLinks:
     lanternfly_primary_behind: lanternfly_primary_front
   sprites:
@@ -976,12 +976,12 @@
   bodyPart: Tail
   groupWhitelist: [ Moth ]
   layering:
-    pyr_neck: TailBehindBackpack
+    pyr_neck: TailOversuit
     pyr_wing_behind: TailBehind
-    pyr_wing_front: TailBehindBackpack
+    pyr_wing_front: TailOversuit
     pyr_inner_behind: TailBehind
-    pyr_inner_front: TailBehindBackpack
-    pyr_stripes_front: TailBehindBackpack
+    pyr_inner_front: TailOversuit
+    pyr_stripes_front: TailOversuit
   colorLinks:
     pyr_wing_behind: pyr_wing_front
     pyr_inner_behind: pyr_inner_front

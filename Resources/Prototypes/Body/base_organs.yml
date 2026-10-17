@@ -73,13 +73,16 @@
       - UndergarmentTop
       - UndergarmentBottom
       - Special
-      # IMP START - some of these visual layers may not be needed. pending marking cleanup
+      # IMP START
       - TailBehind
-      - TailBehindBackpack
       - TailOversuit
-      - TailUnderlay
       - Tenta
-      # IMP END
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Special # for syndicate mascot suits
+    - enum.HumanoidVisualLayers.UndergarmentTop # for swimsuits
+    - enum.HumanoidVisualLayers.UndergarmentBottom # for swimsuits
+    # IMP END
+
 
 - type: entity
   parent: OrganBase

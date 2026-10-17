@@ -894,7 +894,8 @@
   - sprite: _Impstation/Mobs/Customization/Anomalocarid/headtop.rsi
     state: antennae17_secondary
 
-#Tail # TODO: POLISH THESE
+#Tail
+# These layer on top of backpacks, which has very minor balance implications. but it looks nice so its fiiine
 
 - type: marking
   id: AnomalocaridWingsDefault
@@ -907,9 +908,9 @@
         !type:EyeColoring
   layering:
     wings1_primary_behind: TailBehind
-    wings1_primary_front: TailOversuit
+    wings1_primary_front: Tail
     wings1_secondary_behind: TailBehind
-    wings1_secondary_front: TailOversuit
+    wings1_secondary_front: Tail
   colorLinks:
     wings1_primary_behind: wings1_primary_front
     wings1_secondary_behind: wings1_secondary_front
@@ -934,9 +935,9 @@
         !type:EyeColoring
   layering:
     wings2_primary_behind: TailBehind
-    wings2_primary_front: TailOversuit
+    wings2_primary_front: Tail
     wings2_secondary_behind: TailBehind
-    wings2_secondary_front: TailOversuit
+    wings2_secondary_front: Tail
   colorLinks:
     wings2_primary_behind: wings2_primary_front
     wings2_secondary_behind: wings2_secondary_front
@@ -982,9 +983,9 @@
         !type:EyeColoring
   layering:
     wings4_primary_behind: TailBehind
-    wings4_primary_front: TailOversuit
+    wings4_primary_front: Tail
     wings4_secondary_behind: TailBehind
-    wings4_secondary_front: TailOversuit
+    wings4_secondary_front: Tail
   colorLinks:
     wings4_primary_behind: wings4_primary_front
     wings4_secondary_behind: wings4_secondary_front
@@ -1009,11 +1010,11 @@
         !type:EyeColoring
   layering:
     tentacles_primary_behind: TailBehind
-    tentacles_primary_front: TailOversuit
+    tentacles_primary_front: Tail
     tentacles_secondary_behind: TailBehind
-    tentacles_secondary_front: TailOversuit
+    tentacles_secondary_front: Tail
     tentacles_tertiary_behind: TailBehind
-    tentacles_tertiary_front: TailOversuit
+    tentacles_tertiary_front: Tail
   colorLinks:
     tentacles_primary_behind: tentacles_primary_front
     tentacles_secondary_behind: tentacles_secondary_front

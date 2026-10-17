@@ -327,12 +327,10 @@
 - type: entity
   parent: [ OrganBaseHead, OrganUnguExternal ]
   id: OrganUnguHead
-  # imp edit, this hand shouldn't be here..?
-  #components:
-  #- type: HandOrgan
-  #  handID: left
-  #  data:
-  #    location: Left
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.SnoutCover
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganUnguExternal ]
@@ -361,10 +359,18 @@
 - type: entity
   parent: [ OrganBaseFootLeft, OrganUnguExternal ]
   id: OrganUnguFootLeft
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.LFoot
 
 - type: entity
   parent: [ OrganBaseFootRight, OrganUnguExternal ]
   id: OrganUnguFootRight
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.RFoot
 
 - type: entity
   parent: [ OrganBaseBrain, OrganUnguInternal ]

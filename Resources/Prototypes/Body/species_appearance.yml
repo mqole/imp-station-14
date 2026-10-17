@@ -5,8 +5,7 @@
   - type: Sprite
     layers:
 
-    # imp/floof: 'Behind' sprites
-    - map: [ "enum.HumanoidVisualLayers.TailUnderlay" ] # imp
+    # floof: 'Behind' sprites
     - map: [ "enum.HumanoidVisualLayers.TailBehind" ] # Floof
 
     # Torso
@@ -45,9 +44,8 @@
     - map: [ "belt" ]
     - map: [ "id" ]
     - map: [ "outerClothing" ]
-    - map: [ "enum.HumanoidVisualLayers.TailBehindBackpack" ] # imp
+    - map: [ "enum.HumanoidVisualLayers.TailOversuit" ] # Floof - imp change, make it layer under the backpack always.
     - map: [ "back" ]
-    - map: [ "enum.HumanoidVisualLayers.TailOversuit" ] # Floof
     - map: [ "neck" ]
     - map: [ "suitstorage" ]
 

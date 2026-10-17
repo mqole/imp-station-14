@@ -160,11 +160,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    default_neck: TailBehindBackpack
+    default_neck: TailOversuit
     default_primary_behind: TailBehind
-    default_primary_front: TailBehindBackpack
+    default_primary_front: TailOversuit
     default_secondary_behind: TailBehind
-    default_secondary_front: TailBehindBackpack
+    default_secondary_front: TailOversuit
   colorLinks:
     default_primary_behind: default_primary_front
     default_secondary_behind: default_secondary_front
@@ -185,9 +185,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    charred_neck: TailBehindBackpack
+    charred_neck: TailOversuit
     charred_primary_behind: TailBehind
-    charred_primary_front: TailBehindBackpack
+    charred_primary_front: TailOversuit
   colorLinks:
     charred_primary_behind: charred_primary_front
   sprites:
@@ -203,11 +203,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    dbushy_neck: TailBehindBackpack
+    dbushy_neck: TailOversuit
     dbushy_primary_behind: TailBehind
-    dbushy_primary_front: TailBehindBackpack
+    dbushy_primary_front: TailOversuit
     dbushy_secondary_behind: TailBehind
-    dbushy_secondary_front: TailBehindBackpack
+    dbushy_secondary_front: TailOversuit
   colorLinks:
     dbushy_primary_behind: dbushy_primary_front
     dbushy_secondary_behind: dbushy_secondary_front
@@ -228,11 +228,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    deathhead_neck: TailBehindBackpack
+    deathhead_neck: TailOversuit
     deathhead_primary_behind: TailBehind
-    deathhead_primary_front: TailBehindBackpack
+    deathhead_primary_front: TailOversuit
     deathhead_secondary_behind: TailBehind
-    deathhead_secondary_front: TailBehindBackpack
+    deathhead_secondary_front: TailOversuit
   colorLinks:
     deathhead_primary_behind: deathhead_primary_front
     deathhead_secondary_behind: deathhead_secondary_front
@@ -253,11 +253,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    fan_neck: TailBehindBackpack
+    fan_neck: TailOversuit
     fan_primary_behind: TailBehind
-    fan_primary_front: TailBehindBackpack
+    fan_primary_front: TailOversuit
     fan_secondary_behind: TailBehind
-    fan_secondary_front: TailBehindBackpack
+    fan_secondary_front: TailOversuit
   colorLinks:
     fan_primary_behind: fan_primary_front
     fan_secondary_behind: fan_secondary_front
@@ -278,11 +278,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    dfan_neck: TailBehindBackpack
+    dfan_neck: TailOversuit
     dfan_primary_behind: TailBehind
-    dfan_primary_front: TailBehindBackpack
+    dfan_primary_front: TailOversuit
     dfan_secondary_behind: TailBehind
-    dfan_secondary_front: TailBehindBackpack
+    dfan_secondary_front: TailOversuit
   colorLinks:
     dfan_primary_behind: dfan_primary_front
     dfan_secondary_behind: dfan_secondary_front
@@ -303,9 +303,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    feathery_neck: TailBehindBackpack
+    feathery_neck: TailOversuit
     feathery_primary_behind: TailBehind
-    feathery_primary_front: TailBehindBackpack
+    feathery_primary_front: TailOversuit
   colorLinks:
     feathery_primary_behind: feathery_primary_front
   sprites:
@@ -321,11 +321,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    firewatch_neck: TailBehindBackpack
+    firewatch_neck: TailOversuit
     firewatch_primary_behind: TailBehind
-    firewatch_primary_front: TailBehindBackpack
+    firewatch_primary_front: TailOversuit
     firewatch_secondary_behind: TailBehind
-    firewatch_secondary_front: TailBehindBackpack
+    firewatch_secondary_front: TailOversuit
   colorLinks:
     firewatch_primary_behind: firewatch_primary_front
     firewatch_secondary_behind: firewatch_secondary_front
@@ -346,11 +346,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    gothic_neck: TailBehindBackpack
+    gothic_neck: TailOversuit
     gothic_primary_behind: TailBehind
-    gothic_primary_front: TailBehindBackpack
+    gothic_primary_front: TailOversuit
     gothic_secondary_behind: TailBehind
-    gothic_secondary_front: TailBehindBackpack
+    gothic_secondary_front: TailOversuit
   colorLinks:
     gothic_primary_behind: gothic_primary_front
     gothic_secondary_behind: gothic_secondary_front
@@ -371,9 +371,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    jungle_neck: TailBehindBackpack
+    jungle_neck: TailOversuit
     jungle_primary_behind: TailBehind
-    jungle_primary_front: TailBehindBackpack
+    jungle_primary_front: TailOversuit
   colorLinks:
     jungle_primary_behind: jungle_primary_front
   sprites:
@@ -389,10 +389,10 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    ladybug_neck: TailBehindBackpack
+    ladybug_neck: TailOversuit
     ladybug_primary_behind: TailBehind
-    ladybug_primary_front: TailBehindBackpack
-    ladybug_secondary_front: TailBehindBackpack
+    ladybug_primary_front: TailOversuit
+    ladybug_secondary_front: TailOversuit
   colorLinks:
     ladybug_primary_behind: ladybug_primary_front
   sprites:
@@ -410,11 +410,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    maple_neck: TailBehindBackpack
+    maple_neck: TailOversuit
     maple_primary_behind: TailBehind
-    maple_primary_front: TailBehindBackpack
+    maple_primary_front: TailOversuit
     maple_secondary_behind: TailBehind
-    maple_secondary_front: TailBehindBackpack
+    maple_secondary_front: TailOversuit
   colorLinks:
     maple_primary_behind: maple_primary_front
     maple_secondary_behind: maple_secondary_front
@@ -435,12 +435,12 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    moffra_neck: TailBehindBackpack
-    moffra_neck_secondary: TailBehindBackpack
+    moffra_neck: TailOversuit
+    moffra_neck_secondary: TailOversuit
     moffra_primary_behind: TailBehind
-    moffra_primary_front: TailBehindBackpack
+    moffra_primary_front: TailOversuit
     moffra_secondary_behind: TailBehind
-    moffra_secondary_front: TailBehindBackpack
+    moffra_secondary_front: TailOversuit
   colorLinks:
     moffra_primary_behind: moffra_primary_front
     moffra_secondary_behind: moffra_secondary_front
@@ -464,9 +464,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    oakworm_neck: TailBehindBackpack
+    oakworm_neck: TailOversuit
     oakworm_primary_behind: TailBehind
-    oakworm_primary_front: TailBehindBackpack
+    oakworm_primary_front: TailOversuit
   colorLinks:
     oakworm_primary_behind: oakworm_primary_front
   sprites:
@@ -482,11 +482,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    plasmafire_neck: TailBehindBackpack
+    plasmafire_neck: TailOversuit
     plasmafire_primary_behind: TailBehind
-    plasmafire_primary_front: TailBehindBackpack
+    plasmafire_primary_front: TailOversuit
     plasmafire_secondary_behind: TailBehind
-    plasmafire_secondary_front: TailBehindBackpack
+    plasmafire_secondary_front: TailOversuit
   colorLinks:
     plasmafire_primary_behind: plasmafire_primary_front
     plasmafire_secondary_behind: plasmafire_secondary_front
@@ -507,9 +507,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    pointy_neck: TailBehindBackpack
+    pointy_neck: TailOversuit
     pointy_primary_behind: TailBehind
-    pointy_primary_front: TailBehindBackpack
+    pointy_primary_front: TailOversuit
   colorLinks:
     pointy_primary_behind: pointy_primary_front
   sprites:
@@ -525,11 +525,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    royal_neck: TailBehindBackpack
+    royal_neck: TailOversuit
     royal_primary_behind: TailBehind
-    royal_primary_front: TailBehindBackpack
+    royal_primary_front: TailOversuit
     royal_secondary_behind: TailBehind
-    royal_secondary_front: TailBehindBackpack
+    royal_secondary_front: TailOversuit
   colorLinks:
     royal_primary_behind: royal_primary_front
     royal_secondary_behind: royal_secondary_front
@@ -550,9 +550,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    stellar_neck: TailBehindBackpack
+    stellar_neck: TailOversuit
     stellar_primary_behind: TailBehind
-    stellar_primary_front: TailBehindBackpack
+    stellar_primary_front: TailOversuit
   colorLinks:
     stellar_primary_behind: stellar_primary_front
   sprites:
@@ -568,9 +568,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    striped_neck: TailBehindBackpack
+    striped_neck: TailOversuit
     striped_primary_behind: TailBehind
-    striped_primary_front: TailBehindBackpack
+    striped_primary_front: TailOversuit
   colorLinks:
     striped_primary_behind: striped_primary_front
   sprites:
@@ -586,9 +586,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    swirly_neck: TailBehindBackpack
+    swirly_neck: TailOversuit
     swirly_primary_behind: TailBehind
-    swirly_primary_front: TailBehindBackpack
+    swirly_primary_front: TailOversuit
   colorLinks:
     swirly_primary_behind: swirly_primary_front
   sprites:
@@ -604,9 +604,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    whitefly_neck: TailBehindBackpack
+    whitefly_neck: TailOversuit
     whitefly_primary_behind: TailBehind
-    whitefly_primary_front: TailBehindBackpack
+    whitefly_primary_front: TailOversuit
   colorLinks:
     whitefly_primary_behind: whitefly_primary_front
   sprites:
@@ -622,9 +622,9 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    witchwing_neck: TailBehindBackpack
+    witchwing_neck: TailOversuit
     witchwing_primary_behind: TailBehind
-    witchwing_primary_front: TailBehindBackpack
+    witchwing_primary_front: TailOversuit
   colorLinks:
     witchwing_primary_behind: witchwing_primary_front
   sprites:
@@ -640,11 +640,11 @@
   bodyPart: Tail
   groupWhitelist: [Moth]
   layering: # imp edit start
-    underwing_neck: TailBehindBackpack
+    underwing_neck: TailOversuit
     underwing_primary_behind: TailBehind
-    underwing_primary_front: TailBehindBackpack
+    underwing_primary_front: TailOversuit
     underwing_secondary_behind: TailBehind
-    underwing_secondary_front: TailBehindBackpack
+    underwing_secondary_front: TailOversuit
   colorLinks:
     underwing_primary_behind: underwing_primary_front
     underwing_secondary_behind: underwing_secondary_front

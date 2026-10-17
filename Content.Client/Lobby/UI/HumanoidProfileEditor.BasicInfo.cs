@@ -34,5 +34,7 @@ public sealed partial class HumanoidProfileEditor
         var name = HumanoidCharacterProfile.GetName(Profile.Species, Profile.Gender);
         SetName(name);
         UpdateNameEdit();
+
+        _recordsTab.Update(Profile); // CD - Character Records
     }
 }

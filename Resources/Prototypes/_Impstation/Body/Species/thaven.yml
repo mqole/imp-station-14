@@ -241,11 +241,11 @@
   components:
   - type: Sprite
     state: head #imp edit, don't have m/f heads
-  # - type: VisualOrganMarkings
-  #   hideableLayers:
-  #   - enum.HumanoidVisualLayers.Hair
-  #   - enum.HumanoidVisualLayers.HeadSide
-  #   - enum.HumanoidVisualLayers.Snout
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Hair
+    - enum.HumanoidVisualLayers.HeadSide
+    - enum.HumanoidVisualLayers.Snout
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganThavenExternal ]
