@@ -9,6 +9,7 @@ using Content.Server.Connection;
 using Content.Server.Database;
 using Content.Server.Discord.DiscordLink;
 using Content.Server.EUI;
+using Content.Server.FeedbackSystem;
 using Content.Server.GameTicking;
 using Content.Server.GhostKick;
 using Content.Server.GuideGenerator;
@@ -24,6 +25,7 @@ using Content.Server.ServerInfo;
 using Content.Server.ServerUpdates;
 using Content.Server.Voting.Managers;
 using Content.Shared.CCVar;
+using Content.Shared.FeedbackSystem;
 using Content.Shared.Kitchen;
 using Content.Shared.Localizations;
 using Robust.Server;
@@ -77,6 +79,7 @@ namespace Content.Server.Entry
         [Dependency] private readonly ServerApi _serverApi = default!;
         [Dependency] private readonly ServerInfoManager _serverInfo = default!;
         [Dependency] private readonly ServerUpdateManager _updateManager = default!;
+        [Dependency] private readonly ServerFeedbackManager _feedbackManager = null!;
         [Dependency] private readonly IServerNotifierManager _notifyManager = default!;//imp
 
         public override void PreInit()
@@ -168,6 +171,7 @@ namespace Content.Server.Entry
             _connection.PostInit();
             _multiServerKick.Initialize();
             _cvarCtrl.Initialize();
+            _feedbackManager.Initialize();
         }
 
         public override void Update(ModUpdateLevel level, FrameEventArgs frameEventArgs)
