@@ -606,7 +606,7 @@
   flavor: bitter
   color: "#B3B599"
   metabolisms: #imp
-    Poison:
+    Bloodstream:
       effects:
       - !type:HealthChange
         conditions:

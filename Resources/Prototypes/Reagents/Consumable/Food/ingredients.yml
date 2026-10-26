@@ -68,15 +68,6 @@
     Digestion:
       metabolites:
         UncookedAnimalProteins: 1
-      # imp edit start
-      effects:
-      - !type:AdjustReagent
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Kodepiia ]
-        reagent: UncookedAnimalProteins
-        amount: 1
-      # imp edit end
 
 - type: reagent
   id: EggCooked
@@ -91,12 +82,6 @@
     Digestion:
       metabolites:
         Protein: 2
-        # imp edit start
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Kodepiia ]
-          inverted: true
-        # imp edit end
 
 - type: reagent
   id: Blackpepper

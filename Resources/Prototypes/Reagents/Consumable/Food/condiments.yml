@@ -58,7 +58,7 @@
   recognizable: true
   # imp changes start
   metabolisms:
-    Food:
+    Digestion:
       effects:
       - !type:PopupMessage
           type: Local

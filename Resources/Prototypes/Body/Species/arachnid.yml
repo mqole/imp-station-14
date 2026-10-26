@@ -268,12 +268,12 @@
   id: OrganArachnidLungs
   name: book lungs  #imp edit
   description: "Filters oxygen from an atmosphere... just less efficiently."  #imp edited from 'but more greedily'
-  components: #imp edit, changes average out to consuming 50% more gas than base
-  - type: Metabolizer
-    updateInterval: 0.5 # imp, twice as often as base
-    groups:
-    - id: Gas
-      rateModifier: 75.0 #imp, 25% less than base
+  # components: #imp edit, changes average out to consuming 50% more gas than base
+  # TODO THIS NEEDS REWRITING BECAUSE METABOLITES FUCKED IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # - type: Metabolizer
+  #   updateIntervalMultiplier : 2 # imp, twice as often as base
+  #   stages: [Respiration]
+  #     rateModifier: 0.75 #imp, 25% less than base
 
 - type: entity
   parent: [ OrganArachnidInternal, OrganBaseHeart, OrganArachnidMetabolizer ]

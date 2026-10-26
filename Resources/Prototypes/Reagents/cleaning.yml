@@ -94,18 +94,6 @@
       - !type:GenericStatusEffect # imp TODO:update with status effect refactor
         key: PGAccent
         component: PGAccent
-    Drink:
-      metabolismRate: 0.4 # imp - accent lasts for like 15 seconds otherwise
-      effects:
-      #- !type:Vomit #imp, replaced with accent status effect
-      #  conditions:
-      #  - !type:ReagentCondition
-      #    reagent: SoapReagent
-      #    min: 6
-      #  probability: 0.20
-      - !type:GenericStatusEffect # imp
-        key: PGAccent
-        component: PGAccent
       #imp edit start TODO: add a soapy water reagent that has this effect and remove this from soap
   tileReactions:
   - !type:CleanTileReaction

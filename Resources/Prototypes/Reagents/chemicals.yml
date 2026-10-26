@@ -203,7 +203,7 @@
   color: "#E6E6DA"
   physicalDesc: reagent-physical-desc-crystalline
   metabolisms: #imp
-    Food:
+    Digestion:
       effects:
       - !type:SatiateHunger
         conditions:

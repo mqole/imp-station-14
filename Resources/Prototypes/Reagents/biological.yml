@@ -210,7 +210,7 @@
     params:
       volume: 6
   metabolisms: # imp
-    Food:
+    Digestion:
       effects:
       - !type:SatiateHunger
         conditions:

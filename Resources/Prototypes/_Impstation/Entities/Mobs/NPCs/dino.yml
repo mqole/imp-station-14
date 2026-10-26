@@ -129,9 +129,7 @@
   - type: Metabolizer
     solutionOnBody: false
     metabolizerTypes: [ Reptilian ]
-    groups:
-    - id: Medicine
-    - id: Poison
+    stages: [ Digestion, Bloodstream ]
   - type: Speech
     speechSounds: Dino
     speechVerb: Reptilian

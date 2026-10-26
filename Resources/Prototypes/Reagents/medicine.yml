@@ -98,8 +98,6 @@
           types:
             Poison: -3
     #imp edit start
-    Poison:
-      effects:
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition
@@ -107,7 +105,7 @@
         damage:
           types:
             Poison: 4
-      #imp edit end
+    #imp edit end
 
 - type: reagent
   id: Ethylredoxrazine
@@ -740,15 +738,13 @@
         - !type:ModifyBloodLevel
           amount: 6
     # imp edit start
-    Poison:
-      effects:
-      - !type:HealthChange
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Snail ]
-        damage:
-          types:
-            Poison: 4
+        - !type:HealthChange
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type: [ Snail ]
+          damage:
+            types:
+              Poison: 4
     # imp edit end
 
 - type: reagent

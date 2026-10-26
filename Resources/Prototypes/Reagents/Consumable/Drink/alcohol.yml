@@ -73,7 +73,7 @@
   metamorphicChangeColor: true
   fizziness: 0.6
   metabolisms: #imp
-    Drink:
+    Digestion:
       effects:
       - !type:SatiateThirst
         factor: 2
@@ -1071,7 +1071,7 @@
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
   metabolisms: #imp
-    Narcotic:
+    Bloodstream:
       effects:
       - !type:ModifyStatusEffect
         effectProto: StatusEffectSeeingRainbow

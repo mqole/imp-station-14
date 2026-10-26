@@ -253,7 +253,7 @@
   boilingPoint: 1737.0
 # imp edit start
   metabolisms:
-    Poison:
+    Bloodstream:
       effects:
       - !type:HealthChange
         damage:
