@@ -95,7 +95,7 @@
     containers:
       storagebase: !type:AllSelector
         children:
-        - id: SyndicateElectricRangeMachineFlatpack # imp, was microwave
+        - id: SyndicateElectricRangeFlatpack # imp, was microwave
         - id: WeaponCroissant
           amount: 2
         - id: WeaponBaguette

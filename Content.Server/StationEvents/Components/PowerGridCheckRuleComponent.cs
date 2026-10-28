@@ -23,6 +23,7 @@ public sealed partial class PowerGridCheckRuleComponent : Component
     /// Token source for cancelling the power restoration announcement.
     /// </summary>
     // imp edit - unused, commented out
+    // thank you darkmajia
     // public CancellationTokenSource? AnnounceCancelToken;
 
     /// <summary>

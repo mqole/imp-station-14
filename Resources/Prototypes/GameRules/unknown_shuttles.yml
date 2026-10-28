@@ -28,13 +28,13 @@
   id: BaseUnknownShuttleAnnouncedRule
   components:
   - type: StationEvent
-    startAnnouncement: station-event-unknown-shuttle-incoming
-    startAudio:
-      path: /Audio/Announcements/attention.ogg
+    startAnnouncement: true # ee announce
+  #  startAudio: # imp COUNTDOWN UNTIL WE GET THE NEW ANNOUNCER SYSTEM I FUCKING HJATE EINSTEIN ENGINES AND I HATE THIS STUPID JANK ASS AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  #    path: /Audio/Announcements/attention.ogg
 
 # The power of 3 clowns proved too strong for the players and may need to be 1984'ed. Replace this with a more engaging clown shuttle.
 - type: entity
-  parent: BaseUnknownShuttleAnnouncedRule
+  parent: BaseUnknownShuttleAnnouncedRule # imp add announce
   id: UnknownShuttleHonki
   components:
   - type: StationEvent
@@ -54,7 +54,7 @@
 
 - type: entity
   id: UnknownShuttleNTQuark
-  parent: BaseUnknownShuttleRule
+  parent: BaseUnknownShuttleAnnouncedRule # imp add announce
   components:
   - type: StationEvent
     weight: .5 # Hopefully this is uncommon enough, it needs to be uncommon enough that people wont waste time metaknowledging it.

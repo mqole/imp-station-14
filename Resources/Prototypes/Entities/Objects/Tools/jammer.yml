@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: [BaseItem, Tier2Contraband]
+  parent: [BaseItem, Tier2Contraband] # imp contraband
   id: BaseJammer
   name: radio jammer
   description: This device will disrupt any nearby outgoing radio communication as well as suit sensors when activated.
