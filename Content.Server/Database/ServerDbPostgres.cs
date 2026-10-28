@@ -11,7 +11,6 @@ using Content.Server.IP;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Microsoft.EntityFrameworkCore;
-using Robust.Shared.Asynchronous;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization.Manager;
