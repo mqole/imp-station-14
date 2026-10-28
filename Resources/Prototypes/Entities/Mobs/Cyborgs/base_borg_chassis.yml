@@ -258,6 +258,7 @@
         Heat: 10 # capable of touching light bulbs and stoves without feeling pain!
         Cold: 10 # imp edit. For cold lightbulb
   - type: BypassLock
+    openWiresPanel: true
   - type: BypassLockRequiresMobState
     requiredMobState:
     - Critical

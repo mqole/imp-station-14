@@ -94,9 +94,7 @@
     solutionOnBody: false
     updateInterval: 0.25
     metabolizerTypes: [ Dragon ]
-    groups:
-    - id: Medicine
-    - id: Poison
+    stages: [ Digestion, Bloodstream ]
   - type: GoobAbsorbable
     biomassRestored: 0.8
   - type: Butcherable

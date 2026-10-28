@@ -50,11 +50,6 @@
   parent: [ OrganPleebnarInternal, OrganAnimalLiver ]
   id: OrganPleebnarLiver
   name: grubi
-  components:
-  - type: Metabolizer
-    groups:
-    - id: Alcohol
-      rateModifier: 0.1
 
 - type: entity
   parent: [ OrganPleebnarInternal, OrganAnimalHeart ]
