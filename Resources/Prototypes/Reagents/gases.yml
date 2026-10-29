@@ -353,9 +353,10 @@
           type: [ Slime ]
           inverted: true
         ignoreResistances: true
+        scaling: true
         damage:
           types:
-            Poison: 0.25
+            Poison: 1
       # imp edit start
       - !type:Oxygenate #thaven don't suffocate from any gases
         scaling: true
