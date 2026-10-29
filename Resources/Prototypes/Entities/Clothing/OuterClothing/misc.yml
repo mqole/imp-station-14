@@ -212,7 +212,6 @@
     sprite: _Impstation/Clothing/OuterClothing/Misc/violetwizard.rsi # imp edit
   - type: Tag
     tags:
-    - CorgiWearable
    #- WhitelistChameleon #imp edit
 
 - type: entity
@@ -241,7 +240,6 @@
     sprite: _Impstation/Clothing/OuterClothing/Misc/redwizard.rsi # imp edit
   - type: Tag
     tags:
-    - CorgiWearable
    #- WhitelistChameleon #imp edit
 - type: entity
   parent: ClothingOuterBase
