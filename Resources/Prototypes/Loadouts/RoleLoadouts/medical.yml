@@ -16,7 +16,7 @@
   - Glasses
   - SurvivalCommand # imp SurvivalMedical > SurvivalCommand
   - Trinkets
-  - ChiefMedicalOfficerJobTrinkets
+#  - ChiefMedicalOfficerJobTrinkets
   - GroupSpeciesBreathToolCommand # imp GroupSpeciesBreathToolMedical > GroupSpeciesBreathToolCommand
   - GroupBreathToolDecapoid # imp special
   - GroupTankHarnessCommandWithOuterwear # imp GroupTankHarness > GroupTankHarnessCommandWithOuterwear
@@ -36,7 +36,7 @@
   - MedicalDoctorPDA
   - SurvivalMedical
   - Trinkets
-  - MedicalDoctorJobTrinkets
+#  - MedicalDoctorJobTrinkets
   - GroupSpeciesBreathToolMedical
   - GroupBreathToolDecapoid # imp special
   - GroupTankHarnessWithOuterwear # imp GroupTankHarness > GroupTankHarnessWithOuterwear
@@ -49,7 +49,7 @@
   - Glasses
   - SurvivalMedical
   - Trinkets
-  - MedicalInternJobTrinkets
+#  - MedicalInternJobTrinkets
   - GroupSpeciesBreathToolMedical
   - GroupBreathToolDecapoid # imp special
   - GroupTankHarness # imp reorder
@@ -70,7 +70,7 @@
   - Glasses
   - SurvivalMedical
   - Trinkets
-  - ChemistJobTrinkets
+#  - ChemistJobTrinkets
   - GroupSpeciesBreathToolMedical
   - GroupBreathToolDecapoid # imp special
   - GroupTankHarnessWithOuterwear # imp GroupTankHarness > GroupTankHarnessWithOuterwear
@@ -90,7 +90,7 @@
   - Glasses
   - SurvivalMedical
   - Trinkets
-  - ParamedicJobTrinkets
+#  - ParamedicJobTrinkets
   - GroupSpeciesBreathToolMedical
   - GroupBreathToolDecapoid # imp special
   - GroupTankHarnessWithOuterwear # imp GroupTankHarness > GroupTankHarnessWithOuterwear
