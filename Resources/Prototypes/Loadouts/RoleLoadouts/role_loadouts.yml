@@ -175,6 +175,7 @@
 
 - type: roleLoadout
   id: JobChaplain
+  canCustomizeName: true
   groups:
   - ChaplainHead
   - ChaplainEyes # imp ????? why arent these glasses or mask
