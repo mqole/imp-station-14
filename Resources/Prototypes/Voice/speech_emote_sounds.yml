@@ -368,8 +368,6 @@
     DefaultDeathgasp:
       collection: DeathGasp
    # imp edit start
-    Sneeze:
-      collection: UnisexSneezes #placeholder
     Cough:
       collection: UnisexCoughs #placeholder
     Yawn:
